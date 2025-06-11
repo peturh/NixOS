@@ -49,15 +49,15 @@
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
       editor = "vscode"; # nixvim, vscode, nvchad, neovim, emacs (WIP)
-      browser = "google-chromey"; # firefox, floorp, zen
+      browser = "google-chrome"; # firefox, floorp, zen
       terminal = "kitty"; # kitty, alacritty, wezterm
       terminalFileManager = "yazi"; # yazi or lf
       sddmTheme = "purple_leaves"; # astronaut, black_hole, purple_leaves, jake_the_dog, hyprland_kath
       wallpaper = "kurzgesagt"; # see modules/themes/wallpapers
 
       # System configuration
-      videoDriver = "intel"; # CHOOSE YOUR GPU DRIVERS (nvidia, amdgpu or intel)
-      hostname = "nixhp"; # CHOOSE A HOSTNAME HERE
+      videoDriver = "amdgpu"; # CHOOSE YOUR GPU DRIVERS (nvidia, amdgpu or intel)
+      hostname = "thinkpad"; # CHOOSE A HOSTNAME HERE
       locale = "en_GB.UTF-8"; # CHOOSE YOUR LOCALE
       timezone = "Europe/Stockholm"; # CHOOSE YOUR TIMEZONE
       kbdLayout = "se"; # CHOOSE YOUR KEYBOARD LAYOUT

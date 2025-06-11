@@ -21,7 +21,8 @@
     # ../../modules/desktop/i3-gaps # Enable i3 window manager
 
 #    ../../modules/programs/games
-   # ../../modules/programs/browser/${browser} # Set browser defined in flake.nix
+  #  ../../modules/programs/browser/firefox # Set browser defined in flake.nix
+   ../../modules/programs/browser/floorp
     ../../modules/programs/terminal/${terminal} # Set terminal defined in flake.nix
     ../../modules/programs/editor/${editor} # Set editor defined in flake.nix
     ../../modules/programs/cli/${terminalFileManager} # Set file-manager defined in flake.nix
