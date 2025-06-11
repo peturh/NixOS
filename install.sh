@@ -47,12 +47,16 @@ done
 sudo sed -i -e "s/username = \".*\"/username = \"$currentUser\"/" "./flake.nix"
 
 # rm -f ./hosts/Default/hardware-configuration.nix &>/dev/null
-if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
-elif [ -f "/etc/nixos/hosts/Default/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hosts/Default/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
-else
-  sudo nixos-generate-config --show-hardware-config >"$flake/hosts/Default/hardware-configuration.nix"
+if [ ! -f "./hosts/Default/hardware-configuration.nix" ]; then
+  if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
+    cat "/etc/nixos/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
+  elif [ -f "/etc/nixos/hosts/Default/hardware-configuration.nix" ]; then
+    cat "/etc/nixos/hosts/Default/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
+  else
+    # Generate new config
+    clear
+    sudo nixos-generate-config --show-hardware-config >"./hosts/Default/hardware-configuration.nix"
+  fi
 fi
 
 sudo git -C . add hosts/Default/hardware-configuration.nix
