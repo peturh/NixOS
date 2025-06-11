@@ -2,6 +2,7 @@
    <br>
       Péturs NixOS System
 </h1>
+
 # Installation
 > [!Note]
 > <p>You should review the configuration variables in `flake.nix` before installing.<br>
