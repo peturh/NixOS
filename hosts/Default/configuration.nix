@@ -18,11 +18,7 @@
     ../../modules/scripts
 
     ../../modules/desktop/hyprland # Enable hyprland window manager
-    # ../../modules/desktop/i3-gaps # Enable i3 window manager
-
-#    ../../modules/programs/games
-  #  ../../modules/programs/browser/firefox # Set browser defined in flake.nix
-   ../../modules/programs/browser/floorp
+    ../../modules/programs/browser/${browser}
     ../../modules/programs/terminal/${terminal} # Set terminal defined in flake.nix
     ../../modules/programs/editor/${editor} # Set editor defined in flake.nix
     ../../modules/programs/cli/${terminalFileManager} # Set file-manager defined in flake.nix
@@ -36,16 +32,12 @@
     ../../modules/programs/shell/zsh
     ../../modules/programs/media/discord
     ../../modules/programs/media/spicetify
-    # ../../modules/programs/media/youtube-music
-    # ../../modules/programs/media/thunderbird
-    # ../../modules/programs/media/obs-studio
     ../../modules/programs/media/mpv
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
-    # ../../modules/programs/misc/nix-ld
-    # ../../modules/programs/misc/virt-manager
     ../../modules/programs/security/microsoft-intune
+    ../../modules/programs/development/node
   ];
 
   # Home-manager config
@@ -62,13 +54,14 @@
 
   # Define system packages here
   environment.systemPackages = with pkgs; [
-    google-chrome
+    # google-chrome
     slack
-    # intune-portal
-    python3
+    intune-portal
+    nwg-look
+    # microsoft-edge
   ];
 
-  # services.intune.enable = true;
+  services.intune.enable = true;
 
   networking.extraHosts = 
     "

@@ -227,6 +227,7 @@
   fonts.packages = with pkgs.nerd-fonts; [
     jetbrains-mono
     fira-code
+    open-dyslexic
   ];
 
   nixpkgs = {
