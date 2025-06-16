@@ -19,6 +19,7 @@
 
     ../../modules/desktop/hyprland # Enable hyprland window manager
     ../../modules/programs/browser/${browser}
+    # ../../modules/programs/browser/microsoft-edge
     ../../modules/programs/terminal/${terminal} # Set terminal defined in flake.nix
     ../../modules/programs/editor/${editor} # Set editor defined in flake.nix
     ../../modules/programs/cli/${terminalFileManager} # Set file-manager defined in flake.nix
@@ -37,7 +38,8 @@
     ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/security/microsoft-intune
-    ../../modules/programs/development/node
+    ../../modules/programs/development/python3
+
   ];
 
   # Home-manager config
@@ -59,9 +61,20 @@
     intune-portal
     nwg-look
     # microsoft-edge
+    modem-manager-gui
   ];
-
   services.intune.enable = true;
+
+  networking.networkmanager.enable = true;
+  networking.modemmanager.enable = true;
+
+  networking.modemmanager.fccUnlockScripts = [
+      {
+          id = "8086:7560"; 
+          path = "${pkgs.lenovo-wwan-unlock}/bin/fcc_unlock.sh";
+      }
+
+   ];
 
   networking.extraHosts = 
     "

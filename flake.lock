@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "cpyvn": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1748884032,
+        "narHash": "sha256-0rdzouFjbYkWGGw9g8wSHWUASBzdNs4CJ6tJOlledXU=",
+        "owner": "cpvpn",
+        "repo": "cpyvpn",
+        "rev": "34d527724c257b3e68ce56143dd25a9fa6a9ebc3",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "cpvpn",
+        "repo": "cpyvpn",
+        "type": "gitlab"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -199,6 +215,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-24_11": {
+      "locked": {
+        "lastModified": 1749488106,
+        "narHash": "sha256-b9GIWdF/8jKpCC5JIMgDLZgwe8cEbty2fyTyo1eDFfI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "8fe3e32e7f210522377c3bcff80931a3284ace6a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-24.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1743296961,
@@ -262,22 +294,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
-      "locked": {
-        "lastModified": 1749285348,
-        "narHash": "sha256-frdhQvPbmDYaScPFiCnfdh3B/Vh81Uuoo0w5TkWmmjU=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "3e3afe5174c561dee0df6f2c2b2236990146329f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixvim": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -324,7 +340,9 @@
     "nur": {
       "inputs": {
         "flake-parts": "flake-parts_3",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
@@ -407,9 +425,11 @@
     "root": {
       "inputs": {
         "betterfox": "betterfox",
+        "cpyvn": "cpyvn",
         "home-manager": "home-manager",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-24_11": "nixpkgs-24_11",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixvim": "nixvim",
         "nur": "nur",
