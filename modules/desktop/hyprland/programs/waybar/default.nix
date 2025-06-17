@@ -24,10 +24,102 @@
             margin-right = 10;
             margin-bottom = 0;
 
-            modules-left = ["hyprland/workspaces" "cava"];
-            # modules-center = ["clock" "custom/notification"];
-            modules-center = ["idle_inhibitor" "clock"];
-            modules-right = ["custom/gpuinfo" "cpu" "memory" "backlight" "pulseaudio" "bluetooth" "network" "tray" "battery"];
+            modules-left = ["hyprland/workspaces"];
+            # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
+            modules-center = ["hyprland/window"];
+            modules-right = ["bluetooth" "network" "tray" "custom/notification"];
+
+            "hyprland/workspaces" = {
+              disable-scroll = true;
+              all-outputs = true;
+              active-only = false;
+              on-click = "activate";
+              persistent-workspaces = {
+                "*" = [1 2 3 4 5 6 7 8 9 10];
+              };
+            };
+
+            "hyprland/window" = {
+              format = "{}";
+              separate-outputs = true;
+              rewrite = {
+                "harvey@hyprland =(.*)" = "$1 ";
+                "(.*) — Mozilla Firefox" = "$1 󰈹";
+                "(.*)Mozilla Firefox" = " Firefox 󰈹";
+                "(.*) - Visual Studio Code" = "$1 󰨞";
+                "(.*)Visual Studio Code" = "Code 󰨞";
+                "(.*) — Dolphin" = "$1 󰉋";
+                "(.*)Spotify" = "Spotify 󰓇";
+                "(.*)Spotify Premium" = "Spotify 󰓇";
+                "(.*)Steam" = "Steam 󰓓";
+                "(.*)Edge" = "$1 ";
+                "(.*)Chrome" = "$1 ";
+                "(.*)Slack" = "$1 ";
+              };
+              max-length = 1000;
+            };
+
+            "network" = {
+              # on-click = "nm-connection-editor";
+              # "interface" = "wlp2*"; # (Optional) To force the use of this interface
+              format-wifi = "󰤨 {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
+              # format-wifi = " {bandwidthDownBits}  {bandwidthUpBits}";
+              # format-wifi = "󰤨 {essid}";
+              format-ethernet = "󱘖  {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
+              # format-ethernet = " {bandwidthDownBits}  {bandwidthUpBits}";
+              format-linked = "󱘖 {ifname} (No IP)";
+              format-disconnected = "󰤮 Off";
+              # format-disconnected = "󰤮 Disconnected";
+              format-alt = "󰤨 {signalStrength}% {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
+              tooltip-format = "󱘖 {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
+            };
+
+            "bluetooth" = {
+              format = "";
+              # format-disabled = ""; # an empty format will hide the module
+              format-connected = " {num_connections}";
+              tooltip-format = " {device_alias}";
+              tooltip-format-connected = "{device_enumerate}";
+              tooltip-format-enumerate-connected = " {device_alias}";
+              on-click = "blueman-manager";
+            };
+
+            "tray" = {
+              icon-size = 12;
+              spacing = 5;
+            };
+          }
+           {
+            layer = "bottom";
+            position = "bottom";
+            mode = "dock"; # Fixes fullscreen issues
+            height = 32; # 35
+            exclusive = true;
+            passthrough = false;
+            gtk-layer-shell = true;
+            ipc = true;
+            fixed-center = true;
+            margin-top = 1;
+            margin-left = 10;
+            margin-right = 10;
+            margin-bottom = 0;
+
+            modules-left = ["pulseaudio#microphone" "pulseaudio" "cava" "mpris"];
+            # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
+            modules-center = ["clock"];
+            modules-right = ["power-profiles-daemon" "cpu" "memory" "backlight" "battery" "temperature"];
+
+            "power-profiles-daemon" = {
+              format = "{icon}";
+              tooltip-format= "Power profile: {profile}\nDriver: {driver}";
+              tooltip = true;
+              format-icons = {
+                default = "󱐋";
+                performance = "󱐋";
+                balanced = " ";
+                power-saver = "󱙷 ";
+              };
+            };
 
             "custom/notification" = {
               tooltip = false;
@@ -126,7 +218,8 @@
             };
 
             "hyprland/window" = {
-              format = "  {}";
+              # format = "  {}";
+              format = "{}";
               separate-outputs = true;
               rewrite = {
                 "harvey@hyprland =(.*)" = "$1 ";
@@ -138,6 +231,8 @@
                 "(.*)Spotify" = "Spotify 󰓇";
                 "(.*)Spotify Premium" = "Spotify 󰓇";
                 "(.*)Steam" = "Steam 󰓓";
+                "(.*)Edge" = "Edge ";
+
               };
               max-length = 1000;
             };
@@ -177,7 +272,7 @@
 
             "cpu" = {
               interval = 10;
-              format = "󰍛 {usage}%";
+              format = "󰻠 {usage}%";
               format-alt = "{icon0}{icon1}{icon2}{icon3}";
               format-icons = ["▁" "▂" "▃" "▄" "▅" "▆" "▇" "█"];
             };
@@ -198,20 +293,6 @@
               on-scroll-down = "${pkgs.brightnessctl}/bin/brightnessctl set 2%-";
             };
 
-            "network" = {
-              # on-click = "nm-connection-editor";
-              # "interface" = "wlp2*"; # (Optional) To force the use of this interface
-              format-wifi = "󰤨 Wi-Fi";
-              # format-wifi = " {bandwidthDownBits}  {bandwidthUpBits}";
-              # format-wifi = "󰤨 {essid}";
-              format-ethernet = "󱘖 Wired";
-              # format-ethernet = " {bandwidthDownBits}  {bandwidthUpBits}";
-              format-linked = "󱘖 {ifname} (No IP)";
-              format-disconnected = "󰤮 Off";
-              # format-disconnected = "󰤮 Disconnected";
-              format-alt = "󰤨 {signalStrength}%";
-              tooltip-format = "󱘖 {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
-            };
 
             "bluetooth" = {
               format = "";
@@ -445,6 +526,20 @@
 
           #custom-updates {
             color: @blue
+          }
+
+          #power-profiles-daemon {
+            padding-right: 2px;
+          }
+
+          #power-profiles-daemon.performance {
+            color: @red
+          }
+          #power-profiles-daemon.balanced {
+            color: @blue  
+          }
+          #power-profiles-daemon.power-saver {
+            color: @green
           }
 
           #custom-notification {

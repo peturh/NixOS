@@ -32,7 +32,7 @@
     ../../modules/programs/media/discord
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/mpv
-    ../../modules/programs/misc/tlp
+    # ../../modules/programs/misc/tlp
     ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/security/microsoft-intune
@@ -62,6 +62,7 @@
     modem-manager-gui
   ];
   services.intune.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   networking.networkmanager.enable = true;
   networking.modemmanager.enable = true;
