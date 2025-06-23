@@ -26,8 +26,23 @@
 
             modules-left = ["hyprland/workspaces"];
             # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
-            modules-center = ["hyprland/window"];
-            modules-right = ["bluetooth" "network" "tray" "custom/notification"];
+            modules-center = ["clock"];
+            # modules-center = ["wlr/taskbar"];
+            modules-right = ["bluetooth" "network"  "custom/notification"];
+            #"tray"
+
+            "wlr/taskbar"= {
+                format = "{icon}";
+                icon-size = 14;
+                all-outputs = false;
+                icon-theme = "Numix-Circle";
+                tooltip-format = "{title}";
+                on-click = "activate";
+                on-click-middle = "close";
+                ignore-list = [
+                  "Alacritty"
+                ];
+            };
 
             "hyprland/workspaces" = {
               disable-scroll = true;
@@ -59,10 +74,36 @@
               max-length = 1000;
             };
 
+             "clock" = {
+              format = "{:%a %d %b %R}";
+              # format = "{:%R 󰃭 %d·%m·%y}";
+              format-alt = "{:%I:%M %p}";
+              tooltip-format = "<tt>{calendar}</tt>";
+              calendar = {
+                mode = "month";
+                mode-mon-col = 3;
+                on-scroll = 1;
+                on-click-right = "mode";
+                format = {
+                  months = "<span color='#ffead3'><b>{}</b></span>";
+                  weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+                  today = "<span color='#ff6699'><b>{}</b></span>";
+                };
+              };
+              actions = {
+                on-click-right = "mode";
+                on-click-forward = "tz_up";
+                on-click-backward = "tz_down";
+                on-scroll-up = "shift_up";
+                on-scroll-down = "shift_down";
+              };
+            };
+
+
             "network" = {
               # on-click = "nm-connection-editor";
               # "interface" = "wlp2*"; # (Optional) To force the use of this interface
-              format-wifi = "󰤨 {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
+              format-wifi = "󰤨  {signalStrength}%";
               # format-wifi = " {bandwidthDownBits}  {bandwidthUpBits}";
               # format-wifi = "󰤨 {essid}";
               format-ethernet = "󱘖  {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
@@ -72,16 +113,19 @@
               # format-disconnected = "󰤮 Disconnected";
               format-alt = "󰤨 {signalStrength}% {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
               tooltip-format = "󱘖 {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
+              on-click-right = "nm-connection-editor";
             };
 
             "bluetooth" = {
               format = "";
+              format-alt = " {device_alias}";
               # format-disabled = ""; # an empty format will hide the module
               format-connected = " {num_connections}";
               tooltip-format = " {device_alias}";
               tooltip-format-connected = "{device_enumerate}";
               tooltip-format-enumerate-connected = " {device_alias}";
-              on-click = "blueman-manager";
+              # on-click = "blueman-manager";
+              on-click-right = "blueman-manager";
             };
 
             "tray" = {
@@ -106,7 +150,7 @@
 
             modules-left = ["pulseaudio#microphone" "pulseaudio" "cava" "mpris"];
             # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
-            modules-center = ["clock"];
+            modules-center = ["hyprland/window"];
             modules-right = ["power-profiles-daemon" "cpu" "memory" "backlight" "battery" "temperature"];
 
             "power-profiles-daemon" = {
@@ -200,7 +244,7 @@
               hwmon-path = "/sys/class/hwmon/hwmon1/temp1_input";
               critical-threshold = 83;
               format = "{icon} {temperatureC}°C";
-              format-icons = ["" "" ""];
+              format-icons = ["" "" ""];
               interval = 10;
             };
             "hyprland/language" = {
@@ -231,7 +275,7 @@
                 "(.*)Spotify" = "Spotify 󰓇";
                 "(.*)Spotify Premium" = "Spotify 󰓇";
                 "(.*)Steam" = "Steam 󰓓";
-                "(.*)Edge" = "Edge ";
+                "(.*)Edge" = "$1 - Edge ";
 
               };
               max-length = 1000;
@@ -242,31 +286,6 @@
               format-icons = {
                 activated = "󰥔";
                 deactivated = "";
-              };
-            };
-
-            "clock" = {
-              format = "{:%a %d %b %R}";
-              # format = "{:%R 󰃭 %d·%m·%y}";
-              format-alt = "{:%I:%M %p}";
-              tooltip-format = "<tt>{calendar}</tt>";
-              calendar = {
-                mode = "month";
-                mode-mon-col = 3;
-                on-scroll = 1;
-                on-click-right = "mode";
-                format = {
-                  months = "<span color='#ffead3'><b>{}</b></span>";
-                  weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-                  today = "<span color='#ff6699'><b>{}</b></span>";
-                };
-              };
-              actions = {
-                on-click-right = "mode";
-                on-click-forward = "tz_up";
-                on-click-backward = "tz_down";
-                on-scroll-up = "shift_up";
-                on-scroll-down = "shift_down";
               };
             };
 
@@ -707,7 +726,7 @@
           }
 
           #network {
-            color: @blue;
+            color: @sapphire;
           }
           #network.disconnected,
           #network.disabled {

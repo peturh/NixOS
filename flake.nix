@@ -57,7 +57,7 @@
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
       editor = "vscode"; # nixvim, vscode, nvchad, neovim, emacs (WIP)
-      browser = "google-chrome"; # firefox, floorp, zen
+      browser = "microsoft-edge"; # firefox, floorp, zen
       terminal = "kitty"; # kitty, alacritty, wezterm
       terminalFileManager = "yazi"; # yazi or lf
       sddmTheme = "purple_leaves"; # astronaut, black_hole, purple_leaves, jake_the_dog, hyprland_kath

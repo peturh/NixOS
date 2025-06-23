@@ -2,6 +2,7 @@
   lib,
   pkgs,
   browser,
+  editor,
   terminal,
   terminalFileManager,
   kbdLayout,
@@ -111,9 +112,10 @@
             "NIXPKGS_ALLOW_UNFREE,1"
           ];
           exec-once = [
-            #"[workspace 1 silent] ${terminal}"
-            #"[workspace 5 silent] ${browser}"
-            #"[workspace 6 silent] spotify"
+            # "[workspace 1 silent] slack"
+            # "[workspace 2 silent] ${browser}"
+            # "[workspace 3 silent] ${editor}"
+            # "[workspace 6 silent] ${terminal}"
             #"[workspace special silent] ${browser} --private-window"
             #"[workspace special silent] ${terminal}"
 
@@ -130,7 +132,7 @@
             "pamixer --set-volume 50"
           ];
           input = {
-            kb_layout = "${kbdLayout},ru";
+            kb_layout = "${kbdLayout},is";
             kb_variant = "${kbdVariant},";
             repeat_delay = 300; # or 212
             repeat_rate = 30;

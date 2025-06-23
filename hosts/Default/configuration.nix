@@ -17,7 +17,7 @@
     ../../modules/scripts
     ../../modules/desktop/hyprland # Enable hyprland window manager
     ../../modules/programs/browser/${browser}
-    ../../modules/programs/browser/microsoft-edge
+    ../../modules/programs/browser/google-chrome
     ../../modules/programs/terminal/${terminal} # Set terminal defined in flake.nix
     ../../modules/programs/editor/${editor} # Set editor defined in flake.nix
     ../../modules/programs/cli/${terminalFileManager} # Set file-manager defined in flake.nix
@@ -60,6 +60,7 @@
     nwg-look
     # microsoft-edge
     modem-manager-gui
+    nodejs_24
   ];
   services.intune.enable = true;
   services.power-profiles-daemon.enable = true;
@@ -85,6 +86,24 @@
     10.47.26.11 unleash.prod.local
     "
   ;
+
+services.avahi = {
+  enable = true;
+  nssmdns4 = true;
+  openFirewall = true;
+};
+#   hardware.printers = {
+#   ensureDefaultPrinter = "Konica Minolta";
+#   ensurePrinters = [
+#     {
+#       deviceUri = "ipp://10.12.3.8/ipp";
+#       location = "work";
+#       name = "Konica Minolta";
+#       model = "C250-PS-P";
+#     }
+#   ];
+# };
+
 
   # In /etc/nixos/configuration.nix
   virtualisation.docker = {
