@@ -23,13 +23,21 @@
             margin-left = 10;
             margin-right = 10;
             margin-bottom = 0;
+            
 
+            modules-left-left = ["custom/launcher"];
             modules-left = ["hyprland/workspaces"];
             # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
             modules-center = ["clock"];
             # modules-center = ["wlr/taskbar"];
             modules-right = ["bluetooth" "network"  "custom/notification"];
             #"tray"
+
+            "custom/launcher" = {
+              format = " ";
+              on-click = "${../../scripts/rofi.sh}";
+            };
+            
 
             "wlr/taskbar"= {
                 format = "{icon}";
@@ -192,6 +200,7 @@
               on-scroll-up = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n +100";
               on-scroll-down = "busctl --user -- call rs.wl-gammarelay / rs.wl.gammarelay UpdateTemperature n -100";
             };
+
             "custom/cava_mviz" = {
               exec = "${../../scripts/WaybarCava.sh}";
               format = "{}";
@@ -440,7 +449,17 @@
             margin-left: 5px;
           }
 
+
           /* This section can be use if you want to separate waybar modules */
+
+           .modules-left-left {
+          	background: @theme_base_color;
+           	border: 1px solid @blue;
+          	padding-right: 15px;
+          	padding-left: 2px;
+          	border-radius: 10px;
+          }
+
           .modules-left {
           	background: @theme_base_color;
            	border: 1px solid @blue;
