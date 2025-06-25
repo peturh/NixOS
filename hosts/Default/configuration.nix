@@ -37,7 +37,6 @@
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/python3
-
   ];
 
   # Home-manager config
@@ -48,6 +47,7 @@
         # krita
  #       github-desktop
         # gimp
+        converse
       ];
     })
   ];
@@ -61,6 +61,8 @@
     # microsoft-edge
     modem-manager-gui
     nodejs_24
+    signal-desktop
+    # converse
   ];
   services.intune.enable = true;
   services.power-profiles-daemon.enable = true;

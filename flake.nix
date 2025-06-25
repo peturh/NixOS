@@ -44,6 +44,10 @@
       url = "gitlab:cpvpn/cpyvpn";
       flake = false;
     };
+    converse-src = {
+    url = "github:vishruth-thimmaiah/converse";
+    flake = false;
+    };
 
   };
 

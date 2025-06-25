@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "converse-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1734786719,
+        "narHash": "sha256-7elZ1cLzAhcWb6IoCSpjiWjLXytxgKZC3Elwd6Nm58w=",
+        "owner": "vishruth-thimmaiah",
+        "repo": "converse",
+        "rev": "ff441562fcc9697904d0baeaffd6391739e46eeb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vishruth-thimmaiah",
+        "repo": "converse",
+        "type": "github"
+      }
+    },
     "cpyvn": {
       "flake": false,
       "locked": {
@@ -409,6 +425,7 @@
     "root": {
       "inputs": {
         "betterfox": "betterfox",
+        "converse-src": "converse-src",
         "cpyvn": "cpyvn",
         "home-manager": "home-manager",
         "nix-index-database": "nix-index-database",
