@@ -38,6 +38,7 @@
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/python3
     ../../modules/desktop/hyprland/programs/converse
+    ../../modules/programs/security/cpyvpn
   ];
 
   # Home-manager config
