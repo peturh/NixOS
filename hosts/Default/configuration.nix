@@ -118,4 +118,24 @@ services.avahi = {
   users.users.${username}.extraGroups = [ "docker" ];
 
   networking.hostName = hostname; # Set hostname defined in flake.nix
+
+
+  sops = {
+  enable = true;
+  age.keyFile = "/var/lib/sops/age.key";
+  secrets.cpyvpn_config = {
+    # Points to the encrypted file we created
+    sopsFile = ../../secrets.yaml;
+    # Tells sops to format it as a key = value file
+    format = "ini";
+  };
+};
+
+# 2. This block enables the service and points it to the secure config file
+services.cpyvpn = {
+  enable = true;
+  # This path is provided automatically by sops-nix
+  configFile = config.sops.secrets.cpyvpn_config.path;
+};
+
 }

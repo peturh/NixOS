@@ -48,12 +48,17 @@
     url = "github:vishruth-thimmaiah/converse";
     flake = false;
     };
+     sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
   };
 
   outputs = {
     self,
     nixpkgs,
+    sops-nix,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -90,7 +95,7 @@
       Default = nixpkgs.lib.nixosSystem {
         system = forAllSystems (system: system);
         specialArgs = {inherit self inputs outputs;} // settings;
-        modules = [./hosts/Default/configuration.nix];
+        modules = [./hosts/Default/configuration.nix sops-nix.nixosModules.sops];
       };
     };
   };

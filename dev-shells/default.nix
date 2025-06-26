@@ -3,6 +3,10 @@ rec {
     path = ./empty;
     description = "Empty development environment";
   };
+  admin = {
+    path = ./admin;
+    description = "NixOS administration environment (sops, age, etc.)";
+  };
   bun = {
     path = ./bun;
     description = "Bun development environment";

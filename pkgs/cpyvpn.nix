@@ -1,27 +1,48 @@
+# ~/NixOS/modules/security/cpyvpn.nix
 
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
-pkgs.python3Packages.buildPythonApplication rec {
-  pname = "cpyvpn";
-  version = "0.1.0"; # Or another version you prefer
+let
+  cfg = config.services.cpyvpn;
+in
+{
+  # The options section is now much simpler!
+  options.services.cpyvpn = {
+    enable = lib.mkEnableOption "the CPYVPN client service";
 
-  src = pkgs.fetchFromGitLab {
-    owner = "cpvpn";
-    repo = "cpyvpn";
-    # A recent commit hash from the master branch
-    rev = "31968d9046c4f9f65c1926639d1b72a6b472e0d3";
-    hash = "sha256-4c4hW/T+bF+zRzW1r5752G4M03d8+F+K1n8zI1lK7x4=";
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.cpyvpn;
+      description = "The cpyvpn package to use.";
+    };
+
+    # This is the important change. We now expect a path to the config file.
+    configFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Path to the cpyvpn configuration file. This can be provided by sops-nix.";
+      example = "/run/secrets/cpyvpn-config";
+    };
   };
 
-  # Dependencies are automatically handled by the buildPythonApplication hook
-  # from the requirements.txt file in the source.
+  config = lib.mkIf cfg.enable {
+    # Install the package
+    environment.systemPackages = [ cfg.package ];
 
-  # Metadata for the package
-  meta = with pkgs.lib; {
-    description = "Check Point VPN client";
-    homepage = "https://gitlab.com/cpvpn/cpyvpn";
-    license = licenses.gpl3Only; # As stated in the repository
-    maintainers = with maintainers; [ ]; # Add your GitHub username here if you like
-    platforms = platforms.linux;
+    # The systemd service is now cleaner, just pointing to the configFile path
+    systemd.services.cpyvpn = {
+      description = "CPYVPN Client Service";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+
+      serviceConfig = {
+        User = "root";
+        Group = "root";
+        Type = "simple";
+        # It now uses the configFile path directly
+        ExecStart = "${cfg.package}/bin/cpyvpn --config ${cfg.configFile}";
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
+    };
   };
 }
