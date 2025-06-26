@@ -1,5 +1,5 @@
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs,username, ... }:
 
 let
   cfg = config.programs.converse;
@@ -12,7 +12,7 @@ in
     settings = {
       api_key = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
-        default = null;
+        default = "";
         description = "API key for the model provider. WARNING: Insecure, use a secrets tool.";
       };
       model_provider = lib.mkOption {
@@ -22,7 +22,7 @@ in
       };
       model = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
-        default = null;
+        default = "gemini-2.5-pro";
         description = "The specific model to use (e.g., \"gemini-pro\").";
       };
       theme = lib.mkOption {
@@ -34,14 +34,16 @@ in
   };
 
   # Applies the configuration if enabled
-  config = lib.mkIf cfg.enable {
-    # Installs the package built by your overlay
-    environment.systemPackages = [ pkgs.converse ];
+config = lib.mkIf cfg.enable {
+home-manager.users.${username} = {
+    # 1. Install the package to your user profile
+    home.packages = [ pkgs.converse ];
 
-    # Generates the config.toml file from your settings
-    environment.etc."converse/config.toml" = {
-      source = (pkgs.formats.toml {}).generate "converse-config.toml" cfg.settings;
-      mode = "0444"; # Read-only
+    # 2. Place the config file directly in ~/.config/converse/config.toml
+    #    This is managed automatically by Home Manager.
+    xdg.configFile."converse/config.toml" = {
+    source = (pkgs.formats.toml {}).generate "converse-config.toml" cfg.settings;
     };
-  };
+};
+};
 }

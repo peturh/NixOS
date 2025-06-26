@@ -37,6 +37,7 @@
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/python3
+    ../../modules/desktop/hyprland/programs/converse
   ];
 
   # Home-manager config
@@ -47,7 +48,7 @@
         # krita
  #       github-desktop
         # gimp
-        converse
+        # converse
       ];
     })
   ];

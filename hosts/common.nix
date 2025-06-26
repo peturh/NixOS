@@ -79,7 +79,7 @@
         ripgrep
         tldr
         unzip
-        # converse
+        converse
       ];
     };
   };
