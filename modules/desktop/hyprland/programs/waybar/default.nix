@@ -285,6 +285,7 @@
                 "(.*)Spotify Premium" = "Spotify 󰓇";
                 "(.*)Steam" = "Steam 󰓓";
                 "(.*)Edge" = "$1 - Edge ";
+                "(.*)Chrome" = "$1 - Chrome ";
 
               };
               max-length = 1000;
