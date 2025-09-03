@@ -28,9 +28,9 @@
             modules-left-left = ["custom/launcher"];
             modules-left = ["hyprland/workspaces"];
             # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
-            modules-center = ["clock"];
+            modules-center = ["idle_inhibitor" "clock" "custom/notification"];
             # modules-center = ["wlr/taskbar"];
-            modules-right = ["bluetooth" "network"  "custom/notification"];
+            modules-right = ["bluetooth" "network"  "custom/notification", "tray"];
             #"tray"
 
             "custom/launcher" = {
