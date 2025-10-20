@@ -33,7 +33,7 @@
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/mpv
     # ../../modules/programs/misc/tlp
-    ../../modules/programs/misc/thunar
+    # ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/python3
@@ -54,6 +54,13 @@
     })
   ];
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # Add any missing dynamic libraries for unpackaged programs
+    # here, NOT in environment.systemPackages
+  ];
+
+
   # Define system packages here
   environment.systemPackages = with pkgs; [
     # google-chrome
@@ -64,8 +71,22 @@
     modem-manager-gui
     nodejs_24
     signal-desktop
+    usbimager
+    transmission_4-qt
+    gparted
+    nautilus
+    unrar
+    wget
+    crystal
+    p7zip
+    
     # converse
   ];
+
+  services.transmission = {
+    enable = true;
+    package = pkgs.transmission_4;
+  };
   services.intune.enable = true;
   services.power-profiles-daemon.enable = true;
 
@@ -90,6 +111,7 @@
     10.47.26.11 unleash.prod.local
     "
   ;
+services.samba.enable = true;
 
 services.avahi = {
   enable = true;
