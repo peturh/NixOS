@@ -159,19 +159,34 @@
             modules-left = ["pulseaudio#microphone" "pulseaudio" "cava" "mpris"];
             # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
             modules-center = ["hyprland/window"];
-            modules-right = ["power-profiles-daemon" "cpu" "memory" "backlight" "battery" "temperature"];
+            modules-right = ["custom/tlp" "cpu" "memory" "backlight" "battery" "temperature"];
 
-            "power-profiles-daemon" = {
+            "custom/tlp" = {
               format = "{icon}";
-              tooltip-format= "Power profile: {profile}\nDriver: {driver}";
-              tooltip = true;
               format-icons = {
-                default = "󱐋";
-                performance = "󱐋";
-                balanced = " ";
-                power-saver = "󱙷 ";
+                battery = "󱙷 ";
+                AC = "󱐋";
               };
-            };
+              exec = "${../../scripts/tlp-ctl.sh} get --json";
+              exec-on-event = true;
+              return-type = "json";
+              # We need to run every now and then in case there are outside changes.
+              interval = 20;
+              on-click = "${../../scripts/tlp-ctl.sh}  toggle";
+              on-click-right = "${../../scripts/tlp-ctl.sh}  set auto";
+           };
+           #"power-profiles-daemon" 
+            # "power-profiles-daemon" = {
+            #   format = "{icon}";
+            #   tooltip-format= "Power profile: {profile}\nDriver: {driver}";
+            #   tooltip = true;
+            #   format-icons = {
+            #     default = "󱐋";
+            #     performance = "󱐋";
+            #     balanced = " ";
+            #     power-saver = "󱙷 ";i
+            #   };
+            # };
 
             "custom/notification" = {
               tooltip = false;
@@ -567,7 +582,7 @@
             color: @blue
           }
 
-          #power-profiles-daemon {
+          #custom/tlp {
             padding-right: 2px;
           }
 
