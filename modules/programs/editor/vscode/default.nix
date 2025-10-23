@@ -256,6 +256,8 @@
                 "commands" = ["editor.action.commentLine"];
               }
             ];
+        
+            "geminicodeassist.project" = "stunning-outrider-324z7";
           };
         };
       };
