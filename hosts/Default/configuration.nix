@@ -32,7 +32,7 @@
     ../../modules/programs/media/discord
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/mpv
-    # ../../modules/programs/misc/tlp
+    ../../modules/programs/misc/tlp
     # ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/security/microsoft-intune
@@ -79,7 +79,8 @@
     wget
     crystal
     p7zip
-    
+    modemmanager
+    vlc
     # converse
   ];
 
@@ -89,13 +90,13 @@
   };
   services.intune.enable = true;
   # services.power-profiles-daemon.enable = true;'
-  services.tlp.enable = true;
-  services.tlp.settings = {
-        CPU_SCALING_GOVERNOR_ON_AC = "performance";
-        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-        CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-        CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-  };
+  # services.tlp.enable = true;
+  # services.tlp.settings = {
+  #       CPU_SCALING_GOVERNOR_ON_AC = "performance";
+  #       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+  #       CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+  #       CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+  # };
 
 
   networking.networkmanager.enable = true;

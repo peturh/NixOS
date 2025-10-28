@@ -161,7 +161,7 @@
             modules-center = ["hyprland/window"];
             modules-right = ["custom/tlp" "cpu" "memory" "backlight" "battery" "temperature"];
 
-            "custom/tlp" = {
+            "custom/tlp" = { 
               format = "{icon}";
               format-icons = {
                 battery = "󱙷 ";
@@ -527,6 +527,7 @@
           #custom-light_dark,
           #custom-lock,
           #custom-menu,
+          #custom-tlp,
           #custom-power_vertical,
           #custom-power,
           #custom-swaync,
@@ -582,7 +583,11 @@
             color: @blue
           }
 
-          #custom/tlp {
+          #custom-tlp {
+            padding-right: 2px;
+          }
+
+          #power-profiles-daemon {
             padding-right: 2px;
           }
 
