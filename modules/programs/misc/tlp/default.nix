@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   services.tlp = {
     enable = true;
     settings = {
@@ -20,4 +20,19 @@
       STOP_CHARGE_THRESH_BAT1 = 95;
     };
   };
+
+  # Allow password-less TLP mode toggling for users in the power group
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+        if ((action.id == "org.freedesktop.policykit.exec" &&
+             action.lookup("program") == "${pkgs.tlp}/bin/tlp") &&
+            subject.isInGroup("power")) {
+            return polkit.Result.YES;
+        }
+    });
+  '';
+
+  # Create power group and add user to it
+  users.groups.power = {};
+  users.users.petur.extraGroups = ["power"];
 }

@@ -164,14 +164,14 @@
             "custom/tlp" = { 
               format = "{icon}";
               format-icons = {
-                battery = "󱙷 ";
-                AC = "󱐋";
+                battery = "󰄌 ";
+                ac = "󰚥 ";
               };
               exec = "${../../scripts/tlp-ctl.sh} get --json";
               exec-on-event = true;
               return-type = "json";
               # We need to run every now and then in case there are outside changes.
-              interval = 20;
+              interval = 5;
               on-click = "${../../scripts/tlp-ctl.sh}  toggle";
               on-click-right = "${../../scripts/tlp-ctl.sh}  set auto";
            };
@@ -585,6 +585,7 @@
 
           #custom-tlp {
             padding-right: 2px;
+            color: @peach;
           }
 
           #power-profiles-daemon {

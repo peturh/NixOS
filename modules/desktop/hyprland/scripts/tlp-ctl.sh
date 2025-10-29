@@ -50,6 +50,8 @@ get_mode() {
             handling=auto
             ;;
     esac
+    # Normalize mode to lowercase for consistency
+    mode=$(echo "$mode" | tr '[:upper:]' '[:lower:]')
     print_mode "TLP Mode" "$mode" "$handling" "$1"
 }
 
