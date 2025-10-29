@@ -100,6 +100,11 @@
   networking.networkmanager.enable = true;
   networking.modemmanager.enable = true;
 
+  # Enable debug logging for FCC unlock script
+  systemd.services.ModemManager.environment = {
+    FCC_UNLOCK_DEBUG_LOG = "1";
+  };
+
   networking.modemmanager.fccUnlockScripts = [
       {
           id = "8086:7560"; 

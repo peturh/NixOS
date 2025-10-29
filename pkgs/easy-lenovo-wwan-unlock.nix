@@ -1,4 +1,4 @@
-{ stdenvNoCC, fetchurl, lib }:
+{ stdenvNoCC, fetchurl, lib, makeWrapper, coreutils, gnugrep, gawk, xxd }:
 stdenvNoCC.mkDerivation rec {
 
       #name = "lenovo-wwan-unlock-${version}";
@@ -16,6 +16,8 @@ stdenvNoCC.mkDerivation rec {
         hash = "sha256-QuAC2a0renRZQsZvWfTEE9a/Pj6G+ZhGEmYtVagaurE=";
       };*/
 
+      nativeBuildInputs = [ makeWrapper ];
+
       dontUnpack = true;
 
       installPhase = ''
@@ -24,6 +26,11 @@ stdenvNoCC.mkDerivation rec {
         cp -v $src $out/bin/fcc_unlock.sh
         chmod +x $out/bin/fcc_unlock.sh
         patchShebangs $out/bin/fcc_unlock.sh
+        
+        # Wrap the script to ensure all required utilities are in PATH
+        wrapProgram $out/bin/fcc_unlock.sh \
+          --prefix PATH : ${lib.makeBinPath [ coreutils gnugrep gawk xxd ]}
+        
         runHook postInstall
       '';
 
