@@ -42,7 +42,6 @@
     ../../modules/programs/misc/nautilus
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/usbimager
-    # ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
     ../../modules/programs/hardware/modem
     ../../modules/programs/security/microsoft-intune
