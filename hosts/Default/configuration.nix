@@ -28,15 +28,25 @@
     ../../modules/programs/cli/cava
     ../../modules/programs/cli/btop
     ../../modules/programs/cli/micro
+    ../../modules/programs/cli/wget
     ../../modules/programs/shell/bash
     ../../modules/programs/shell/zsh
     ../../modules/programs/media/discord
     ../../modules/programs/media/slack
+    ../../modules/programs/media/signal
     ../../modules/programs/media/spicetify
+    ../../modules/programs/media/transmission
+    ../../modules/programs/media/vlc
+    ../../modules/programs/misc/archive
+    ../../modules/programs/misc/gparted
+    ../../modules/programs/misc/nautilus
     ../../modules/programs/misc/tlp
+    ../../modules/programs/misc/usbimager
     # ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
+    ../../modules/programs/hardware/modem
     ../../modules/programs/security/microsoft-intune
+    ../../modules/programs/development/node
     ../../modules/programs/development/python3
     ../../modules/desktop/hyprland/programs/converse
     ../../modules/programs/security/cpyvpn
@@ -64,28 +74,9 @@
 
   # Define system packages here
   environment.systemPackages = with pkgs; [
-    # google-chrome
-    # microsoft-edge
-    modem-manager-gui
-    nodejs_24
-    signal-desktop
-    usbimager
-    transmission_4-qt
-    gparted
-    nautilus
-    unrar
-    wget
-    crystal
-    p7zip
-    modemmanager
-    vlc
-    # converse
+    # All packages have been moved to their respective modules
+    # See modules/programs/* for package definitions
   ];
-
-  services.transmission = {
-    enable = true;
-    package = pkgs.transmission_4;
-  };
   services.intune.enable = true;
   # services.power-profiles-daemon.enable = true;'
   # services.tlp.enable = true;
