@@ -3,13 +3,13 @@
   pkgs,
   ...
 }: {
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) ["cursor"];
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) ["code-cursor"];
   home-manager.sharedModules = [
     (_: {
       programs.vscode = {
         enable = true;
         # mutableExtensionsDir = true; # TODO: test with home-manager
-        package = pkgs.cursor;
+        package = pkgs.code-cursor;
         profiles.default = {
           extensions = with pkgs.vscode-extensions; [
             bbenoist.nix

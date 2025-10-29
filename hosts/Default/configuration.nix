@@ -65,8 +65,6 @@
   environment.systemPackages = with pkgs; [
     # google-chrome
     slack
-    intune-portal
-    nwg-look
     # microsoft-edge
     modem-manager-gui
     nodejs_24
