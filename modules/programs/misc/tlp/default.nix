@@ -69,11 +69,11 @@
     };
   };
 
-  # Allow password-less TLP mode toggling for users in the power group
+  # Allow password-less TLP and pkexec for users in the power group
+  security.polkit.enable = true;
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
-        if ((action.id == "org.freedesktop.policykit.exec" &&
-             action.lookup("program") == "${pkgs.tlp}/bin/tlp") &&
+        if (action.id == "org.freedesktop.policykit.exec" &&
             subject.isInGroup("power")) {
             return polkit.Result.YES;
         }
@@ -82,5 +82,4 @@
 
   # Create power group and add user to it
   users.groups.power = {};
-  users.users.petur.extraGroups = ["power"];
 }

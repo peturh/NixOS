@@ -31,6 +31,7 @@
       "libvirtd"
       "video"
       "audio"
+      "power"
     ];
   };
 
