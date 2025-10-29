@@ -31,6 +31,7 @@
     ../../modules/programs/shell/bash
     ../../modules/programs/shell/zsh
     ../../modules/programs/media/discord
+    ../../modules/programs/media/slack
     ../../modules/programs/media/spicetify
     ../../modules/programs/misc/tlp
     # ../../modules/programs/misc/thunar
@@ -64,7 +65,6 @@
   # Define system packages here
   environment.systemPackages = with pkgs; [
     # google-chrome
-    slack
     # microsoft-edge
     modem-manager-gui
     nodejs_24
