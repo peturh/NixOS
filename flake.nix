@@ -65,7 +65,7 @@
     settings = {
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
-      editor = "vscode"; # nixvim, vscode, nvchad, neovim, emacs (WIP)
+      editor = "cursor"; # nixvim, vscode, cursor, nvchad, neovim, emacs (WIP)
       browser = "microsoft-edge"; # firefox, floorp, zen
       terminal = "kitty"; # kitty, alacritty, wezterm
       terminalFileManager = "yazi"; # yazi or lf

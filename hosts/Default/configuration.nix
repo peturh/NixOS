@@ -81,7 +81,6 @@
     p7zip
     modemmanager
     vlc
-    code-cursor
     # converse
   ];
 
