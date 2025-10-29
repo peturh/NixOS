@@ -6,7 +6,7 @@
         enableBashIntegration = true;
         enableZshIntegration = true;
         settings = {
-          manager = {
+          mgr = {
             show_hidden = true;
             show_symlink = true;
             sort_dir_first = true;
@@ -28,9 +28,18 @@
             # max_height = 1500;
             image_quality = 90;
           };
+          opener = {
+            edit = [
+              {
+                run = ''micro "$@"'';
+                block = true;
+                desc = "Edit with micro";
+              }
+            ];
+          };
         };
         keymap = {
-          manager.prepend_keymap = [
+          mgr.prepend_keymap = [
             {
               on = ["e"];
               run = "open";
@@ -42,7 +51,7 @@
           ];
         };
         theme = {
-          manager = {
+          mgr = {
             border_symbol = " ";
           };
           status = {
