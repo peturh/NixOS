@@ -250,19 +250,11 @@
   };
 
   environment.systemPackages = with pkgs; [
-    killall
-    lm_sensors
-    jq
     bibata-cursors
     sddm-astronaut # Overlayed
     pkgs.kdePackages.qtsvg
     pkgs.kdePackages.qtmultimedia
     pkgs.kdePackages.qtvirtualkeyboard
-    # libsForQt5.qt5.qtgraphicaleffects
-
-    # devenv
-    # devbox
-    # shellify
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
