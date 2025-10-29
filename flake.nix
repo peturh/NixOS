@@ -12,10 +12,6 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = {
-      url = "github:Sly-Harvey/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,16 +24,8 @@
       url = "github:yokoffing/Betterfox";
       flake = false;
     };
-    thunderbird-catppuccin = {
-      url = "github:catppuccin/thunderbird";
-      flake = false;
-    };
     zen-browser = {
       url = "github:maximoffua/zen-browser.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nvchad4nix = {
-      url = "github:nix-community/nix4nvchad";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     cpyvn = {
@@ -65,7 +53,7 @@
     settings = {
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
-      editor = "cursor"; # nixvim, vscode, cursor, nvchad, neovim, emacs (WIP)
+      editor = "cursor"; # cursor, vscode
       browser = "microsoft-edge"; # firefox, floorp, zen
       terminal = "kitty"; # kitty, alacritty, wezterm
       terminalFileManager = "yazi"; # yazi or lf
@@ -73,7 +61,7 @@
       wallpaper = "thinkpad"; # see modules/themes/wallpapers
 
       # System configuration
-      videoDriver = "amdgpu"; # CHOOSE YOUR GPU DRIVERS (nvidia, amdgpu or intel)
+      videoDriver = "amdgpu"; # GPU driver (only amdgpu is configured)
       hostname = "thinkpad"; # CHOOSE A HOSTNAME HERE
       locale = "en_GB.UTF-8"; # CHOOSE YOUR LOCALE
       timezone = "Europe/Stockholm"; # CHOOSE YOUR TIMEZONE
@@ -88,7 +76,6 @@
     ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    templates = import ./dev-shells;
     overlays = import ./overlays {inherit inputs settings;};
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     nixosConfigurations = {

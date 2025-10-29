@@ -31,7 +31,6 @@
     ../../modules/programs/shell/zsh
     ../../modules/programs/media/discord
     ../../modules/programs/media/spicetify
-    ../../modules/programs/media/mpv
     ../../modules/programs/misc/tlp
     # ../../modules/programs/misc/thunar
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
