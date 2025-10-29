@@ -16,7 +16,6 @@
             bbenoist.nix
             # arrterian.nix-env-selector
             eamodio.gitlens
-            github.vscode-github-actions
             yzhang.markdown-all-in-one
             catppuccin.catppuccin-vsc
             catppuccin.catppuccin-vsc-icons
@@ -27,12 +26,7 @@
             # redhat.vscode-yaml
             # vadimcn.vscode-lldb
             rust-lang.rust-analyzer
-            ms-vscode.cpptools
-            ms-vscode.cmake-tools
-            ms-vscode.makefile-tools
-            ziglang.vscode-zig
             # ms-dotnettools.csharp
-            ms-python.python
             # pkief.material-icon-theme
             # equinusocio.vsc-material-theme
             # dracula-theme.theme-dracula
