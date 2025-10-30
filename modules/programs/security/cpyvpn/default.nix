@@ -1,71 +1,43 @@
-# ~/NixOS/modules/security/cpyvpn.nix
-# This module provides the configuration for the cpyvpn service.
-
 { config, lib, pkgs, ... }:
 
 let
-  # A shortcut to the options we are about to define
-  cfg = config.services.cpyvpn;
-
-  # This function formats the settings into the key = value format cpyvpn expects
-  format = pkgs.formats.keyValue {
-    mkKeyValue = key: value: "${key} = ${toString value}";
-  };
-
-  # Generate the configuration file from the settings
-  configFile = format.generate "cpyvpn.conf" cfg.settings;
+  cfg = config.programs.cpyvpn;
+  
+  # Create a wrapper script that reads secrets and calls cpyvpn
+  vpnScript = pkgs.writeShellScriptBin "vpn" ''
+    #!/usr/bin/env bash
+    set -euo pipefail
+    
+    # Read secrets from sops
+    SERVER=$(cat /run/secrets/vpn-server)
+    REALM=$(cat /run/secrets/vpn-realm)
+    USERNAME=$(cat /run/secrets/vpn-username)
+    PASSWORD=$(cat /run/secrets/vpn-password)
+    
+    # Run cpyvpn with the secrets
+    echo "Connecting to VPN at $SERVER..."
+    ${cfg.package}/bin/cp_client "$SERVER" \
+      --realm="$REALM" \
+      --user="$USERNAME" \
+      --passwd-on-stdin <<< "$PASSWORD"
+  '';
 in
 {
-  # This section defines the user-friendly options for your configuration
-  options.services.cpyvpn = {
-    enable = lib.mkEnableOption "the CPYVPN client service";
-
+  options.programs.cpyvpn = {
+    enable = lib.mkEnableOption "the cpyvpn VPN client wrapper";
+    
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs.cpyvpn;
       description = "The cpyvpn package to use.";
     };
-
-    settings = {
-      server = lib.mkOption {
-        type = lib.types.str;
-        example = "vpn.mycompany.com";
-        description = "The hostname or IP address of the VPN server.";
-      };
-      username = lib.mkOption {
-        type = lib.types.str;
-        description = "The username for the VPN connection.";
-      };
-      password = lib.mkOption {
-        type = lib.types.str;
-        description = "The password for the VPN connection. WARNING: Stored in plaintext in the Nix store.";
-        # In a real-world scenario, you would use `sops-nix` or another secrets management tool.
-      };
-      # You can add other options from the cpyvpn documentation here
-    };
   };
 
-  # This section activates when you set 'services.cpyvpn.enable = true;'
   config = lib.mkIf cfg.enable {
-    # 1. Install the package to the system profile
-    environment.systemPackages = [ cfg.package ];
-
-    # 2. Create a systemd service to run the VPN daemon
-    systemd.services.cpyvpn = {
-      description = "CPYVPN Client Service";
-      wantedBy = [ "multi-user.target" ]; # Start on boot
-      after = [ "network.target" ];     # Wait for network to be up
-
-      serviceConfig = {
-        # The VPN client needs root privileges to manage network interfaces
-        User = "root";
-        Group = "root";
-        Type = "simple";
-        # The command to run, pointing to the generated config file
-        ExecStart = "${cfg.package}/bin/cpyvpn --config ${configFile}";
-        Restart = "on-failure";
-        RestartSec = "10s";
-      };
-    };
+    # Install both the cpyvpn package and the wrapper script
+    environment.systemPackages = [ 
+      cfg.package
+      vpnScript
+    ];
   };
 }

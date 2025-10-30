@@ -20,6 +20,32 @@
 
   programs.nix-index-database.comma.enable = true;
 
+  # Configure sops-nix for secrets management
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/home/${username}/NixOS/age.key";
+    
+    secrets = {
+      "vpn-server" = {
+        key = "server";
+        owner = username;
+      };
+      "vpn-realm" = {
+        key = "realm";
+        owner = username;
+      };
+      "vpn-username" = {
+        key = "username";
+        owner = username;
+      };
+      "vpn-password" = {
+        key = "password";
+        owner = username;
+      };
+    };
+  };
+
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [
@@ -262,6 +288,8 @@
     pkgs.kdePackages.qtsvg
     pkgs.kdePackages.qtmultimedia
     pkgs.kdePackages.qtvirtualkeyboard
+    sops  # For managing encrypted secrets
+    age   # Age encryption tool for sops
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

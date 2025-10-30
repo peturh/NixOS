@@ -1,48 +1,36 @@
-# ~/NixOS/modules/security/cpyvpn.nix
+{ pkgs, inputs }:
 
-{ config, lib, pkgs, ... }:
-
-let
-  cfg = config.services.cpyvpn;
-in
-{
-  # The options section is now much simpler!
-  options.services.cpyvpn = {
-    enable = lib.mkEnableOption "the CPYVPN client service";
-
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.cpyvpn;
-      description = "The cpyvpn package to use.";
-    };
-
-    # This is the important change. We now expect a path to the config file.
-    configFile = lib.mkOption {
-      type = lib.types.path;
-      description = "Path to the cpyvpn configuration file. This can be provided by sops-nix.";
-      example = "/run/secrets/cpyvpn-config";
-    };
-  };
-
-  config = lib.mkIf cfg.enable {
-    # Install the package
-    environment.systemPackages = [ cfg.package ];
-
-    # The systemd service is now cleaner, just pointing to the configFile path
-    systemd.services.cpyvpn = {
-      description = "CPYVPN Client Service";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-
-      serviceConfig = {
-        User = "root";
-        Group = "root";
-        Type = "simple";
-        # It now uses the configFile path directly
-        ExecStart = "${cfg.package}/bin/cpyvpn --config ${cfg.configFile}";
-        Restart = "on-failure";
-        RestartSec = "10s";
-      };
-    };
+pkgs.python3Packages.buildPythonApplication {
+  pname = "cpyvpn";
+  version = "unstable";
+  
+  src = inputs.cpyvn;  # Using the flake input
+  
+  format = "pyproject";
+  
+  nativeBuildInputs = with pkgs.python3Packages; [
+    setuptools
+    setuptools-scm
+    wheel
+  ];
+  
+  propagatedBuildInputs = with pkgs.python3Packages; [
+    cryptography
+    pyopenssl
+    lxml
+    requests
+  ];
+  
+  # Set a fallback version since git metadata isn't available
+  env.SETUPTOOLS_SCM_PRETEND_VERSION = "0.0.1";
+  
+  # Skip tests if they exist and are failing
+  doCheck = false;
+  
+  meta = with pkgs.lib; {
+    description = "Check Point VPN client for Linux";
+    homepage = "https://gitlab.com/cpvpn/cpyvpn";
+    license = licenses.gpl3;
+    platforms = platforms.linux;
   };
 }

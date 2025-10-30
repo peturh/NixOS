@@ -57,6 +57,7 @@
 
 
   services.intune.enable = true;
+  programs.cpyvpn.enable = true;
 
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];
