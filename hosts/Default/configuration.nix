@@ -53,7 +53,6 @@
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
     ../../modules/programs/development/webengage-release
-    ../../modules/desktop/hyprland/programs/converse
     ../../modules/programs/security/cpyvpn
   ];
 

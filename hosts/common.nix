@@ -122,7 +122,6 @@
         ripgrep
         tldr
         unzip
-        converse
       ];
     };
   };

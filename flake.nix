@@ -32,11 +32,7 @@
       url = "gitlab:cpvpn/cpyvpn";
       flake = false;
     };
-    converse-src = {
-    url = "github:vishruth-thimmaiah/converse";
-    flake = false;
-    };
-     sops-nix = {
+    sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
