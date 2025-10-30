@@ -34,6 +34,7 @@
     ../../modules/programs/shell/bash
     ../../modules/programs/shell/zsh
     ../../modules/programs/media/discord
+    ../../modules/programs/media/mpv
     ../../modules/programs/media/slack
     ../../modules/programs/media/signal
     ../../modules/programs/media/spicetify
