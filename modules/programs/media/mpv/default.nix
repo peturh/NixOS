@@ -41,12 +41,28 @@
           screenshot-format = "png";
           screenshot-png-compression = 8;
           screenshot-directory = "~/Pictures/Screenshots";
+          
+          # Audio streaming/buffering settings
+          cache = true;
+          demuxer-max-bytes = "500M";           # Large buffer for network streams
+          demuxer-max-back-bytes = "100M";      # Backward buffer
+          demuxer-readahead-secs = 60;          # Read ahead 60 seconds
+          audio-buffer = 2;                     # 2 second audio buffer
+          
+          # Stream timing and stability
+          hr-seek = "yes";                      # High quality seeking
+          force-seekable = true;                # Treat stream as seekable
+          stream-buffer-size = "10MiB";         # Network stream buffer
+          
+          # Audio output settings for PipeWire
+          audio-channels = "stereo";
+          audio-samplerate = 48000;
+          ao = "pipewire,pulse,alsa";           # Try PipeWire first, fallback to others
         };
         
         # Modern OSC (on-screen controller) with better theming
         scripts = with pkgs.mpvScripts; [
           mpris        # Media player controls integration
-          thumbnail    # Video thumbnail previews
         ];
       };
     })
