@@ -91,7 +91,7 @@ entry {
     background-color:            transparent;
     text-color:                  inherit;
     cursor:                      text;
-    placeholder:                 "Search Applications...";
+    placeholder:                 "Search...";
     placeholder-color:           inherit;
 }
 
