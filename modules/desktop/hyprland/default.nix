@@ -508,9 +508,9 @@
           # Easily plug in any monitor
           monitor=,preferred,auto,1
 
-          # Set DP-2 as left monitor and eDP-1 as right monitor
+          # Set DP-2 as left monitor and eDP-1 as right monitor (vertically centered)
           monitor=DP-2,3840x2160@60,0x0,1
-          monitor=eDP-1,1920x1200@60,3840x0,1
+          monitor=eDP-1,1920x1200@60,3840x960,1
 
           # Home Setup: eDP-1 (laptop) on the left, external monitor on the right
           # Replace HDMI-A-1 and 1920x1080@60 with your monitor's details

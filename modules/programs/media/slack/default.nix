@@ -9,7 +9,7 @@
       home.file.".slack-theme".text = ''
         # Catppuccin Mocha for Slack
         # Copy this into Slack's custom theme settings: Preferences > Themes > Create a custom theme
-        #1e1e2e,#313244,#89b4fa,#cdd6f4,#313244,#cdd6f4,#a6e3a1,#f38ba8,#1e1e2e,#cdd6f4
+        #1e1e2e,#313244,#cba6f7,#cdd6f4,#313244,#cdd6f4,#a6e3a1,#f38ba8,#1e1e2e,#cdd6f4
       '';
 
       # Custom CSS for Slack (if using slack-theme injector)
