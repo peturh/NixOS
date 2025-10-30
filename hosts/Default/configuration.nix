@@ -51,6 +51,7 @@
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
+    ../../modules/programs/development/webengage-release
     ../../modules/desktop/hyprland/programs/converse
     ../../modules/programs/security/cpyvpn
   ];
@@ -58,6 +59,7 @@
 
   services.intune.enable = true;
   programs.cpyvpn.enable = true;
+  programs.webengage-release.enable = true;
 
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];

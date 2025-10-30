@@ -43,6 +43,22 @@
         key = "password";
         owner = username;
       };
+      "jira-username" = {
+        key = "jira_username";
+        owner = username;
+      };
+      "jira-password" = {
+        key = "jira_password";
+        owner = username;
+      };
+      "devops-username" = {
+        key = "devops_username";
+        owner = username;
+      };
+      "devops-password" = {
+        key = "devops_password";
+        owner = username;
+      };
     };
   };
 
