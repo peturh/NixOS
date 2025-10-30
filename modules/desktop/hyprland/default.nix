@@ -56,7 +56,7 @@
         swappy
         libnotify
         brightnessctl
-        networkmanagerapplet
+        networkmanager_dmenu
         pamixer
         pavucontrol
         playerctl
@@ -120,7 +120,6 @@
 
             "waybar"
             "swaync"
-            "nm-applet --indicator"
             "wl-clipboard-history -t"
             "${getExe' pkgs.wl-clipboard "wl-paste"} --type text --watch cliphist store" # clipboard store text data
             "${getExe' pkgs.wl-clipboard "wl-paste"} --type image --watch cliphist store" # clipboard store image data
@@ -295,7 +294,6 @@
             "opacity 0.80 0.70,class:^(org.pulseaudio.pavucontrol)$"
             "opacity 0.80 0.70,class:^(blueman-manager)$"
             "opacity 0.80 0.70,class:^(.blueman-manager-wrapped)$"
-            "opacity 0.80 0.70,class:^(nm-applet)$"
             "opacity 0.80 0.70,class:^(nm-connection-editor)$"
             "opacity 0.80 0.70,class:^(org.kde.polkit-kde-authentication-agent-1)$"
 
@@ -327,7 +325,6 @@
             "float,class:^(pavucontrol)$"
             "float,class:^(blueman-manager)$"
             "float,class:^(.blueman-manager-wrapped)$"
-            "float,class:^(nm-applet)$"
             "float,class:^(nm-connection-editor)$"
             "float,class:^(org.kde.polkit-kde-authentication-agent-1)$"
           ];
@@ -394,6 +391,7 @@
               # "$mainMod, tab, exec, pkill -x rofi || ${./scripts/rofi.sh} window" # switch between desktop applications
               # "$mainMod, R, exec, pkill -x rofi || ${./scripts/rofi.sh} file" # brrwse system files
               "$mainMod ALT, K, exec, ${./scripts/keyboardswitch.sh}" # change keyboard layout
+              "$mainMod, N, exec, networkmanager_dmenu" # network manager
               "$mainMod SHIFT, N, exec, swaync-client -t -sw" # swayNC panel
               "$mainMod SHIFT, Q, exec, swaync-client -t -sw" # swayNC panel
               "$mainMod, G, exec, ${./scripts/rofi.sh} games" # game launcher

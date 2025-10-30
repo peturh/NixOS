@@ -109,7 +109,7 @@
 
 
             "network" = {
-              # on-click = "nm-connection-editor";
+              on-click-right = "networkmanager_dmenu";
               # "interface" = "wlp2*"; # (Optional) To force the use of this interface
               format-wifi = "󰤨  {signalStrength}%";
               # format-wifi = " {bandwidthDownBits}  {bandwidthUpBits}";
@@ -121,7 +121,7 @@
               # format-disconnected = "󰤮 Disconnected";
               format-alt = "󰤨 {signalStrength}% {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
               tooltip-format = "󱘖 {ipaddr}  {bandwidthUpBytes}  {bandwidthDownBytes}";
-              on-click-right = "nm-connection-editor";
+              #on-click-right = "nm-connection-editor";
             };
 
             "bluetooth" = {
