@@ -101,6 +101,12 @@
   boot = {
     tmp.cleanOnBoot = true;
     kernelPackages = pkgs.linuxPackages_zen; # _latest, _zen, _xanmod_latest, _hardened, _rt, _OTHER_CHANNEL, etc.
+    
+    # Enable deep sleep (s3) for better battery life during suspend
+    kernelParams = [
+      "mem_sleep_default=deep"
+    ];
+    
     loader = {
       efi.canTouchEfiVariables = true;
       efi.efiSysMountPoint = "/boot";

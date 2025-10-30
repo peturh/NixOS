@@ -17,7 +17,6 @@
     ./programs/hypridle
     ./programs/hyprlock
     ./programs/swaync
-    # ./programs/dunst
   ];
 
   nix.settings = {
