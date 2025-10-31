@@ -503,17 +503,19 @@
             #pass_mouse_when_bound=0
           }
 
-          # Easily plug in any monitor
+          # Easily plug in any monitor (fallback)
           monitor=,preferred,auto,1
 
-          # Set DP-2 as left monitor and eDP-1 as right monitor (vertically centered)
+          # Work Setup: DP-2 (4K) on the left, eDP-1 (laptop) on the right
+          # Center-aligned vertically for easier mouse movement
           monitor=DP-2,3840x2160@60,0x0,1
           monitor=eDP-1,1920x1200@60,3840x960,1
 
-          # Home Setup: eDP-1 (laptop) on the left, external monitor on the right
-          # Replace HDMI-A-1 and 1920x1080@60 with your monitor's details
-          # monitor=eDP-1,1920x1200@60,0x0,1
-          # monitor=HDMI-A-1,1920x1080@60,1920x0,1
+          # Home Setup: eDP-1 (laptop) on the left, DP-2 (Samsung ultrawide) on the right
+          # Using monitor description to distinguish from work DP-2
+          # Center-aligned vertically for easier mouse movement
+          monitor=eDP-1,1920x1200@60,0x120,1
+          monitor=desc:Samsung Electric Company S34C65xU HNTWC03661,3440x1440@60,1920x0,1
 
           # 1080p-HDR monitor on the left, 4K-HDR monitor in the middle and 1080p vertical monitor on the right.
           # monitor=desc:BNQ BenQ EW277HDR 99J01861SL0,preferred,-1920x0,1
