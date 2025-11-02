@@ -32,7 +32,9 @@
           widgets = [
             "title"
             "dnd"
+            "label#system-stats"
             "menubar#desktop"
+            "backlight"
             "volume"
             "mpris"
             "notifications"
@@ -91,6 +93,19 @@
             };
             dnd = {
               text = " Do Not Disturb";
+            };
+           
+            "label#system-stats" = {
+              text = "";
+              max-length = 200;
+              exec = "echo \" $(LC_ALL=C free -h | awk '/^Mem:/ {print $3\"/\"$2}')   $(df -h / | awk 'NR==2 {print $3\"/\"$2}')   $(top -bn1 | grep \\\"Cpu(s)\\\" | sed \\\"s/.*, *\\\\([0-9.]*\\\\)%* id.*/\\\\1/\\\" | awk '{print 100 - $1\"%\"}')\"";
+              exec-if = "true";
+              interval = 5;
+            };
+            backlight = {
+              label = "";
+              device = "amdgpu_bl1";
+              subsystem = "backlight";
             };
             mpris = {
               image-size = 96;
@@ -156,7 +171,7 @@
           @define-color peach     #fab387;
           @define-color maroon    #eba0ac;
           @define-color red       #f38ba8;
-          @define-color mauve     #cba6f7;
+          @define-color mauve     #cba6f7; 
           @define-color pink      #f5c2e7;
           @define-color flamingo  #f2cdcd;
           @define-color rosewater #f5e0dc;
@@ -642,7 +657,7 @@
             min-height: 50px;
           }
           .widget-backlight > label {
-            background: @surface0;
+            background: alpha(@mantle, .80);
             /* background: alpha(currentColor, 0.05); */
             margin: 5px 0px 5px 10px;
             border-radius: 4px 0px 0px 4px;
