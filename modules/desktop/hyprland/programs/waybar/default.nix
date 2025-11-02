@@ -53,38 +53,16 @@
             };
 
             "hyprland/workspaces" = {
-              disable-scroll = true;
+              disable-scroll = false;
               all-outputs = true;
               active-only = false;
               on-click = "activate";
+              on-scroll-up = "hyprctl dispatch workspace e+1";
+              on-scroll-down = "hyprctl dispatch workspace e-1";
               persistent-workspaces = {
                 "*" = [1 2 3 4 5 6 7 8 9 10];
               };
-              format = "{id} {windows}";
-              format-window-separator = " ";
-              window-rewrite-default = "";
-              window-rewrite = {
-                "firefox" = "󰈹";
-                "google-chrome" = "";
-                "microsoft-edge" = "󰇩";
-                "code" = "󰨞";
-                "cursor" = "󰨞";
-                "kitty" = "";
-                "alacritty" = "";
-                "wezterm" = "";
-                "discord" = "󰙯";
-                "slack" = "󰒱";
-                "spotify" = "󰓇";
-                "vlc" = "󰕼";
-                "mpv" = "";
-                "nautilus" = "󰉋";
-                "thunar" = "󰉋";
-                "steam" = "󰓓";
-                "obs" = "󰐌";
-                "gimp" = "";
-                "signal" = "󰍡 ";
-                "telegram" = "";
-              };
+              format = "{name}";
             };
 
             "hyprland/window" = {
@@ -302,38 +280,16 @@
               on-click = "${../../scripts/keyboardswitch.sh}";
             };
             "hyprland/workspaces" = {
-              disable-scroll = true;
+              disable-scroll = false;
               all-outputs = true;
               active-only = false;
               on-click = "activate";
+              on-scroll-up = "hyprctl dispatch workspace e+1";
+              on-scroll-down = "hyprctl dispatch workspace e-1";
               persistent-workspaces = {
                 "*" = [1 2 3 4 5 6 7 8 9 10];
               };
-              format = "{id} {windows}";
-              format-window-separator = " ";
-              window-rewrite-default = "";
-              window-rewrite = {
-                "firefox" = "󰈹";
-                "google-chrome" = "";
-                "microsoft-edge" = "󰇩";
-                "code" = "󰨞";
-                "cursor" = "󰨞";
-                "kitty" = "";
-                "alacritty" = "";
-                "wezterm" = "";
-                "discord" = "󰙯";
-                "slack" = "󰒱";
-                "spotify" = "󰓇";
-                "vlc" = "󰕼";
-                "mpv" = "";
-                "nautilus" = "󰉋";
-                "thunar" = "󰉋";
-                "steam" = "󰓓";
-                "obs" = "󰐌";
-                "gimp" = "";
-                "signal" = "󰍡";
-                "telegram" = "";
-              };
+              format = "{name}";
             };
 
             "hyprland/window" = {
@@ -708,48 +664,38 @@
             color: @flamingo;
           }
 
+          #workspaces {
+            background: transparent;
+            margin: 5px;
+            padding: 0px;
+            border-radius: 10px;
+          }
+
           #workspaces button {
-              box-shadow: none;
-            	text-shadow: none;
-              padding: 0px;
-              border-radius: 9px;
-              padding-left: 4px;
-              padding-right: 4px;
-              animation: gradient_f 20s ease-in infinite;
-              transition: all 0.5s cubic-bezier(.55,-0.68,.48,1.682);
+              font-size: 16px;
+              font-weight: bold;
+              padding: 0px 12px;
+              margin: 0px 3px;
+              border-radius: 8px;
+              color: @subtext0;
+              background: transparent;
+              transition: all 0.3s ease;
           }
 
           #workspaces button:hover {
-          	border-radius: 10px;
-          	color: @overlay0;
-          	background-color: @surface0;
-           	padding-left: 2px;
-              padding-right: 2px;
-              margin-left:2px;
-              margin-left:2px;
-              animation: gradient_f 20s ease-in infinite;
-              transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
-          }
-
-          #workspaces button.persistent {
-          	color: @surface1;
-          	border-radius: 10px;
+              color: @text;
+              background: @surface0;
           }
 
           #workspaces button.active {
-          	color: @peach;
-            	border-radius: 10px;
-              padding-left: 8px;
-              padding-right: 8px;
-              margin-right: 8px;
-              margin-left: 0px;
-              animation: gradient_f 20s ease-in infinite;
-              transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
+              color: @crust;
+              background: @mauve;
+              padding: 0px 14px;
           }
 
           #workspaces button.urgent {
-          	color: @red;
-           	border-radius: 0px;
+              color: @crust;
+              background: @red;
           }
 
           #taskbar button.active {
