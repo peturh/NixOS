@@ -726,7 +726,7 @@
            	padding-left: 2px;
               padding-right: 2px;
               margin-left:2px;
-         
+              margin-left:2px;
               animation: gradient_f 20s ease-in infinite;
               transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
           }
