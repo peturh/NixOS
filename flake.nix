@@ -20,10 +20,6 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    zen-browser = {
-      url = "github:maximoffua/zen-browser.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     cpyvn = {
       url = "gitlab:cpvpn/cpyvpn";
       flake = false;
@@ -72,7 +68,7 @@
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     nixosConfigurations = {
       Default = nixpkgs.lib.nixosSystem {
-        system = forAllSystems (system: system);
+        system = "x86_64-linux";
         specialArgs = {inherit self inputs outputs;} // settings;
         modules = [./hosts/Default/configuration.nix sops-nix.nixosModules.sops];
       };

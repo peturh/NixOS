@@ -126,6 +126,29 @@
     };
   };
 
+  zramSwap = {
+  enable = true;
+  algorithm = "zstd";
+  memoryPercent = 50; # Use 50% of RAM for compressed swap
+  };
+
+  nix.settings = {
+  # ... your existing settings ...
+  max-jobs = "auto"; # Use all available cores
+  cores = 0; # Use all cores per build job (0 = auto)
+  
+  # Reduce memory usage during builds
+  builders-use-substitutes = true;
+  
+  # Enable parallel downloads
+  http-connections = 0; # 0 = unlimited (default is 25)
+  max-substitution-jobs = 16; # Parallel downloads from binary caches
+};
+
+  services.preload = {
+    enable = true; # Preloads frequently used apps into RAM
+  };
+
   # Filesystems support
   boot.supportedFilesystems = ["ntfs" "exfat" "ext4" "fat32" "btrfs"];
   services.devmon.enable = true;
