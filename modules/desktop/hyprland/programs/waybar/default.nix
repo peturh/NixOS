@@ -60,6 +60,31 @@
               persistent-workspaces = {
                 "*" = [1 2 3 4 5 6 7 8 9 10];
               };
+              format = "{id} {windows}";
+              format-window-separator = " ";
+              window-rewrite-default = "";
+              window-rewrite = {
+                "firefox" = "󰈹";
+                "google-chrome" = "";
+                "microsoft-edge" = "󰇩";
+                "code" = "󰨞";
+                "cursor" = "󰨞";
+                "kitty" = "";
+                "alacritty" = "";
+                "wezterm" = "";
+                "discord" = "󰙯";
+                "slack" = "󰒱";
+                "spotify" = "󰓇";
+                "vlc" = "󰕼";
+                "mpv" = "";
+                "nautilus" = "󰉋";
+                "thunar" = "󰉋";
+                "steam" = "󰓓";
+                "obs" = "󰐌";
+                "gimp" = "";
+                "signal" = "󰍡 ";
+                "telegram" = "";
+              };
             };
 
             "hyprland/window" = {
@@ -71,6 +96,7 @@
                 "(.*)Mozilla Firefox" = " Firefox 󰈹";
                 "(.*) - Visual Studio Code" = "$1 󰨞";
                 "(.*)Visual Studio Code" = "Code 󰨞";
+                "(.*)Cursor" = "Code 󰨞";
                 "(.*) — Dolphin" = "$1 󰉋";
                 "(.*)Spotify" = "Spotify 󰓇";
                 "(.*)Spotify Premium" = "Spotify 󰓇";
@@ -282,6 +308,31 @@
               on-click = "activate";
               persistent-workspaces = {
                 "*" = [1 2 3 4 5 6 7 8 9 10];
+              };
+              format = "{id} {windows}";
+              format-window-separator = " ";
+              window-rewrite-default = "";
+              window-rewrite = {
+                "firefox" = "󰈹";
+                "google-chrome" = "";
+                "microsoft-edge" = "󰇩";
+                "code" = "󰨞";
+                "cursor" = "󰨞";
+                "kitty" = "";
+                "alacritty" = "";
+                "wezterm" = "";
+                "discord" = "󰙯";
+                "slack" = "󰒱";
+                "spotify" = "󰓇";
+                "vlc" = "󰕼";
+                "mpv" = "";
+                "nautilus" = "󰉋";
+                "thunar" = "󰉋";
+                "steam" = "󰓓";
+                "obs" = "󰐌";
+                "gimp" = "";
+                "signal" = "󰍡";
+                "telegram" = "";
               };
             };
 
@@ -659,7 +710,7 @@
 
           #workspaces button {
               box-shadow: none;
-          	text-shadow: none;
+            	text-shadow: none;
               padding: 0px;
               border-radius: 9px;
               padding-left: 4px;
@@ -674,6 +725,8 @@
           	background-color: @surface0;
            	padding-left: 2px;
               padding-right: 2px;
+              margin-left:2px;
+         
               animation: gradient_f 20s ease-in infinite;
               transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
           }
@@ -688,6 +741,8 @@
             	border-radius: 10px;
               padding-left: 8px;
               padding-right: 8px;
+              margin-right: 8px;
+              margin-left: 0px;
               animation: gradient_f 20s ease-in infinite;
               transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
           }
