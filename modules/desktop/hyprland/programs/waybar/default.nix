@@ -674,8 +674,8 @@
           #workspaces button {
               font-size: 16px;
               font-weight: bold;
-              padding: 0px 12px;
-              margin: 0px 3px;
+              padding: 0px 8px;
+              margin: 0px 2px;
               border-radius: 8px;
               color: @subtext0;
               background: transparent;
@@ -690,7 +690,7 @@
           #workspaces button.active {
               color: @crust;
               background: @mauve;
-              padding: 0px 14px;
+              padding: 0px 10px;
           }
 
           #workspaces button.urgent {
