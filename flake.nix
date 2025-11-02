@@ -20,10 +20,6 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    betterfox = {
-      url = "github:yokoffing/Betterfox";
-      flake = false;
-    };
     zen-browser = {
       url = "github:maximoffua/zen-browser.nix";
       inputs.nixpkgs.follows = "nixpkgs";
