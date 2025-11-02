@@ -20,6 +20,7 @@
     ../../modules/desktop/hyprland # Enable hyprland window manager
     ../../modules/programs/browser/${browser}
     ../../modules/programs/browser/google-chrome
+    ../../modules/programs/browser/firefox
     ../../modules/programs/terminal/${terminal} # Set terminal defined in flake.nix
     ../../modules/programs/editor/${editor} # Set editor defined in flake.nix
     ../../modules/programs/cli/${terminalFileManager} # Set file-manager defined in flake.nix
@@ -54,6 +55,7 @@
     ../../modules/programs/development/python3
     ../../modules/programs/development/webengage-release
     ../../modules/programs/security/cpyvpn
+    ../../modules/programs/gaming/steam
   ];
 
 
