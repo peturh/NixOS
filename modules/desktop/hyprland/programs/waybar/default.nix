@@ -289,7 +289,31 @@
               persistent-workspaces = {
                 "*" = [1 2 3 4 5 6 7 8 9 10];
               };
-              format = "{name}";
+              format = "{id} {windows}";
+              format-window-separator = " ";
+              window-rewrite-default = "";
+              window-rewrite = {
+                "firefox" = "󰈹";
+                "google-chrome" = "";
+                "microsoft-edge" = "󰇩";
+                "code" = "󰨞";
+                "cursor" = "󰨞";
+                "kitty" = "";
+                "alacritty" = "";
+                "wezterm" = "";
+                "discord" = "󰙯";
+                "slack" = "󰒱";
+                "spotify" = "󰓇";
+                "vlc" = "󰕼";
+                "mpv" = "";
+                "nautilus" = "󰉋";
+                "thunar" = "󰉋";
+                "steam" = "󰓓";
+                "obs" = "󰐌";
+                "gimp" = "";
+                "signal" = "󰍡 ";
+                "telegram" = "";
+              };            
             };
 
             "hyprland/window" = {
