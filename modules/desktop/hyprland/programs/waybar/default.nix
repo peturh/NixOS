@@ -57,34 +57,37 @@
               all-outputs = true;
               active-only = false;
               on-click = "activate";
-              on-scroll-up = "hyprctl dispatch workspace e+1";
-              on-scroll-down = "hyprctl dispatch workspace e-1";
               persistent-workspaces = {
                 "*" = [1 2 3 4 5 6 7 8 9 10];
               };
-              format = "{name}";
+              format = "{id} {windows}";
+              format-window-separator = " ";
+              window-rewrite-default = "";
+              window-rewrite = {
+                "firefox" = "󰈹";
+                "google-chrome" = "";
+                "microsoft-edge" = "󰇩";
+                "code" = "󰨞";
+                "cursor" = "󰨞";
+                "kitty" = "";
+                "alacritty" = "";
+                "wezterm" = "";
+                "discord" = "󰙯";
+                "slack" = "󰒱";
+                "spotify" = "󰓇";
+                "vlc" = "󰕼";
+                "mpv" = "";
+                "nautilus" = "󰉋";
+                "thunar" = "󰉋";
+                "steam" = "󰓓";
+                "obs" = "󰐌";
+                "gimp" = "";
+                "signal" = "󰍡 ";
+                "telegram" = "";
+              };            
             };
 
-            "hyprland/window" = {
-              format = "{}";
-              separate-outputs = true;
-              rewrite = {
-                "harvey@hyprland =(.*)" = "$1 ";
-                "(.*) — Mozilla Firefox" = "$1 󰈹";
-                "(.*)Mozilla Firefox" = " Firefox 󰈹";
-                "(.*) - Visual Studio Code" = "$1 󰨞";
-                "(.*)Visual Studio Code" = "Code 󰨞";
-                "(.*)Cursor" = "Code 󰨞";
-                "(.*) — Dolphin" = "$1 󰉋";
-                "(.*)Spotify" = "Spotify 󰓇";
-                "(.*)Spotify Premium" = "Spotify 󰓇";
-                "(.*)Steam" = "Steam 󰓓";
-                "(.*)Edge" = "$1 ";
-                "(.*)Chrome" = "$1 ";
-                "(.*)Slack" = "$1 ";
-              };
-              max-length = 1000;
-            };
+
 
              "clock" = {
               format = "{:%a %d %b %R}";
@@ -279,60 +282,24 @@
               format = "{short}"; # can use {short} and {variant}
               on-click = "${../../scripts/keyboardswitch.sh}";
             };
-            "hyprland/workspaces" = {
-              disable-scroll = false;
-              all-outputs = true;
-              active-only = false;
-              on-click = "activate";
-              on-scroll-up = "hyprctl dispatch workspace e+1";
-              on-scroll-down = "hyprctl dispatch workspace e-1";
-              persistent-workspaces = {
-                "*" = [1 2 3 4 5 6 7 8 9 10];
-              };
-              format = "{id} {windows}";
-              format-window-separator = " ";
-              window-rewrite-default = "";
-              window-rewrite = {
-                "firefox" = "󰈹";
-                "google-chrome" = "";
-                "microsoft-edge" = "󰇩";
-                "code" = "󰨞";
-                "cursor" = "󰨞";
-                "kitty" = "";
-                "alacritty" = "";
-                "wezterm" = "";
-                "discord" = "󰙯";
-                "slack" = "󰒱";
-                "spotify" = "󰓇";
-                "vlc" = "󰕼";
-                "mpv" = "";
-                "nautilus" = "󰉋";
-                "thunar" = "󰉋";
-                "steam" = "󰓓";
-                "obs" = "󰐌";
-                "gimp" = "";
-                "signal" = "󰍡 ";
-                "telegram" = "";
-              };            
-            };
-
-            "hyprland/window" = {
-              # format = "  {}";
+          
+           "hyprland/window" = {
               format = "{}";
               separate-outputs = true;
               rewrite = {
-                "harvey@hyprland =(.*)" = "$1 ";
                 "(.*) — Mozilla Firefox" = "$1 󰈹";
                 "(.*)Mozilla Firefox" = " Firefox 󰈹";
                 "(.*) - Visual Studio Code" = "$1 󰨞";
                 "(.*)Visual Studio Code" = "Code 󰨞";
+                "(.*)Cursor" = "Cursor 󰨞";
+                "(.*) - Cursor" = "$1 󰨞";
                 "(.*) — Dolphin" = "$1 󰉋";
                 "(.*)Spotify" = "Spotify 󰓇";
                 "(.*)Spotify Premium" = "Spotify 󰓇";
                 "(.*)Steam" = "Steam 󰓓";
-                "(.*)Edge" = "$1 - Edge ";
-                "(.*)Chrome" = "$1 - Chrome ";
-
+                "(.*)Edge" = "$1 ";
+                "(.*)Chrome" = "$1 ";
+                "(.*)Slack" = "$1 ";
               };
               max-length = 1000;
             };
