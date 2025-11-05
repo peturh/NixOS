@@ -61,7 +61,7 @@
                 "*" = [1 2 3 4 5 6 7 8 9 10];
               };
               format = "{id} {windows}";
-              format-window-separator = " |";
+              format-window-separator = " | ";
               window-rewrite-default = "";
               window-rewrite = {
                 "firefox" = "󰈹";
