@@ -5,6 +5,7 @@
 }: let
   # Define radio stations in a CSV format
   radioStations = ''
+url,"name"
 https://live1.sr.se/p1-aac-320,SR P1 (AAC 320kbps)
 https://live1.sr.se/p2-flac,SR P2 (FLAC)
 https://live1.sr.se/p3-aac-320,SR P3 (AAC 320kbps)
