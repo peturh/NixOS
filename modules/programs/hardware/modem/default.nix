@@ -3,6 +3,7 @@
     (_: {
       home.packages = with pkgs; [
         modem-manager-gui
+        networkmanagerapplet  # NetworkManager system tray applet
       ];
     })
   ];

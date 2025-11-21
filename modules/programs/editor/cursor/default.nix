@@ -13,22 +13,12 @@
         profiles.default = {
           extensions = with pkgs.vscode-extensions; [
             bbenoist.nix
-            # arrterian.nix-env-selector
             eamodio.gitlens
             yzhang.markdown-all-in-one
             catppuccin.catppuccin-vsc
             catppuccin.catppuccin-vsc-icons
-            # asvetliakov.vscode-neovim
-            # vscodevim.vim
             tamasfe.even-better-toml
-            #jnoortheen.nix-ide
-            # redhat.vscode-yaml
-            # vadimcn.vscode-lldb
             rust-lang.rust-analyzer
-            # ms-dotnettools.csharp
-            # pkief.material-icon-theme
-            # equinusocio.vsc-material-theme
-            # dracula-theme.theme-dracula
           ];  
           keybindings = [
             {
@@ -74,14 +64,10 @@
             "editor.codeActionsOnSave" = {"source.organizeImports" = "explicit";};
             "editor.inlineSuggest.enabled" = true;
             "editor.formatOnSave" = true;
-            # "editor.formatOnType" = true;
             "editor.formatOnPaste" = true;
 
             "editor.minimap.enabled" = false;
             "workbench.sideBar.location" = "left";
-            # "workbench.activityBar.location" = "hidden";
-            # "workbench.editor.showTabs" = "single";
-            # "workbench.statusBar.visible" = false;
             "workbench.layoutControl.type" = "menu";
             "workbench.editor.limit.enabled" = true;
             "workbench.editor.limit.value" = 10;

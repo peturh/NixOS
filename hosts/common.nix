@@ -231,6 +231,10 @@
     settings.General.Experimental = true;
   };
 
+  # Enable Logitech wireless device support
+  hardware.logitech.wireless.enable = true;
+  hardware.logitech.wireless.enableGraphical = true;
+
   # Enable networking
   networking = {
     # hostName = hostname; # Define your hostname.
@@ -304,6 +308,7 @@
     pkgs.kdePackages.qtsvg
     pkgs.kdePackages.qtmultimedia
     pkgs.kdePackages.qtvirtualkeyboard
+    solaar  # Logitech wireless device manager
     sops  # For managing encrypted secrets
     age   # Age encryption tool for sops
   ];
