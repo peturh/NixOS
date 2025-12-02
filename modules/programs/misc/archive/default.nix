@@ -1,10 +1,10 @@
 {pkgs, ...}: {
-  # Enable file-roller for Nautilus archive integration
-  programs.file-roller.enable = true;
-
   home-manager.sharedModules = [
     (_: {
       home.packages = with pkgs; [
+        # Archive GUI
+        file-roller    # Archive manager for Nautilus integration
+
         # Archive formats
         unzip          # Extract .zip files
         zip            # Create .zip files

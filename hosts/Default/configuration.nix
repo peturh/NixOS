@@ -34,6 +34,7 @@
     ../../modules/programs/cli/wget
     ../../modules/programs/shell/bash
     ../../modules/programs/shell/zsh
+    ../../modules/programs/media/audacity
     ../../modules/programs/media/discord
     ../../modules/programs/media/mpv
     ../../modules/programs/media/radioboat

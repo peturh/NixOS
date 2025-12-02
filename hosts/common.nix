@@ -145,10 +145,6 @@
   max-substitution-jobs = 16; # Parallel downloads from binary caches
 };
 
-  services.preload = {
-    enable = true; # Preloads frequently used apps into RAM
-  };
-
   # Filesystems support
   boot.supportedFilesystems = ["ntfs" "exfat" "ext4" "fat32" "btrfs"];
   services.devmon.enable = true;
