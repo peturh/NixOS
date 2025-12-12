@@ -50,6 +50,7 @@
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/usbimager
     ../../modules/programs/misc/lact # GPU fan, clock and power configuration
+    ../../modules/programs/misc/porttelefon
     ../../modules/programs/hardware/modem
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/node
@@ -64,6 +65,7 @@
   services.intune.enable = true;
   programs.cpyvpn.enable = true;
   programs.webengage-release.enable = true;
+  programs.porttelefon.enable = true;
 
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];

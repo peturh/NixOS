@@ -107,9 +107,10 @@
       # Packages that don't require configuration. If you're looking to configure a program see the /modules dir
       home.packages = with pkgs; [
         # Applications
-        #kate
+        remmina  # VNC/RDP/SSH remote desktop client
 
         # Terminal
+        file
         fzf
         fd
         git

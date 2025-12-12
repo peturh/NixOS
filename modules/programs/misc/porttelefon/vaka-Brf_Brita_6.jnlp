@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
+
+<jnlp codebase="http://592e9239.duc.comhem.se:8081/1/F0D7670374C6" spec="1.0+">
+  <information>
+    <title>Vaka-Brf Brita 6</title>
+    <vendor>Axema Access Control AB</vendor>
+    <homepage href="http://www.axema.se"></homepage>
+    <description></description>
+    <description kind="short"></description>
+    <icon height="48" href="logo48.jpg" kind="default" width="48"></icon>
+    <shortcut online="false" install="false">
+    <desktop/>
+    <menu submenu="Vaka"/>
+    </shortcut>
+  </information>
+  <update check="always" policy="always"></update>
+  <security>
+    <all-permissions></all-permissions>
+  </security>
+  <resources>
+    <j2se version="1.8+"></j2se>
+    <jar download="eager" href="pico.run.jar" main="true"></jar>
+  </resources>
+  <application-desc main-class="pico.bootstrap.PicoMain">
+</application-desc>
+</jnlp>
+
