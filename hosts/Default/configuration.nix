@@ -43,6 +43,7 @@
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/transmission
     ../../modules/programs/media/vlc
+    ../../modules/programs/media/gimp
     ../../modules/programs/misc/archive
     ../../modules/programs/misc/gparted
     ../../modules/programs/misc/nautilus
