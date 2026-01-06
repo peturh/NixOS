@@ -50,7 +50,7 @@ let
       "$IMAGE_NAME"
 
     # Wait a moment for container to initialize
-    sleep 2
+    sleep 3
 
     # Verify container is running
     if ! ${pkgs.docker}/bin/docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
