@@ -51,6 +51,7 @@
       home.packages = with pkgs; [
         hyprpaper
         hyprpicker
+        hyprland-qtutils
         cliphist
         grimblast
         swappy

@@ -162,6 +162,9 @@
   boot = {
     tmp.cleanOnBoot = true;
     kernelPackages = pkgs.linuxPackages_zen; # _latest, _zen, _xanmod_latest, _hardened, _rt, _OTHER_CHANNEL, etc.
+    kernelParams = [
+      "amd_pmc.enable_stb=1"  # Enable System Trace Buffer for better AMD s2idle suspend/resume
+    ];
     
     loader = {
       efi.canTouchEfiVariables = true;

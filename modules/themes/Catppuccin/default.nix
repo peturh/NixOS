@@ -44,14 +44,20 @@ in {
         };
       };
 
-      # Set wallpaper
-      services.hyprpaper = {
-        enable = true;
-        settings = {
-          preload = ["${../wallpapers/${wallpaper}.jxl}"];
-          wallpaper = [",${../wallpapers/${wallpaper}.jxl}"];
-        };
-      };
+      # Set wallpaper - hyprpaper 0.8.0+ block syntax
+      services.hyprpaper.enable = true;
+      xdg.configFile."hypr/hyprpaper.conf".text = ''
+        ipc = true
+        splash = false
+
+        preload = ${../wallpapers/${wallpaper}.jxl}
+
+        wallpaper {
+          monitor =
+          path = ${../wallpapers/${wallpaper}.jxl}
+          fit_mode = cover
+        }
+      '';
 
       dconf.settings = {
         "org/gnome/desktop/interface" = {
