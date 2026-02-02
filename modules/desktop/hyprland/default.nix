@@ -57,6 +57,7 @@
         swappy
         libnotify
         brightnessctl
+        networkmanagerapplet
         networkmanager_dmenu
         pamixer
         pavucontrol
@@ -120,6 +121,7 @@
             #"[workspace special silent] ${terminal}"
 
             "waybar"
+            "nm-applet --indicator" # NetworkManager tray applet
             "swaync"
             "wl-clipboard-history -t"
             "${getExe' pkgs.wl-clipboard "wl-paste"} --type text --watch cliphist store" # clipboard store text data

@@ -116,7 +116,6 @@
 
 
             "network" = {
-              on-click-right = "networkmanager_dmenu";
               # "interface" = "wlp2*"; # (Optional) To force the use of this interface
               format-wifi = "󰤨  {signalStrength}%";
               # format-wifi = " {bandwidthDownBits}  {bandwidthUpBits}";
@@ -144,8 +143,8 @@
             };
 
             "tray" = {
-              icon-size = 12;
-              spacing = 5;
+              icon-size = 18;
+              spacing = 8;
             };
           }
            {
