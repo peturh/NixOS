@@ -10,4 +10,5 @@
   sddm-astronaut = pkgs.callPackage ./sddm-themes/astronaut.nix {theme = settings.sddmTheme;};
   lenovo-wwan-unlock = pkgs.callPackage ./easy-lenovo-wwan-unlock.nix { };
   cpyvpn = import ./cpyvpn.nix { inherit pkgs inputs; };
+  extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
 }

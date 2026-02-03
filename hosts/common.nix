@@ -311,6 +311,7 @@
     solaar  # Logitech wireless device manager
     sops  # For managing encrypted secrets
     age   # Age encryption tool for sops
+    extract-xiso  # Xbox ISO creation/extraction utility
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
