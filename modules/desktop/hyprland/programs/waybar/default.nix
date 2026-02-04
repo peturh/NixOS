@@ -84,6 +84,8 @@
                 "gimp" = "";
                 "signal" = "󰍡 ";
                 "telegram" = "";
+                "org.gnome.FileRoller" = "󰛫";
+                "transmission-qt" = "󰃘";
               };            
             };
 
