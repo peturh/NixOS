@@ -11,4 +11,5 @@
   lenovo-wwan-unlock = pkgs.callPackage ./easy-lenovo-wwan-unlock.nix { };
   cpyvpn = import ./cpyvpn.nix { inherit pkgs inputs; };
   extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
+  "8bitdo-updater" = pkgs.callPackage ./8bitdo-updater.nix {};
 }

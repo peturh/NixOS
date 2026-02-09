@@ -74,8 +74,12 @@
       "video"
       "audio"
       "power"
+      "plugdev"
     ];
   };
+
+  # Create plugdev group for USB device access
+  users.groups.plugdev = {};
 
   # Common home-manager options that are shared between all systems.
   home-manager = {
@@ -271,6 +275,17 @@
   # Enable fwupd for firmware updates
   services.fwupd.enable = true;
 
+  # udev rules for 8BitDo controllers (firmware updates)
+  services.udev.extraRules = ''
+    # 8BitDo controllers - normal mode
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", MODE="0666", GROUP="plugdev"
+    # 8BitDo controllers - bootloader mode
+    SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="5750", MODE="0666", GROUP="plugdev"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", ATTR{idProduct}=="5750", MODE="0666", GROUP="plugdev"
+    # Allow fwupd access
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", TAG+="uaccess"
+  '';
+
 
   services.xserver.enable = true; # Enable the X11 windowing system.
 
@@ -316,6 +331,7 @@
     age   # Age encryption tool for sops
     extract-xiso  # Xbox ISO creation/extraction utility
     gnome-firmware  # GTK frontend for fwupd firmware updates
+    pkgs."8bitdo-updater"  # 8BitDo gamepad firmware updater
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
