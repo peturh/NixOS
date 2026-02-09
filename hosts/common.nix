@@ -268,6 +268,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable fwupd for firmware updates
+  services.fwupd.enable = true;
+
 
   services.xserver.enable = true; # Enable the X11 windowing system.
 
@@ -312,6 +315,7 @@
     sops  # For managing encrypted secrets
     age   # Age encryption tool for sops
     extract-xiso  # Xbox ISO creation/extraction utility
+    gnome-firmware  # GTK frontend for fwupd firmware updates
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
