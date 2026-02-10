@@ -332,6 +332,7 @@
     extract-xiso  # Xbox ISO creation/extraction utility
     gnome-firmware  # GTK frontend for fwupd firmware updates
     pkgs."8bitdo-updater"  # 8BitDo gamepad firmware updater
+    iptvnator  # IPTV player with Xtream Codes support (overlayed)
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -12,4 +12,5 @@
   cpyvpn = import ./cpyvpn.nix { inherit pkgs inputs; };
   extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
   "8bitdo-updater" = pkgs.callPackage ./8bitdo-updater.nix {};
+  iptvnator = pkgs.callPackage ./iptvnator.nix {};
 }
