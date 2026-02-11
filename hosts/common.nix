@@ -333,6 +333,8 @@
     gnome-firmware  # GTK frontend for fwupd firmware updates
     pkgs."8bitdo-updater"  # 8BitDo gamepad firmware updater
     iptvnator  # IPTV player with Xtream Codes support (overlayed)
+    makerom  # CLI tool to create Nintendo 3DS CXI/CFA/CCI/CIA files (overlayed)
+    ctrtool  # CLI tool to read/extract Nintendo 3DS files (overlayed)
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

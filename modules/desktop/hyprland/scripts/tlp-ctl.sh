@@ -39,19 +39,28 @@ function Help() {
 # ---- Mode functions ----
 
 get_mode() {
-    local mode=$(tlp-stat -m)
+    local raw_mode=$(tlp-stat -m)
     local handling
-    case "$mode" in
+    case "$raw_mode" in
         *"(manual)" )
             handling=manual
-            mode="${mode%% *}" # Remove everything after the first space
+            raw_mode="${raw_mode%% *}" # Remove everything after the first space
             ;;
         * )
             handling=auto
             ;;
     esac
     # Normalize mode to lowercase for consistency
-    mode=$(echo "$mode" | tr '[:upper:]' '[:lower:]')
+    raw_mode=$(echo "$raw_mode" | tr '[:upper:]' '[:lower:]')
+    # Extract power source from "profile/source" format (e.g. "performance/ac" -> "ac")
+    local mode
+    if [[ "$raw_mode" == */* ]]; then
+        mode="${raw_mode##*/}"
+    else
+        mode="$raw_mode"
+    fi
+    # Normalize "bat" to "battery" for waybar format-icons matching
+    [[ "$mode" == "bat" ]] && mode="battery"
     print_mode "TLP Mode" "$mode" "$handling" "$1"
 }
 
@@ -71,9 +80,17 @@ set_mode() {
 }
 
 toggle_mode() {
-    local mode=$(tlp-stat -m)
+    local raw_mode=$(tlp-stat -m)
+    # Normalize and extract power source from "profile/source" format
+    raw_mode=$(echo "$raw_mode" | tr '[:upper:]' '[:lower:]')
+    local mode
+    if [[ "$raw_mode" == */* ]]; then
+        mode="${raw_mode##*/}"
+    else
+        mode="$raw_mode"
+    fi
     case "$mode" in
-        battery* ) 
+        bat* ) 
             pkexec tlp ac;;
         * )
             pkexec tlp bat;;

@@ -51,6 +51,12 @@ This document provides context about this NixOS configuration that isn't immedia
 - **Custom packages**: `pkgs/` for packages not in nixpkgs
 - **Overlays**: `overlays/` for package modifications
 
+### Installing New Packages
+When installing a new package:
+1. Create the derivation in `pkgs/<name>.nix`
+2. Register it in `pkgs/default.nix` via `callPackage`
+3. **Always** add it to `environment.systemPackages` in `hosts/common.nix` so it's actually available
+
 ### Flake Settings
 Central configuration in `flake.nix` under `settings`:
 - `username`, `editor`, `browser`, `terminal` - easily swappable

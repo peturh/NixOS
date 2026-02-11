@@ -13,4 +13,6 @@
   extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
   "8bitdo-updater" = pkgs.callPackage ./8bitdo-updater.nix {};
   iptvnator = pkgs.callPackage ./iptvnator.nix {};
+  makerom = pkgs.callPackage ./makerom.nix {};
+  ctrtool = pkgs.callPackage ./ctrtool.nix {};
 }
