@@ -4,6 +4,6 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
-    nodejs_24
+    nodejs_22
   ];
 }
