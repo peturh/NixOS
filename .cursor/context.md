@@ -80,20 +80,20 @@ _Fill in issues you frequently encounter:_
 ## Future Goals
 
 _What are you planning to change or add?_
-- 
+- I'm planning of adding support of an old laptop as well. I don't know the system yet. I think it's an Intel, with 32GB ram.
 - 
 - 
 
 ## Quick Reference
 
-| Item            | Value                                      |
-| --------------- | ------------------------------------------ |
-| Config location | `~/NixOS`                                  |
+| Item            | Value                                             |
+| --------------- | ------------------------------------------------- |
+| Config location | `~/NixOS`                                         |
 | Rebuild command | `SUPER+U` → `rebuild.sh` → `nixos-rebuild switch` |
-| Formatter       | Alejandra                                  |
-| Secrets         | sops-nix with age key at `~/NixOS/age.key` |
-| State version   | 23.11                                      |
-| Nixpkgs channel | unstable                                   |
+| Formatter       | Alejandra                                         |
+| Secrets         | sops-nix with age key at `~/NixOS/age.key`        |
+| State version   | 23.11                                             |
+| Nixpkgs channel | unstable                                          |
 
 ### Current Preferences (from flake.nix)
 - **Editor**: Cursor
