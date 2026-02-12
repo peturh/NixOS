@@ -27,7 +27,7 @@ This document provides context about this NixOS configuration that isn't immedia
   - Slack, Signal for communication
 
 ### Typical Commands
-- Rebuild: `nh os switch` (flake at `~/NixOS`)
+- Rebuild: `SUPER+U` launches `scripts/rebuild.sh` in Kitty, which runs `sudo nixos-rebuild switch --flake ~/NixOS#Default` (also injects username into flake.nix and manages hardware-configuration.nix)
 - Update flake inputs: `nix flake update`
 - Garbage collection: Automatic via nh (keeps 7 days, 3 generations)
 
@@ -52,10 +52,14 @@ This document provides context about this NixOS configuration that isn't immedia
 - **Overlays**: `overlays/` for package modifications
 
 ### Installing New Packages
-When installing a new package:
-1. Create the derivation in `pkgs/<name>.nix`
-2. Register it in `pkgs/default.nix` via `callPackage`
-3. **Always** add it to `environment.systemPackages` in `hosts/common.nix` so it's actually available
+When I ask for you to install new application and packages:
+1. Search for the application on `nixpkgs`. 
+   1. Createa new flake for the installation
+   2. Make it avaialble directly so I can use it.
+2. If you cant find it on `nixpkgs`, install it from source on github.
+   1. Create the derivation in `pkgs/<name>.nix`
+   2. Register it in `pkgs/default.nix` via `callPackage`
+   3. **Always** add it to `environment.systemPackages` in `hosts/common.nix` so it's actually available
 
 ### Flake Settings
 Central configuration in `flake.nix` under `settings`:
@@ -85,7 +89,7 @@ _What are you planning to change or add?_
 | Item            | Value                                      |
 | --------------- | ------------------------------------------ |
 | Config location | `~/NixOS`                                  |
-| Rebuild command | `nh os switch`                             |
+| Rebuild command | `SUPER+U` → `rebuild.sh` → `nixos-rebuild switch` |
 | Formatter       | Alejandra                                  |
 | Secrets         | sops-nix with age key at `~/NixOS/age.key` |
 | State version   | 23.11                                      |
