@@ -6,6 +6,7 @@
         killall
         lm_sensors
         jq
+        rsync
       ];
     })
   ];
