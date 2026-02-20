@@ -46,19 +46,34 @@ done
 # replace username variable in flake.nix with $USER
 sudo sed -i -e "s/username = \".*\"/username = \"$currentUser\"/" "./flake.nix"
 
-# rm -f ./hosts/Default/hardware-configuration.nix &>/dev/null
-if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
-elif [ -f "/etc/nixos/hosts/Default/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hosts/Default/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
-else
-  sudo nixos-generate-config --show-hardware-config >"$flake/hosts/Default/hardware-configuration.nix"
+hostName=$(hostname)
+hostDir="./hosts/$hostName"
+if [ ! -d "$hostDir" ]; then
+  echo -e "${RED}No host config for '$hostName'. Available hosts:${NC}"
+  hosts=($(ls -d ./hosts/*/configuration.nix 2>/dev/null | xargs -I{} dirname {} | xargs -I{} basename {}))
+  for i in "${!hosts[@]}"; do
+    echo "  $((i+1))) ${hosts[$i]}"
+  done
+  while true; do
+    read -p "Select host (1-${#hosts[@]}): " choice
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#hosts[@]}" ]; then
+      hostName="${hosts[$((choice-1))]}"
+      hostDir="./hosts/$hostName"
+      break
+    fi
+    echo "Invalid choice."
+  done
 fi
 
-sudo git -C . add hosts/Default/hardware-configuration.nix
+if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
+  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "$hostDir/hardware-configuration.nix" >/dev/null
+else
+  sudo nixos-generate-config --show-hardware-config | sudo tee "$hostDir/hardware-configuration.nix" >/dev/null
+fi
 
-# clear
-sudo nixos-rebuild switch --flake .#Default && \
+sudo git -C . add "$hostDir/hardware-configuration.nix"
+
+sudo nixos-rebuild switch --flake ".#$hostName" && \
     echo -e "${GREEN}Success!${NC}" && \
     echo "Make sure to reboot if this is your first time using this script!" || \
     exit 1

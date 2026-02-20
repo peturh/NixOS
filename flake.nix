@@ -38,7 +38,9 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
-    settings = {
+
+    # Shared settings across all hosts
+    commonSettings = {
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
       editor = "cursor"; # cursor, vscode
@@ -49,13 +51,33 @@
       wallpaper = "thinkpad"; # see modules/themes/wallpapers
 
       # System configuration
-      videoDriver = "amdgpu"; # GPU driver (only amdgpu is configured)
-      hostname = "thinkpad"; # CHOOSE A HOSTNAME HERE
       locale = "en_GB.UTF-8"; # CHOOSE YOUR LOCALE
       timezone = "Europe/Stockholm"; # CHOOSE YOUR TIMEZONE
       kbdLayout = "se"; # CHOOSE YOUR KEYBOARD LAYOUT
       kbdVariant = ""; # CHOOSE YOUR KEYBOARD VARIANT (Can leave empty)
       consoleKeymap = "sv-latin1"; # CHOOSE YOUR CONSOLE KEYMAP (Affects the tty?)
+    };
+
+    # Per-host overrides
+    hostSettings = {
+      t14s = commonSettings // {
+        hostname = "t14s";
+        videoDriver = "amdgpu";
+      };
+      t470p = commonSettings // {
+        hostname = "t470p";
+        videoDriver = "nvidia";
+      };
+      t450 = commonSettings // {
+        hostname = "t450";
+        videoDriver = "intel";
+      };
+    };
+
+    mkHost = name: settings: nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {inherit self inputs outputs;} // settings;
+      modules = [./hosts/${name}/configuration.nix sops-nix.nixosModules.sops];
     };
 
     systems = [
@@ -64,14 +86,12 @@
     ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    overlays = import ./overlays {inherit inputs settings;};
+    overlays = import ./overlays {inherit inputs; settings = commonSettings;};
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     nixosConfigurations = {
-      Default = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit self inputs outputs;} // settings;
-        modules = [./hosts/Default/configuration.nix sops-nix.nixosModules.sops];
-      };
+      t14s = mkHost "t14s" hostSettings.t14s;
+      t470p = mkHost "t470p" hostSettings.t470p;
+      t450 = mkHost "t450" hostSettings.t450;
     };
   };
 }

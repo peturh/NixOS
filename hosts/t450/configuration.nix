@@ -11,18 +11,18 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/hardware/video/${videoDriver}.nix # Enable gpu drivers defined in flake.nix
+    ../../modules/hardware/video/${videoDriver}.nix
     ../../modules/hardware/networking
     ../../modules/hardware/audio
     ../common.nix
     ../../modules/scripts
-    ../../modules/desktop/hyprland # Enable hyprland window manager
+    ../../modules/desktop/hyprland
     ../../modules/programs/browser/${browser}
     ../../modules/programs/browser/google-chrome
     ../../modules/programs/browser/firefox
-    ../../modules/programs/terminal/${terminal} # Set terminal defined in flake.nix
-    ../../modules/programs/editor/${editor} # Set editor defined in flake.nix
-    ../../modules/programs/cli/${terminalFileManager} # Set file-manager defined in flake.nix
+    ../../modules/programs/terminal/${terminal}
+    ../../modules/programs/editor/${editor}
+    ../../modules/programs/cli/${terminalFileManager}
     ../../modules/programs/cli/starship
     ../../modules/programs/cli/tmux
     ../../modules/programs/cli/direnv
@@ -50,23 +50,11 @@
     ../../modules/programs/misc/nix-ld
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/usbimager
-    ../../modules/programs/misc/lact # GPU fan, clock and power configuration
-    ../../modules/programs/misc/porttelefon
-    ../../modules/programs/hardware/modem
-    ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
     ../../modules/programs/development/go
-    ../../modules/programs/development/webengage-release
-    ../../modules/programs/security/cpyvpn
     ../../modules/programs/gaming/steam
   ];
-
-
-  services.intune.enable = true;
-  programs.cpyvpn.enable = true;
-  programs.webengage-release.enable = true;
-  programs.porttelefon.enable = true;
 
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];
