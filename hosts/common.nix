@@ -166,10 +166,6 @@
   boot = {
     tmp.cleanOnBoot = true;
     kernelPackages = pkgs.linuxPackages_zen; # _latest, _zen, _xanmod_latest, _hardened, _rt, _OTHER_CHANNEL, etc.
-    kernelParams = [
-      "amdgpu.dcdebugmask=0x10"
-    ];
-    
     loader = {
       efi.canTouchEfiVariables = true;
       efi.efiSysMountPoint = "/boot";
@@ -235,20 +231,6 @@
     settings.General.Experimental = true;
   };
 
-  # Enable Logitech wireless device support
-  hardware.logitech.wireless.enable = true;
-  hardware.logitech.wireless.enableGraphical = true;
-
-  # Enable networking
-  networking = {
-    # hostName = hostname; # Define your hostname.
-    networkmanager.enable = true;
-    # wireless.enable = true; # Enables wireless support via wpa_supplicant.
-    # Configure network proxy if necessary
-    # networking.proxy.default = "http://user:password@proxy:port/";
-    # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-  };
-
   # Enable sddm login manager
   services.displayManager = {
     sddm = {
@@ -274,18 +256,6 @@
 
   # Enable fwupd for firmware updates
   services.fwupd.enable = true;
-
-  # udev rules for 8BitDo controllers (firmware updates)
-  services.udev.extraRules = ''
-    # 8BitDo controllers - normal mode
-    SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", MODE="0666", GROUP="plugdev"
-    # 8BitDo controllers - bootloader mode
-    SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="5750", MODE="0666", GROUP="plugdev"
-    SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", ATTR{idProduct}=="5750", MODE="0666", GROUP="plugdev"
-    # Allow fwupd access
-    SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", TAG+="uaccess"
-  '';
-
 
   services.xserver.enable = true; # Enable the X11 windowing system.
 
@@ -326,12 +296,9 @@
     pkgs.kdePackages.qtsvg
     pkgs.kdePackages.qtmultimedia
     pkgs.kdePackages.qtvirtualkeyboard
-    solaar  # Logitech wireless device manager
     sops  # For managing encrypted secrets
     age   # Age encryption tool for sops
     extract-xiso  # Xbox ISO creation/extraction utility
-    gnome-firmware  # GTK frontend for fwupd firmware updates
-    pkgs."8bitdo-updater"  # 8BitDo gamepad firmware updater
     iptvnator  # IPTV player with Xtream Codes support (overlayed)
     makerom  # CLI tool to create Nintendo 3DS CXI/CFA/CCI/CIA files (overlayed)
     ctrtool  # CLI tool to read/extract Nintendo 3DS files (overlayed)

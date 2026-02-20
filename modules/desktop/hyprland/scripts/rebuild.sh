@@ -30,25 +30,22 @@ currentUser=$(logname)
 # replace username variable in flake.nix with $USER
 sudo sed -i -e "s/username = \".*\"/username = \"$currentUser\"/" "$flake/flake.nix"
 
-if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "$flake/hosts/Default/hardware-configuration.nix" >/dev/null
-elif [ -f "/etc/nixos/hosts/Default/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hosts/Default/hardware-configuration.nix" | sudo tee "$flake/hosts/Default/hardware-configuration.nix" >/dev/null
-else
-  # read -p "No hardware config found, generate another? (Y/n): " confirm
-  # if [[ "$confirm" =~ ^[nN]$ ]]; then
-  #   echo "Aborted."
-  #   exit 1
-  # fi
-  sudo nixos-generate-config --show-hardware-config >"$flake/hosts/Default/hardware-configuration.nix"
+hostDir="$flake/hosts/$(hostname)"
+if [ ! -d "$hostDir" ]; then
+  echo -e "${RED}No host config found for '$(hostname)'. Available hosts:${NC}"
+  ls "$flake/hosts/" | grep -v common.nix
+  exit 1
 fi
 
-sudo git -C "$flake" add hosts/Default/hardware-configuration.nix
+if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
+  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "$hostDir/hardware-configuration.nix" >/dev/null
+else
+  sudo nixos-generate-config --show-hardware-config | sudo tee "$hostDir/hardware-configuration.nix" >/dev/null
+fi
 
-# nh os switch "$flake"
-sudo nixos-rebuild switch --flake "$flake#Default"
-# rm "$flake"/hosts/Default/hardware-configuration.nix &>/dev/null
-# git restore --staged "$flake"/hosts/Default/hardware-configuration.nix &>/dev/null
+sudo git -C "$flake" add "$hostDir/hardware-configuration.nix"
+
+sudo nixos-rebuild switch --flake "$flake"
 
 echo
 read -rsn1 -p"$(echo -e "${GREEN}Press any key to continue${NC}")"

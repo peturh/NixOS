@@ -137,26 +137,17 @@ while true; do
   fi
 done
 
-# GPU Drivers selection
-info "Choose GPU Drivers:"
-echo "1) nvidia"
-echo "2) amdgpu"
-echo "3) intel"
+# Host selection (determines GPU driver and hardware-specific config)
+info "Choose host configuration:"
+echo "1) t14s   (ThinkPad T14s / AMD)"
+echo "2) t470p  (ThinkPad T470p / Nvidia)"
+echo "3) t450   (ThinkPad T450 / Intel)"
 while true; do
-  read -p "Enter choice (1, 2 or 3): " driver_choice
-  case $driver_choice in
-  1)
-    sed -i -e "s/videoDriver = \".*\"/videoDriver = \"nvidia\"/" "./flake.nix"
-    break
-    ;;
-  2)
-    sed -i -e "s/videoDriver = \".*\"/videoDriver = \"amdgpu\"/" "./flake.nix"
-    break
-    ;;
-  3)
-    sed -i -e "s/videoDriver = \".*\"/videoDriver = \"intel\"/" "./flake.nix"
-    break
-    ;;
+  read -p "Enter choice (1, 2 or 3): " host_choice
+  case $host_choice in
+  1) install_host="t14s";  break ;;
+  2) install_host="t470p"; break ;;
+  3) install_host="t450";  break ;;
   *) error "Invalid choice. Enter 1, 2, or 3." ;;
   esac
 done
@@ -761,7 +752,7 @@ echo "All filesystems mounted successfully."
 
 # Generate hardware configuration
 info "Generating hardware configuration..."
-nixos-generate-config --root /mnt --show-hardware-config >./hosts/Default/hardware-configuration.nix || {
+nixos-generate-config --root /mnt --show-hardware-config >./hosts/$install_host/hardware-configuration.nix || {
   error "Failed to generate hardware configuration."
   exit 1
 }
@@ -780,7 +771,7 @@ cp -r ./ /mnt/etc/nixos || {
 
 # Run nixos-install
 info "Installing system..."
-nixos-install --flake /mnt/etc/nixos#Default --no-root-passwd || exit 1
+nixos-install --flake /mnt/etc/nixos#$install_host --no-root-passwd || exit 1
 
 # Set the user password
 echo -e "\n${BLUE}Setting password for $username...${NC}"

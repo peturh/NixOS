@@ -46,19 +46,22 @@ done
 # replace username variable in flake.nix with $USER
 sudo sed -i -e "s/username = \".*\"/username = \"$currentUser\"/" "./flake.nix"
 
-# rm -f ./hosts/Default/hardware-configuration.nix &>/dev/null
-if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
-elif [ -f "/etc/nixos/hosts/Default/hardware-configuration.nix" ]; then
-  cat "/etc/nixos/hosts/Default/hardware-configuration.nix" | sudo tee "./hosts/Default/hardware-configuration.nix" >/dev/null
-else
-  sudo nixos-generate-config --show-hardware-config >"$flake/hosts/Default/hardware-configuration.nix"
+hostDir="./hosts/$(hostname)"
+if [ ! -d "$hostDir" ]; then
+  echo -e "${RED}No host config found for '$(hostname)'. Available hosts:${NC}"
+  ls ./hosts/ | grep -v common.nix
+  exit 1
 fi
 
-sudo git -C . add hosts/Default/hardware-configuration.nix
+if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
+  cat "/etc/nixos/hardware-configuration.nix" | sudo tee "$hostDir/hardware-configuration.nix" >/dev/null
+else
+  sudo nixos-generate-config --show-hardware-config | sudo tee "$hostDir/hardware-configuration.nix" >/dev/null
+fi
 
-# clear
-sudo nixos-rebuild switch --flake .#Default && \
+sudo git -C . add "$hostDir/hardware-configuration.nix"
+
+sudo nixos-rebuild switch --flake . && \
     echo -e "${GREEN}Success!${NC}" && \
     echo "Make sure to reboot if this is your first time using this script!" || \
     exit 1
