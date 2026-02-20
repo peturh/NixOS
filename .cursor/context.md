@@ -81,7 +81,7 @@ _Fill in issues you frequently encounter:_
 
 _What are you planning to change or add?_
 - I'm planning of adding support of an old laptop as well. I don't know the system yet. I think it's an Intel, with 32GB ram.
-- 
+- I'm going to go through my shared modules, my home modules and other things to make the installation prettier
 - 
 
 ## Quick Reference
