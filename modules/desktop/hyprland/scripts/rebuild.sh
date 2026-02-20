@@ -30,11 +30,23 @@ currentUser=$(logname)
 # replace username variable in flake.nix with $USER
 sudo sed -i -e "s/username = \".*\"/username = \"$currentUser\"/" "$flake/flake.nix"
 
-hostDir="$flake/hosts/$(hostname)"
+hostName=$(hostname)
+hostDir="$flake/hosts/$hostName"
 if [ ! -d "$hostDir" ]; then
-  echo -e "${RED}No host config found for '$(hostname)'. Available hosts:${NC}"
-  ls "$flake/hosts/" | grep -v common.nix
-  exit 1
+  echo -e "${RED}No host config for '$hostName'. Available hosts:${NC}"
+  hosts=($(ls -d "$flake"/hosts/*/configuration.nix 2>/dev/null | xargs -I{} dirname {} | xargs -I{} basename {}))
+  for i in "${!hosts[@]}"; do
+    echo "  $((i+1))) ${hosts[$i]}"
+  done
+  while true; do
+    read -p "Select host (1-${#hosts[@]}): " choice
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#hosts[@]}" ]; then
+      hostName="${hosts[$((choice-1))]}"
+      hostDir="$flake/hosts/$hostName"
+      break
+    fi
+    echo "Invalid choice."
+  done
 fi
 
 if [ -f "/etc/nixos/hardware-configuration.nix" ]; then
@@ -45,7 +57,7 @@ fi
 
 sudo git -C "$flake" add "$hostDir/hardware-configuration.nix"
 
-sudo nixos-rebuild switch --flake "$flake"
+sudo nixos-rebuild switch --flake "$flake#$hostName"
 
 echo
 read -rsn1 -p"$(echo -e "${GREEN}Press any key to continue${NC}")"
