@@ -56,6 +56,12 @@
     ../../modules/programs/gaming/steam
   ];
 
+ environment.systemPackages = with pkgs; [
+    
+    gnome-firmware
+    
+  ];
+
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];
 
