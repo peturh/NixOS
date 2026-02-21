@@ -291,6 +291,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    gnome-firmware
+    pkgs."8bitdo-updater"
     bibata-cursors
     sddm-astronaut # Overlayed
     pkgs.kdePackages.qtsvg

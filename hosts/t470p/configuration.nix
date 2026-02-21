@@ -26,7 +26,7 @@
     ../../modules/programs/cli/starship
     ../../modules/programs/cli/tmux
     ../../modules/programs/cli/direnv
-    ../../modules/programs/cli/lazygit
+
     ../../modules/programs/cli/cava
     ../../modules/programs/cli/btop
     ../../modules/programs/cli/micro
@@ -56,11 +56,6 @@
     ../../modules/programs/gaming/steam
   ];
 
- environment.systemPackages = with pkgs; [
-    
-    gnome-firmware
-    
-  ];
 
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];

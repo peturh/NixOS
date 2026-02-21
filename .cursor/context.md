@@ -4,30 +4,50 @@ This document provides context about this NixOS configuration that isn't immedia
 
 ## Hardware
 
-- **Machine**: ThinkPad (model: _fill in your specific model_)
-- **GPU**: AMD (using amdgpu driver)
+This config manages **3 ThinkPad laptops**, each with different hardware and slightly different software sets. Per-host configuration lives in `hosts/<hostname>/configuration.nix`, with shared config in `hosts/common.nix`.
+
+| Machine | GPU | Video Driver | Role |
+| ------- | --- | ------------ | ---- |
+| **T14s** | AMD | amdgpu | Primary work machine (Intune, VPN, WWAN, Logitech, 8BitDo) |
+| **T470p** | Nvidia | nvidia | Personal / secondary |
+| **T450** | Intel | intel | Personal / secondary |
+
 - **CPU Scheduler**: scx_lavd (sched-ext rust scheduler for responsiveness)
 - **Kernel**: linux-zen for better desktop performance
-- **Peripherals**: Logitech wireless devices (Solaar for management)
+- **T14s peripherals**: Logitech wireless devices (Solaar), 8BitDo controller, WWAN modem
+
+### Per-Host Differences
+
+| Feature | T14s | T470p | T450 |
+| ------- | ---- | ----- | ---- |
+| Browser (default) | Microsoft Edge | Google Chrome | Google Chrome |
+| Microsoft Intune | Yes | No | No |
+| Check Point VPN (cpyvpn) | Yes | No | No |
+| WWAN / Modem | Yes | No | No |
+| Logitech / Solaar | Yes | No | No |
+| 8BitDo controller | Yes | No | No |
+| Porttelefon | Yes | No | No |
+| Webengage Release | Yes | No | No |
+| Work hosts file | Yes | No | No |
+
+All three share: Hyprland, Kitty, Cursor, Firefox, Chrome, Steam, Docker, and the full CLI/media/misc module set.
 
 ### Known Quirks / Workarounds
-- `amd_pmc.enable_stb=1` kernel param enables System Trace Buffer for better AMD s2idle suspend/resume
-- _Add any suspend/resume issues you've encountered_
-- _Add any hardware that needed special configuration_
+- T14s: `amdgpu.dcdebugmask=0x10` kernel param for AMD display
 
 ## Workflow
 
-- **Primary Use**: Work development machine (_confirm if also personal use_)
+- **Primary Use**: T14s is the work development machine; T470p and T450 are personal
 - **Languages**: Node.js, Python 3, Go
-- **Containerization**: Docker enabled
-- **Work Tools**: 
+- **Containerization**: Docker enabled on all machines
+- **Work Tools** (T14s only):
   - VPN via cpyvpn (Check Point VPN)
   - Microsoft Intune for device management
   - Jira and Azure DevOps (credentials in sops secrets)
   - Slack, Signal for communication
 
 ### Typical Commands
-- Rebuild: `SUPER+U` launches `scripts/rebuild.sh` in Kitty, which runs `sudo nixos-rebuild switch --flake ~/NixOS#Default` (also injects username into flake.nix and manages hardware-configuration.nix)
+- Rebuild: `SUPER+U` launches `scripts/rebuild.sh` in Kitty, which runs `sudo nixos-rebuild switch --flake ~/NixOS#<hostname>`
 - Update flake inputs: `nix flake update`
 - Garbage collection: Automatic via nh (keeps 7 days, 3 generations)
 
@@ -51,6 +71,13 @@ This document provides context about this NixOS configuration that isn't immedia
 - **Custom packages**: `pkgs/` for packages not in nixpkgs
 - **Overlays**: `overlays/` for package modifications
 
+### Multi-Host Architecture
+- `flake.nix` defines `commonSettings` shared by all hosts, with per-host overrides in `hostSettings`
+- Each host has its own `hosts/<name>/configuration.nix` that imports the modules it needs
+- T14s imports work-specific modules (Intune, cpyvpn, WWAN, etc.) that the other two don't
+- The `browser` setting is `"microsoft-edge"` for T14s and `"google-chrome"` for T470p/T450
+- When adding a package to all machines, add it to `hosts/common.nix`; for a specific machine, add it to that host's `configuration.nix`
+
 ### Installing New Packages
 When I ask for you to install new application and packages:
 1. Search for the application on `nixpkgs`. 
@@ -65,9 +92,9 @@ When I ask for you to install new application and packages:
 Central configuration in `flake.nix` under `settings`:
 - `username`, `editor`, `browser`, `terminal` - easily swappable
 - `videoDriver`, `hostname`, locale settings - system-level
+- Per-host overrides in `hostSettings` (e.g. browser, videoDriver)
 
 ### Home-Manager vs System
-- _Add your preference: when do you use home-manager vs system config?_
 - Currently: Most program configs are home-manager, services are system-level
 
 ## Known Pain Points
@@ -79,9 +106,7 @@ _Fill in issues you frequently encounter:_
 
 ## Future Goals
 
-_What are you planning to change or add?_
-- I'm planning of adding support of an old laptop as well. I don't know the system yet. I think it's an Intel, with 32GB ram.
-- I'm going to go through my shared modules, my home modules and other things to make the installation prettier
+- Going through shared modules, home modules and other things to make the installation prettier
 - 
 
 ## Quick Reference
@@ -94,10 +119,11 @@ _What are you planning to change or add?_
 | Secrets         | sops-nix with age key at `~/NixOS/age.key`        |
 | State version   | 23.11                                             |
 | Nixpkgs channel | unstable                                          |
+| Hosts           | t14s (AMD), t470p (Nvidia), t450 (Intel)          |
 
 ### Current Preferences (from flake.nix)
 - **Editor**: Cursor
-- **Browser**: Microsoft Edge (Firefox, Chrome also installed)
+- **Browser**: Microsoft Edge on T14s, Google Chrome on T470p/T450 (Firefox also installed on all)
 - **Terminal**: Kitty
 - **File Manager**: Yazi
 - **Shell**: zsh with Starship prompt

@@ -28,7 +28,7 @@
     ../../modules/programs/cli/starship
     ../../modules/programs/cli/tmux
     ../../modules/programs/cli/direnv
-    ../../modules/programs/cli/lazygit
+
     ../../modules/programs/cli/cava
     ../../modules/programs/cli/btop
     ../../modules/programs/cli/micro
@@ -84,8 +84,6 @@
   # T14s-specific packages
   environment.systemPackages = with pkgs; [
     solaar
-    gnome-firmware
-    pkgs."8bitdo-updater"
   ];
 
   services.intune.enable = true;

@@ -67,10 +67,12 @@
       t470p = commonSettings // {
         hostname = "t470p";
         videoDriver = "nvidia";
+        browser = "google-chrome";
       };
       t450 = commonSettings // {
         hostname = "t450";
         videoDriver = "intel";
+        browser = "google-chrome";
       };
     };
 
