@@ -44,6 +44,7 @@
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
       editor = "cursor"; # cursor, vscode
+      textEditor = "micro"; # micro, nano, vim
       browser = "microsoft-edge"; # firefox, floorp, zen
       terminal = "kitty"; # kitty, alacritty, wezterm
       terminalFileManager = "yazi"; # yazi or lf
