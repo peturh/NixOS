@@ -23,6 +23,7 @@
           enable_audio_bell = false;
           mouse_hide_wait = 60;
           update_check_interval = 0;
+          term = "xterm-256color";
 
           ## Tabs
           tab_title_template = "{index}";
