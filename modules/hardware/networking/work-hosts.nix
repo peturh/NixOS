@@ -6,5 +6,6 @@
     172.16.151.11 devapp-kibana.puzzel.com
     10.7.24.10 uk-kibana.puzzel.com
     10.47.26.11 unleash.prod.local
+    212.89.50.29 devapp-services.puzzel.com
   '';
 }
