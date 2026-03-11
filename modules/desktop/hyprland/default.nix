@@ -135,6 +135,7 @@
           input = {
             kb_layout = "${kbdLayout},is";
             kb_variant = "${kbdVariant},";
+            numlock_by_default = true;
             repeat_delay = 300; # or 212
             repeat_rate = 30;
 

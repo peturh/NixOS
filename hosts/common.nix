@@ -239,6 +239,7 @@
       enableHidpi = true;
       package = pkgs.kdePackages.sddm;
       theme = "sddm-astronaut-theme";
+      settings.General.Numlock = "on";
       settings.Theme.CursorTheme = "Bibata-Modern-Classic";
       extraPackages = with pkgs; [
         kdePackages.qtmultimedia
