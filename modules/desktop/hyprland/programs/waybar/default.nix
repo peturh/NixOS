@@ -80,6 +80,9 @@
                 "telegram" = "";
                 "org.gnome.FileRoller" = "󰛫";
                 "transmission-qt" = "󰃘";
+                "vivaldi" = "󰖟";
+                "obsidian" = "󱓧";
+                "Bitwarden" = "󰒃";
               };            
             };
 

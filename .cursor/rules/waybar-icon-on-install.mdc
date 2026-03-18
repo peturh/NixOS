@@ -1,0 +1,20 @@
+---
+description: When installing a GUI/UI application, also add a Waybar window-rewrite icon for it
+alwaysApply: true
+---
+
+# Add Waybar icon when installing UI applications
+
+When adding a new GUI application to the NixOS config (e.g. to `home.packages` or `environment.systemPackages`), also add a matching Nerd Font icon entry to the `window-rewrite` map in:
+
+`modules/desktop/hyprland/programs/waybar/default.nix`
+
+The entry maps the application's Hyprland window class to a Nerd Font icon, e.g.:
+
+```nix
+"obsidian" = "󱓧";
+```
+
+Use an icon that visually represents the application's purpose (e.g. a globe for browsers, a note for note apps, a gamepad for game launchers). Browse https://www.nerdfonts.com/cheat-sheet for icons.
+
+This does **not** apply to CLI-only tools or background services — only applications that open a visible window.
