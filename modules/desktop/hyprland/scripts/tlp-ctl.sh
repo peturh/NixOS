@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# Check for playerctl existence
 if ! command -v tlp >/dev/null; then
     echo "Couldn't find tlp. Exiting." >&2
     exit 1
 fi
+
+PERF_MARKER="/tmp/tlp-performance-mode"
+SCRIPT_PATH="$(readlink -f "$0")"
 
 # ==== Usage ====
 USAGE="
@@ -12,142 +14,156 @@ Usage: $0 [COMMAND] [ARGUMENTS] [COMMAND_OPTIONS]
        $0 -h
 
 OPTIONS:
-
     -h, --help      Show this message
 
 COMMANDS:
-    get
-        Get mode (default)
-        Options: --json, -v | --verbose
-    set [bat|ac|auto]
-        Set mode
-
-    toggle
-        Toggle mode
-
-    --
-        Pass args to tlp
+    get             Get current profile (default)
+                    Options: --json, -v | --verbose
+    set [low|medium|performance|auto]
+                    Set power profile
+    toggle          Toggle performance mode on/off
+    --              Pass args to tlp
 "
 
-function Help() {
-    echo "$USAGE"
+Help() { echo "$USAGE"; }
+
+
+# ==== Internal (run via pkexec as root) ====
+
+_apply_performance() {
+    for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+        echo performance > "$gov" 2>/dev/null
+    done
+    for epp in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
+        echo performance > "$epp" 2>/dev/null
+    done
+    [ -f /sys/devices/system/cpu/cpufreq/boost ] && echo 1 > /sys/devices/system/cpu/cpufreq/boost
+    [ -f /sys/devices/system/cpu/intel_pstate/no_turbo ] && echo 0 > /sys/devices/system/cpu/intel_pstate/no_turbo
+    [ -f /sys/firmware/acpi/platform_profile ] && echo performance > /sys/firmware/acpi/platform_profile
 }
 
 
 # ==== Functions ====
 
-# ---- Mode functions ----
+is_on_ac() {
+    for supply in /sys/class/power_supply/*/online; do
+        [ -f "$supply" ] && [ "$(cat "$supply" 2>/dev/null)" = "1" ] && return 0
+    done
+    return 1
+}
 
-get_mode() {
-    local raw_mode=$(tlp-stat -m)
-    local handling
-    case "$raw_mode" in
-        *"(manual)" )
-            handling=manual
-            raw_mode="${raw_mode%% *}" # Remove everything after the first space
-            ;;
-        * )
-            handling=auto
-            ;;
-    esac
-    # Normalize mode to lowercase for consistency
-    raw_mode=$(echo "$raw_mode" | tr '[:upper:]' '[:lower:]')
-    # Extract power source from "profile/source" format (e.g. "performance/ac" -> "ac")
-    local mode
-    if [[ "$raw_mode" == */* ]]; then
-        mode="${raw_mode##*/}"
-    else
-        mode="$raw_mode"
+is_performance_active() {
+    [ -f "$PERF_MARKER" ] || return 1
+    local gov
+    gov=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null)
+    if [ "$gov" != "performance" ]; then
+        rm -f "$PERF_MARKER"
+        return 1
     fi
-    # Normalize "bat" to "battery" for waybar format-icons matching
-    [[ "$mode" == "bat" ]] && mode="battery"
-    print_mode "TLP Mode" "$mode" "$handling" "$1"
+    return 0
 }
 
-set_mode() {
-    local mode="$1"
-    case "$mode" in
-        bat* )
-            pkexec tlp bat;;
-        ac ) 
-            pkexec tlp ac;;
-        auto )
-            pkexec tlp start;;
-        * )
-            echo "Unknown mode: $mode" >&2
-            exit 1;;
-    esac
-}
-
-toggle_mode() {
-    local raw_mode=$(tlp-stat -m)
-    # Normalize and extract power source from "profile/source" format
-    raw_mode=$(echo "$raw_mode" | tr '[:upper:]' '[:lower:]')
-    local mode
-    if [[ "$raw_mode" == */* ]]; then
-        mode="${raw_mode##*/}"
+get_profile() {
+    local profile handling
+    if is_performance_active; then
+        profile="performance"
+        handling="manual"
+    elif is_on_ac; then
+        profile="medium"
+        handling="auto"
     else
-        mode="$raw_mode"
+        profile="low"
+        handling="auto"
     fi
-    case "$mode" in
-        bat* ) 
-            pkexec tlp ac;;
-        * )
-            pkexec tlp bat;;
+    print_profile "$profile" "$handling" "$1"
+}
+
+set_profile() {
+    case "$1" in
+        low)
+            rm -f "$PERF_MARKER"
+            pkexec tlp bat
+            ;;
+        medium)
+            rm -f "$PERF_MARKER"
+            pkexec tlp ac
+            ;;
+        performance)
+            pkexec tlp ac
+            pkexec "$SCRIPT_PATH" _apply_performance
+            touch "$PERF_MARKER"
+            ;;
+        auto)
+            rm -f "$PERF_MARKER"
+            pkexec tlp start
+            ;;
+        *)
+            echo "Unknown profile: $1" >&2
+            exit 1
+            ;;
     esac
 }
 
+toggle_profile() {
+    if is_performance_active; then
+        set_profile auto
+    else
+        set_profile performance
+    fi
+}
 
-# ---- Lib functions ----
+print_profile() {
+    local profile="$1"
+    local handling="$2"
 
-function print_mode() {
-    local param="$1"
-    local mode="$2"
-    local handling="$3"
-
-    case "$4" in
-        --json )
+    case "$3" in
+        --json)
             jq -n --unbuffered --compact-output \
-                --arg mode "$mode" \
-                --arg tooltip "$param: $mode ($handling)" \
+                --arg profile "$profile" \
+                --arg tooltip "Power: $profile ($handling)" \
                 --arg handling "$handling" \
                 '{
-                    "text": $mode, "alt": $mode,
+                    "text": $profile, "alt": $profile,
                     "tooltip": $tooltip,
-                    "class": [ $mode, $handling ]
+                    "class": [ $profile, $handling ]
                 }'
             ;;
-        -v | --verbose )
-            echo "$mode"
-            echo "$param: $mode ($handling)"
-            echo "$mode","$handling"
+        -v | --verbose)
+            echo "$profile"
+            echo "Power: $profile ($handling)"
+            echo "$profile,$handling"
             ;;
-        * )
-            [ -n "$mode" ] && echo "$mode" || echo "$param";;
+        *)
+            echo "$profile"
+            ;;
     esac
 }
 
 
 # ==== Main ====
 
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    Help
-    exit 0
-fi
-
 case "$1" in
-    -h | --help )
+    -h | --help)
         Help
-        exit 0;;
-    "" | get )
-        get_mode "$2";;
-    set )
-        set_mode "$2";;
-    toggle )
-        toggle_mode;;
-    -- )
-        tlp "${@:2}";;
-    * )
+        exit 0
+        ;;
+    "" | get)
+        get_profile "$2"
+        ;;
+    set)
+        set_profile "$2"
+        ;;
+    toggle)
+        toggle_profile
+        ;;
+    _apply_performance)
+        _apply_performance
+        ;;
+    --)
+        tlp "${@:2}"
+        ;;
+    *)
         echo "Unknown command: $1" >&2
-        exit 1;;
+        exit 1
+        ;;
 esac

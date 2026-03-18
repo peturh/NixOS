@@ -89,7 +89,7 @@
         settings = {
           "$mainMod" = "SUPER";
           "$term" = "${getExe pkgs.${terminal}}";
-          "$editor" = "code --disable-gpu";
+          "$editor" = "code";
           "$fileManager" = "$term --class \"terminalFileManager\" -e ${terminalFileManager}";
           "$browser" = browser;
 
@@ -109,7 +109,6 @@
             "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
             "QT_QPA_PLATFORMTHEME,qt6ct"
             "QT_AUTO_SCREEN_SCALE_FACTOR,1"
-            "WLR_RENDERER_ALLOW_SOFTWARE,1"
             "NIXPKGS_ALLOW_UNFREE,1"
           ];
           exec-once = [
@@ -220,7 +219,7 @@
           render = {
             # explicit_sync = 1; # 0 = off, 1 = on, 2 = auto based on gpu driver.
             # explicit_sync_kms = 2; # 0 = off, 1 = on, 2 = auto based on gpu driver.
-            direct_scanout = 2; # 0 = off, 1 = on, 2 = auto (on with content type ‘game’) 
+            direct_scanout = 0; # 0 = off, 1 = on, 2 = auto (on with content type 'game') 
           };
           ecosystem = {
             no_update_news = true;
@@ -232,7 +231,7 @@
             swallow_regex = "^(Alacritty|kitty)$";
             enable_swallow = true;
             vfr = true; # always keep on
-            vrr = 1; # enable variable refresh rate (0=off, 1=on, 2=fullscreen only)
+            vrr = 0; # enable variable refresh rate (0=off, 1=on, 2=fullscreen only)
           };
           xwayland.force_zero_scaling = false;
           

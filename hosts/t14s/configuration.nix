@@ -20,6 +20,7 @@
     ../../modules/scripts
     ../../modules/desktop/hyprland
     ../../modules/programs/browser/${browser}
+    ../../modules/programs/browser/microsoft-edge
     ../../modules/programs/browser/google-chrome
     ../../modules/programs/browser/firefox
     ../../modules/programs/terminal/${terminal}

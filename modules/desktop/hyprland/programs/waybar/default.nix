@@ -163,19 +163,19 @@
             modules-center = ["hyprland/window"];
             modules-right = ["custom/tlp" "cpu" "memory" "backlight" "battery" "temperature"];
 
-            "custom/tlp" = { 
+            "custom/tlp" = {
               format = "{icon}";
               format-icons = {
-                battery = "󰄌 ";
-                ac = "󰚥 ";
+                low = "󰄌";
+                medium = "󰚥";
+                performance = "󱐋";
               };
               exec = "${../../scripts/tlp-ctl.sh} get --json";
               exec-on-event = true;
               return-type = "json";
-              # We need to run every now and then in case there are outside changes.
               interval = 5;
-              on-click = "${../../scripts/tlp-ctl.sh}  toggle";
-              on-click-right = "${../../scripts/tlp-ctl.sh}  set auto";
+              on-click = "${../../scripts/tlp-ctl.sh} toggle";
+              on-click-right = "${../../scripts/tlp-ctl.sh} set auto";
            };
            #"power-profiles-daemon" 
             # "power-profiles-daemon" = {
@@ -495,13 +495,13 @@
     };
     "custom/tlp" = {
       format = "{icon}";
-      format-icons = { battery = "󰄌"; ac = "󰚥"; };
+      format-icons = { low = "󰄌"; medium = "󰚥"; performance = "󱐋"; };
       exec = "${../../scripts/tlp-ctl.sh} get --json";
       exec-on-event = true;
       return-type = "json";
       interval = 5;
-      on-click = "${../../scripts/tlp-ctl.sh}  toggle";
-      on-click-right = "${../../scripts/tlp-ctl.sh}  set auto";
+      on-click = "${../../scripts/tlp-ctl.sh} toggle";
+      on-click-right = "${../../scripts/tlp-ctl.sh} set auto";
     };
     "cpu" = {
       interval = 10;
@@ -759,21 +759,15 @@
 
     #custom-tlp {
       padding-right: 2px;
+    }
+    #custom-tlp.low {
+      color: @green;
+    }
+    #custom-tlp.medium {
+      color: @blue;
+    }
+    #custom-tlp.performance {
       color: @peach;
-    }
-
-    #power-profiles-daemon {
-      padding-right: 2px;
-    }
-
-    #power-profiles-daemon.performance {
-      color: @red
-    }
-    #power-profiles-daemon.balanced {
-      color: @blue  
-    }
-    #power-profiles-daemon.power-saver {
-      color: @green
     }
 
     #custom-notification {
@@ -1158,7 +1152,9 @@
     }
 
     /* System indicators */
-    #custom-tlp { color: @peach; }
+    #custom-tlp.low { color: @green; }
+    #custom-tlp.medium { color: @blue; }
+    #custom-tlp.performance { color: @peach; }
     #cpu { color: @yellow; }
     #memory { color: @green; }
     #backlight { color: @blue; }

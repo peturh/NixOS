@@ -8,10 +8,11 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       libvdpau-va-gl
-      libva-vdpau-driver
-      # vulkan-loader
-      # vulkan-extension-layer
-      # vulkan-validation-layers
+      vulkan-loader
+      vulkan-extension-layer
     ];
+  };
+  environment.variables = {
+    LIBVA_DRIVER_NAME = "radeonsi";
   };
 }
