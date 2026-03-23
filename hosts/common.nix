@@ -268,11 +268,14 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  fonts.packages = with pkgs.nerd-fonts; [
+  fonts.packages = (with pkgs.nerd-fonts; [
     jetbrains-mono
     fira-code
     open-dyslexic
-  ];
+  ]) ++ (with pkgs; [
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+  ]);
 
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
