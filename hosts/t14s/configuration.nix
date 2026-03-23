@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   videoDriver,
   hostname,
@@ -10,6 +11,7 @@
   ...
 }: {
   imports = [
+    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t14s-amd-gen4
     ./hardware-configuration.nix
     ../../modules/hardware/video/${videoDriver}.nix
     ../../modules/hardware/networking
@@ -65,10 +67,16 @@
     ../../modules/programs/gaming/steam
   ];
 
-  # T14s-specific: AMD kernel param
+  boot.initrd.kernelModules = ["amdgpu"];
+
   boot.kernelParams = [
     "amdgpu.dcdebugmask=0x10"
+    "mem_sleep_default=deep"
+    "amd_pstate=active"
   ];
+
+  powerManagement.enable = true;
+  services.power-profiles-daemon.enable = false;
 
   # T14s-specific: Logitech wireless device support
   hardware.logitech.wireless.enable = true;
