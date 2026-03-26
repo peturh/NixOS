@@ -21,6 +21,7 @@ COMMANDS:
                     Options: --json, -v | --verbose
     set [low|medium|performance|auto]
                     Set power profile
+    cycle           Cycle through low → medium → performance
     toggle          Toggle performance mode on/off
     --              Pass args to tlp
 "
@@ -112,6 +113,16 @@ toggle_profile() {
     fi
 }
 
+cycle_profile() {
+    local current
+    current=$(get_profile)
+    case "$current" in
+        low)         set_profile medium ;;
+        medium)      set_profile performance ;;
+        performance) set_profile low ;;
+    esac
+}
+
 print_profile() {
     local profile="$1"
     local handling="$2"
@@ -155,6 +166,9 @@ case "$1" in
         ;;
     toggle)
         toggle_profile
+        ;;
+    cycle)
+        cycle_profile
         ;;
     _apply_performance)
         _apply_performance

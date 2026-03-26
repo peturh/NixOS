@@ -165,7 +165,7 @@
               enabled = true;
               special = true;
               size = 6; # 6
-              passes = 2; # 3
+              passes = 1; # 2
               new_optimizations = true;
               ignore_opacity = true;
               xray = false;
@@ -219,7 +219,7 @@
           render = {
             # explicit_sync = 1; # 0 = off, 1 = on, 2 = auto based on gpu driver.
             # explicit_sync_kms = 2; # 0 = off, 1 = on, 2 = auto based on gpu driver.
-            direct_scanout = 0; # 0 = off, 1 = on, 2 = auto (on with content type 'game') 
+            direct_scanout = 2; # 0 = off, 1 = on, 2 = auto (on with content type 'game') 
           };
           ecosystem = {
             no_update_news = true;

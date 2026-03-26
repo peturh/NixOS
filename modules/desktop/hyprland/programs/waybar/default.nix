@@ -177,7 +177,7 @@
               exec-on-event = true;
               return-type = "json";
               interval = 5;
-              on-click = "${../../scripts/tlp-ctl.sh} toggle";
+              on-click = "${../../scripts/tlp-ctl.sh} cycle";
               on-click-right = "${../../scripts/tlp-ctl.sh} set auto";
            };
            #"power-profiles-daemon" 

@@ -135,7 +135,15 @@
   zramSwap = {
   enable = true;
   algorithm = "zstd";
-  memoryPercent = 50; # Use 50% of RAM for compressed swap
+  memoryPercent = 50;
+  };
+
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 180; # Recommended for zram: aggressively use compressed RAM swap over disk
+    "vm.vfs_cache_pressure" = 50; # Keep inode/dentry caches longer for snappier file access
+    "vm.dirty_ratio" = 10; # Flush dirty pages sooner to avoid I/O stalls
+    "vm.dirty_background_ratio" = 5; # Start background writeback earlier
+    "vm.page-cluster" = 0; # Disable readahead for swap (zram is random-access, not disk)
   };
 
   nix.settings = {
@@ -153,6 +161,7 @@
 
   # Filesystems support
   boot.supportedFilesystems = ["ntfs" "exfat" "ext4" "fat32" "btrfs"];
+  services.fstrim.enable = true;
   services.devmon.enable = true;
   services.gvfs.enable = true;
   services.udisks2.enable = true;
@@ -160,7 +169,7 @@
   services.scx = {
     enable = true;
     package = pkgs.scx.rustscheds;
-    scheduler = "scx_lavd"; # https://github.com/sched-ext/scx/blob/main/scheds/rust/README.md
+    scheduler = "scx_rusty"; # https://github.com/sched-ext/scx/blob/main/scheds/rust/README.md
   };
 
   # Bootloader.
@@ -355,7 +364,6 @@
   nix = {
     # Nix Package Manager Settings
     settings = {
-      auto-optimise-store = true; # May make rebuilds longer but less size
       substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org/"
