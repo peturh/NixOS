@@ -44,6 +44,7 @@
     ../../modules/programs/media/mpv
     ../../modules/programs/media/radioboat
     ../../modules/programs/media/slack
+    ../../modules/programs/media/teams-for-linux
     ../../modules/programs/media/signal
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/transmission

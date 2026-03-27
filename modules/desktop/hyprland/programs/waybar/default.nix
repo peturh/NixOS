@@ -68,6 +68,7 @@
                 "wezterm" = "";
                 "discord" = "󰙯";
                 "slack" = "󰒱";
+                "teams-for-linux" = "󰊻";
                 "spotify" = "󰓇";
                 "vlc" = "󰕼";
                 "mpv" = "";
