@@ -16,6 +16,7 @@
   imports = [
     inputs.home-manager.nixosModules.home-manager
     inputs.nix-index-database.nixosModules.nix-index
+    ../modules/programs/development/claude-code
   ];
 
   programs.nix-index-database.comma.enable = true;
@@ -128,6 +129,7 @@
         ripgrep
         tldr
         unzip
+        xdelta
       ];
     };
   };

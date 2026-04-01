@@ -75,7 +75,6 @@
                 "nautilus" = "󰉋";
                 "thunar" = "󰉋";
                 "steam" = "󰓓";
-                "obs" = "󰐌";
                 "gimp" = "";
                 "signal" = "󰍡 ";
                 "telegram" = "";
@@ -84,6 +83,7 @@
                 "vivaldi" = "󰖟";
                 "obsidian" = "󱓧";
                 "Bitwarden" = "󰒃";
+                "claude-code" = "󰚩";
               };            
             };
 
