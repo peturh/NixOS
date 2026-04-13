@@ -124,7 +124,7 @@
         htop
         libjxl
         microfetch
-        neofetch
+        fastfetch
         nix-prefetch-scripts
         ripgrep
         tldr

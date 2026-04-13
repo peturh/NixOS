@@ -1194,7 +1194,7 @@ in {
         enable = true;
         systemd = {
           enable = false;
-          target = "graphical-session.target";
+          targets = ["graphical-session.target"];
         };
         settings = if useCompactLayout then compactSettings else defaultSettings;
         style = if useCompactLayout then compactStyle else defaultStyle;

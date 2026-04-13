@@ -3,6 +3,7 @@
     (_: {
       programs.yazi = {
         enable = true;
+        shellWrapperName = "yy";
         enableBashIntegration = true;
         enableZshIntegration = true;
         settings = {
