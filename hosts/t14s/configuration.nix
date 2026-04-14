@@ -94,6 +94,7 @@
   # T14s-specific packages
   environment.systemPackages = with pkgs; [
     bitwarden-desktop
+    mkcert
     solaar
   ];
 
