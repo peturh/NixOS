@@ -54,6 +54,7 @@
     ../../modules/programs/misc/gparted
     ../../modules/programs/misc/nautilus
     ../../modules/programs/misc/nix-ld
+    ../../modules/programs/misc/orca
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/usbimager
     ../../modules/programs/misc/lact

@@ -24,7 +24,7 @@
             # modules-center = ["idle_inhibitor" "clock" "custom/notification"];
             modules-center = ["clock"];
             # modules-center = ["wlr/taskbar"];
-            modules-right = ["bluetooth" "network" "tray"];
+            modules-right = ["custom/orca" "bluetooth" "network" "tray"];
             #"tray"
 
             "custom/launcher" = {
@@ -32,6 +32,15 @@
               on-click = "${../../scripts/rofi.sh}";
             };
             
+
+            "custom/orca" = {
+              format = "{}";
+              exec = "${../../scripts/orca-toggle.sh} status";
+              return-type = "json";
+              interval = 2;
+              on-click = "${../../scripts/orca-toggle.sh} toggle";
+              tooltip = true;
+            };
 
             "wlr/taskbar"= {
                 format = "{icon}";
@@ -84,6 +93,7 @@
                 "obsidian" = "󱓧";
                 "Bitwarden" = "󰒃";
                 "claude-code" = "󰚩";
+                "orca" = "󰔊";
               };            
             };
 
@@ -546,6 +556,14 @@
       on-click = "wlogout -b 4";
       tooltip-format = "Power menu";
     };
+    "custom/orca" = {
+      format = "{}";
+      exec = "${../../scripts/orca-toggle.sh} status";
+      return-type = "json";
+      interval = 2;
+      on-click = "${../../scripts/orca-toggle.sh} toggle";
+      tooltip = true;
+    };
   };
 
   compactBarBase = {
@@ -571,7 +589,7 @@
 
   rightBar = compactBarBase // compactModuleDefs // {
     position = "right";
-    modules-left = [ "bluetooth" "network" "tray" ];
+    modules-left = [ "custom/orca" "bluetooth" "network" "tray" ];
     modules-center = [ "clock" ];
     modules-right = [ "custom/tlp" "cpu" "memory" "backlight" "battery" "temperature" "custom/power" ];
   };
@@ -759,6 +777,19 @@
 
     #custom-updates {
       color: @blue
+    }
+
+    #custom-orca {
+      padding-right: 4px;
+      padding-left: 4px;
+      color: @overlay0;
+      transition: color 0.2s ease;
+    }
+    #custom-orca.active {
+      color: @green;
+    }
+    #custom-orca:hover {
+      color: @lavender;
     }
 
     #custom-tlp {
@@ -1153,6 +1184,18 @@
       border: 1px solid alpha(@surface1, 0.6);
       border-radius: 14px;
       margin: 4px 4px;
+    }
+
+    /* Orca screen reader toggle */
+    #custom-orca {
+      color: @overlay0;
+      transition: color 0.2s ease;
+    }
+    #custom-orca.active {
+      color: @green;
+    }
+    #custom-orca:hover {
+      color: @lavender;
     }
 
     /* System indicators */
