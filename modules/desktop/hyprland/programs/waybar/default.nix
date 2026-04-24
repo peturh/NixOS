@@ -90,6 +90,7 @@
                 "org.gnome.FileRoller" = "󰛫";
                 "transmission-qt" = "󰃘";
                 "vivaldi" = "󰖟";
+                "helium" = "󰖟";
                 "obsidian" = "󱓧";
                 "Bitwarden" = "󰒃";
                 "claude-code" = "󰚩";

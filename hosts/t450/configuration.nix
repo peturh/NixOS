@@ -20,6 +20,7 @@
     ../../modules/programs/browser/${browser}
     ../../modules/programs/browser/google-chrome
     ../../modules/programs/browser/firefox
+    ../../modules/programs/browser/helium
     ../../modules/programs/terminal/${terminal}
     ../../modules/programs/editor/${editor}
     ../../modules/programs/cli/${terminalFileManager}

@@ -29,6 +29,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    helium = {
+      url = "github:schembriaiden/helium-browser-nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
   };
 
@@ -65,6 +69,7 @@
       t14s = commonSettings // {
         hostname = "t14s";
         videoDriver = "amdgpu";
+        browser = "helium";
       };
       t470p = commonSettings // {
         hostname = "t470p";
