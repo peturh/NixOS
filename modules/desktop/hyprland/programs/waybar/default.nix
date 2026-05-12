@@ -95,6 +95,7 @@
                 "Bitwarden" = "󰒃";
                 "claude-code" = "󰚩";
                 "orca" = "󰔊";
+                "com.hunterwittenborn.Celeste" = "󰅟";
               };            
             };
 

@@ -46,6 +46,7 @@
     ../../modules/programs/media/vlc
     ../../modules/programs/media/gimp
     ../../modules/programs/misc/archive
+    ../../modules/programs/misc/celeste
     ../../modules/programs/misc/gparted
     ../../modules/programs/misc/nautilus
     ../../modules/programs/misc/nix-ld
