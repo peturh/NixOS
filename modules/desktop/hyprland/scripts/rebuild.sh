@@ -57,7 +57,39 @@ fi
 
 sudo git -C "$flake" add "$hostDir/hardware-configuration.nix"
 
-sudo nixos-rebuild switch --flake "$flake#$hostName"
+YELLOW='\033[1;33m'
+
+# Run nixos-rebuild switch; if the pre-switch inhibitor blocks it (e.g. a
+# dbus/systemd/init swap that can't be done live), fall back to `boot` and
+# offer to reboot. We tee stderr so we can both show it to the user and
+# inspect it for the inhibitor message.
+rebuild_log=$(mktemp)
+trap 'rm -f "$rebuild_log"' EXIT
+
+if sudo nixos-rebuild switch --flake "$flake#$hostName" 2> >(tee "$rebuild_log" >&2); then
+  switch_ok=1
+else
+  switch_ok=0
+fi
+
+if [ "$switch_ok" -eq 0 ] && grep -q -E "switchInhibitors|Pre-switch check" "$rebuild_log"; then
+  echo
+  echo -e "${YELLOW}Live switch was blocked by a critical-component change.${NC}"
+  echo -e "${YELLOW}Staging the new configuration for next boot instead...${NC}"
+  if sudo nixos-rebuild boot --flake "$flake#$hostName"; then
+    echo
+    read -rp "$(echo -e "${YELLOW}Reboot now to activate the new configuration? [y/N] ${NC}")" answer
+    case "$answer" in
+      [yY]|[yY][eE][sS]) sudo systemctl reboot ;;
+      *) echo -e "${GREEN}New configuration will activate on next reboot.${NC}" ;;
+    esac
+  else
+    echo -e "${RED}nixos-rebuild boot also failed. See output above.${NC}"
+    exit 1
+  fi
+elif [ "$switch_ok" -eq 0 ]; then
+  exit 1
+fi
 
 echo
 read -rsn1 -p"$(echo -e "${GREEN}Press any key to continue${NC}")"

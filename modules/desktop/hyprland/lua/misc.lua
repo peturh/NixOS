@@ -17,16 +17,22 @@ hl.config({
     mouse_move_focuses_monitor = true,
     swallow_regex = "^(Alacritty|kitty)$",
     enable_swallow = true,
-    vfr = true, -- always keep on
     vrr = 0, -- enable variable refresh rate (0=off, 1=on, 2=fullscreen only)
+  },
+
+  -- Hyprland 0.55 moved vfr out of `misc` into `debug` (it's a debug-only knob
+  -- and should normally stay at its default value, which is `true`/enabled).
+  debug = {
+    vfr = true,
   },
 
   xwayland = {
     force_zero_scaling = false,
   },
 
+  -- Hyprland 0.55 removed `dwindle.pseudotile` (it was a no-op key); the
+  -- `pseudo` dispatcher is what actually toggles pseudotiling per window.
   dwindle = {
-    pseudotile = true,
     preserve_split = true,
   },
 

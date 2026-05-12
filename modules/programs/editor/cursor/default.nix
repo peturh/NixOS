@@ -6,10 +6,15 @@
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) ["code-cursor"];
   home-manager.sharedModules = [
     (_: {
-      programs.vscode = {
+      # Home Manager split each VSCode fork into its own dedicated module.
+      # `programs.vscode` now always writes to upstream VSCode paths
+      # (~/.config/Code/User), regardless of the package, so Cursor would
+      # silently lose its config. Use `programs.cursor` so settings land at
+      # ~/.config/Cursor/User where Cursor actually reads them.
+      programs.cursor = {
         enable = true;
         # mutableExtensionsDir = true; # TODO: test with home-manager
-        package = pkgs.code-cursor;
+        # package defaults to pkgs.code-cursor; override only if needed.
         profiles.default = {
           extensions = with pkgs.vscode-extensions; [
             bbenoist.nix
