@@ -94,7 +94,11 @@
       xdg.enable = true;
       xdg.portal = {
         enable = true;
-        extraPortals = with pkgs; [ xdg-desktop-portal-hyprland xdg-desktop-portal-gtk ];
+        # xdg-desktop-portal-hyprland is added automatically by the home-manager
+        # hyprland module (using the same flake-pinned version), so we omit it
+        # here to avoid a buildEnv conflict between the nixpkgs copy and the
+        # flake copy.
+        extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
         xdgOpenUsePortal = true;
       };
       home.username = username;
