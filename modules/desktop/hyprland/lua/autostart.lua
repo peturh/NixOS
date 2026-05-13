@@ -10,9 +10,15 @@ hl.on("hyprland.start", function()
   -- hl.exec_cmd("[workspace special silent] " .. v.browser .. " --private-window")
   -- hl.exec_cmd("[workspace special silent] " .. v.term)
 
+  -- Activate the user systemd graphical session. Home-manager normally emits
+  -- this as `exec-once` in hyprland.conf, but Hyprland 0.55+ prefers
+  -- hyprland.lua and silently ignores hyprland.conf, so we replay it here.
+  -- This is what brings up hyprpaper.service, hypridle.service,
+  -- swaync.service, hyprpolkitagent.service, etc.
+  hl.exec_cmd("dbus-update-activation-environment --systemd --all && systemctl --user stop hyprland-session.target && systemctl --user start hyprland-session.target")
+
   hl.exec_cmd("waybar")
   hl.exec_cmd("nm-applet --indicator") -- NetworkManager tray applet
-  hl.exec_cmd("swaync")
   hl.exec_cmd("wl-clipboard-history -t")
   hl.exec_cmd(v.bin.wlPaste .. " --type text --watch cliphist store") -- clipboard store text data
   hl.exec_cmd(v.bin.wlPaste .. " --type image --watch cliphist store") -- clipboard store image data

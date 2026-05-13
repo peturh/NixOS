@@ -64,13 +64,23 @@ YELLOW='\033[1;33m'
 # offer to reboot. We tee stderr so we can both show it to the user and
 # inspect it for the inhibitor message.
 rebuild_log=$(mktemp)
-trap 'rm -f "$rebuild_log"' EXIT
+trap 'rm -f "$rebuild_log" ; stty sane 2>/dev/null || true' EXIT
+
+# Refresh the sudo timestamp now, with a clean tty. If we let sudo prompt
+# for the password from inside the `2> >(tee ...)` process substitution
+# below, sudo's tty handling can leave the terminal in `-onlcr` mode,
+# which produces staircased output for everything that follows.
+sudo -v
 
 if sudo nixos-rebuild switch --flake "$flake#$hostName" 2> >(tee "$rebuild_log" >&2); then
   switch_ok=1
 else
   switch_ok=0
 fi
+
+# Defensive: ensure the terminal is back in a sane state in case the
+# password prompt above (or anything else) left it in raw mode.
+stty sane 2>/dev/null || true
 
 if [ "$switch_ok" -eq 0 ] && grep -q -E "switchInhibitors|Pre-switch check" "$rebuild_log"; then
   echo

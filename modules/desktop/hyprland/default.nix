@@ -140,6 +140,9 @@
           enable = true;
           variables = ["--all"];
         };
+        # Hyprland loads hypr/hyprland.lua when present; HM only needs non-empty
+        # extraConfig here to avoid the "systemd/plugins but no settings" warning.
+        extraConfig = "# primary config: hyprland.lua (xdg.configFile)";
         settings = {};
       };
     })

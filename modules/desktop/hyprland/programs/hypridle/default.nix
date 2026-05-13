@@ -21,7 +21,7 @@ in {
             lock_cmd = "pidof hyprlock || hyprlock";
             unlock_cmd = "pkill --signal SIGUSR1 hyprlock";
             before_sleep_cmd = "loginctl lock-session";
-            after_sleep_cmd = "sleep 1 && hyprctl dispatch dpms on";
+            after_sleep_cmd = "sleep 1 && hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
           };
           listener = [
             {
@@ -30,8 +30,8 @@ in {
             }
             {
               timeout = 600; # 10 Minutes - turn off display (both AC and battery)
-              on-timeout = "hyprctl dispatch dpms off";
-              on-resume = "hyprctl dispatch dpms on";
+              on-timeout = "hyprctl dispatch 'hl.dsp.dpms({ action = \"off\" })'";
+              on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
             }
             {
               timeout = 900; # 15 Minutes - suspend ONLY on battery

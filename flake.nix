@@ -34,7 +34,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland = {
-      url = "github:hyprwm/Hyprland";
+      # Temporarily pinned to x1h0's fork while PR #14393 is unmerged. It
+      # fixes the Hyprland 0.55.0 multi-monitor regression where the cursor
+      # is clamped to the area the first monitor occupied at startup
+      # (PointerManager doesn't subscribe to monitor.layoutChanged).
+      # PR:    https://github.com/hyprwm/Hyprland/pull/14393
+      # Issue: https://github.com/hyprwm/Hyprland/discussions/14382
+      # Revert to "github:hyprwm/Hyprland" once the PR is merged upstream.
+      url = "github:x1h0/Hyprland/c030716c449fbd9f69e7627aaae5a26c914b973b";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

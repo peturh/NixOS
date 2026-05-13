@@ -66,7 +66,7 @@
                 actions = [
                   {
                     label = "   Logout";
-                    command = "hyprctl dispatch exit 0";
+                    command = "hyprctl dispatch 'hl.dsp.exit()'";
                   }
                   {
                     label = "   Shut down";
