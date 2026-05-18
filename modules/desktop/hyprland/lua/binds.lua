@@ -51,9 +51,9 @@ hl.bind(mainMod .. " + delete",    hl.dsp.exit()) -- kill Hyprland session
 hl.bind(mainMod .. " + W",         hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.toggle())
 hl.bind("ALT + return",            hl.dsp.window.fullscreen({ action = "toggle" }))
-hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("hyprlock"))
-hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("pkill -x wlogout || wlogout -b 4"))
-hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd("pkill waybar || waybar"))
+hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("caelestia shell lock lock"))
+hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("caelestia shell drawers toggle session"))
+hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd("systemctl --user restart caelestia"))
 
 -- Applications/Programs.
 hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(v.term))
@@ -66,25 +66,23 @@ hl.bind(mainMod .. " + SHIFT + Y", hl.dsp.exec_cmd("youtube-music"))
 hl.bind("CTRL + ALT + DELETE",     hl.dsp.exec_cmd(v.term .. " -e '" .. v.bin.btop .. "'")) -- System Monitor
 hl.bind(mainMod .. " + CTRL + C",  hl.dsp.exec_cmd("hyprpicker --autocopy --format=hex")) -- Colour Picker
 
-hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofi .. " drun")) -- launch desktop applications
-hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofi .. " drun")) -- launch desktop applications
-hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofi .. " emoji")) -- launch emoji picker
--- hl.bind(mainMod .. " + tab",       hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofi .. " window")) -- switch between desktop applications
--- hl.bind(mainMod .. " + R",         hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofi .. " file")) -- browse system files
+hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("caelestia shell drawers toggle launcher")) -- launch desktop applications
+hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("caelestia shell drawers toggle launcher")) -- launch desktop applications
+hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("caelestia emoji -p")) -- launch emoji picker
 hl.bind(mainMod .. " + ALT + K",   hl.dsp.exec_cmd(v.scripts.keyboardswitch)) -- change keyboard layout
 hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("networkmanager_dmenu")) -- network manager
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("swaync-client -t -sw")) -- swayNC panel
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("swaync-client -t -sw")) -- swayNC panel
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("caelestia shell drawers toggle dashboard")) -- caelestia dashboard
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("caelestia shell drawers toggle dashboard")) -- caelestia dashboard
 hl.bind(mainMod .. " + G",         hl.dsp.exec_cmd(v.scripts.rofi .. " games")) -- game launcher
 hl.bind(mainMod .. " + ALT + G",   hl.dsp.exec_cmd(v.scripts.gamemode)) -- disable hypr effects for gamemode
-hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd(v.scripts.clipManager)) -- Clipboard Manager
+hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("caelestia clipboard")) -- Clipboard Manager
 hl.bind(mainMod .. " + M",         hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofimusic)) -- online music
 
--- Screenshot/Screencapture.
-hl.bind(mainMod .. " + P",         hl.dsp.exec_cmd(v.scripts.screenshot .. " s"))  -- drag to snip an area / click on a window to print it
-hl.bind(mainMod .. " + CTRL + P",  hl.dsp.exec_cmd(v.scripts.screenshot .. " sf")) -- frozen screen, drag to snip an area / click on a window to print it
-hl.bind(mainMod .. " + print",     hl.dsp.exec_cmd(v.scripts.screenshot .. " m"))  -- print focused monitor
-hl.bind(mainMod .. " + ALT + P",   hl.dsp.exec_cmd(v.scripts.screenshot .. " p"))  -- print all monitor outputs
+-- Screenshot/Screencapture (caelestia).
+hl.bind(mainMod .. " + P",         hl.dsp.exec_cmd("caelestia screenshot"))         -- region capture
+hl.bind(mainMod .. " + CTRL + P",  hl.dsp.exec_cmd("caelestia screenshot -f"))      -- frozen-screen region capture
+hl.bind(mainMod .. " + print",     hl.dsp.exec_cmd("caelestia screenshot -m"))      -- current monitor
+hl.bind(mainMod .. " + ALT + P",   hl.dsp.exec_cmd("caelestia screenshot -m all"))  -- all monitors
 
 -- Functional keybinds.
 hl.bind("XF86Sleep",       hl.dsp.exec_cmd("systemctl suspend")) -- Put computer into sleep mode
