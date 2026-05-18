@@ -211,6 +211,18 @@ in {
           lock = {
             hideNotifs = false;
           };
+
+          # Caelestia's default logout command is `loginctl terminate-user ""`
+          # (with an empty username) which hangs on a black screen under SDDM
+          # — a known upstream bug. Override with `hyprctl dispatch exit` so
+          # Hyprland exits cleanly and SDDM respawns the greeter on tty1.
+          # https://github.com/caelestia-dots/shell/issues/250
+          # https://github.com/caelestia-dots/shell/issues/816
+          session = {
+            commands = {
+              logout = ["hyprctl" "dispatch" "exit"];
+            };
+          };
         };
       };
     })

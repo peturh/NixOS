@@ -7,9 +7,15 @@
   # these will be overlayed in nixpkgs automatically.
   # for example: environment.systemPackages = with pkgs; [pokego];
   pokego = pkgs.callPackage ./pokego.nix {};
-  sddm-astronaut = pkgs.callPackage ./sddm-themes/astronaut.nix {theme = settings.sddmTheme;};
-  lenovo-wwan-unlock = pkgs.callPackage ./easy-lenovo-wwan-unlock.nix { };
-  cpyvpn = import ./cpyvpn.nix { inherit pkgs inputs; };
+  sddm-astronaut = pkgs.callPackage ./sddm-themes/astronaut.nix {
+    theme = settings.sddmTheme;
+    # Reuse the system wallpaper for the SDDM greeter background so the login
+    # screen matches the desktop. Set to `null` here to fall back to the
+    # subtheme's bundled background.
+    wallpaper = ../modules/themes/wallpapers/${settings.wallpaper}.jxl;
+  };
+  lenovo-wwan-unlock = pkgs.callPackage ./easy-lenovo-wwan-unlock.nix {};
+  cpyvpn = import ./cpyvpn.nix {inherit pkgs inputs;};
   extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
   "8bitdo-updater" = pkgs.callPackage ./8bitdo-updater.nix {};
   iptvnator = pkgs.callPackage ./iptvnator.nix {};
