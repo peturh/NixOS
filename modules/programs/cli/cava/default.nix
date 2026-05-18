@@ -1,6 +1,12 @@
 {...}: {
   home-manager.sharedModules = [
     (_: {
+      # Caelestia (and Hyprland-side widgets) rewrite ~/.config/cava/config at
+      # runtime, replacing the symlink HM created. On the next rebuild HM
+      # would try to back the live file up to `config.backup`, collide with
+      # the stale backup from the previous cycle, and abort activation.
+      # `force = true` makes HM overwrite the path without backing it up.
+      xdg.configFile."cava/config".force = true;
       programs.cava = {
         enable = true;
         settings = {

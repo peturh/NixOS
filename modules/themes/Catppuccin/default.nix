@@ -82,7 +82,15 @@ in {
 
       xdg.configFile = {
         "gtk-4.0/assets".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/assets";
-        "gtk-4.0/gtk.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
+        # Caelestia rewrites gtk.css at runtime with a dynamic Material You
+        # palette derived from the active scheme/wallpaper, so the file HM
+        # placed here is replaced almost immediately. `force = true` skips the
+        # pre-activation backup that otherwise collides with a stale
+        # `gtk.css.backup` from the previous rebuild and aborts activation.
+        "gtk-4.0/gtk.css" = {
+          source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk.css";
+          force = true;
+        };
         "gtk-4.0/gtk-dark.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
         "Kvantum/${catppuccin}".source = "${catppuccin-kvantum-pkg}/share/Kvantum/${catppuccin}";
         "Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {

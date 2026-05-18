@@ -17,6 +17,25 @@
       djxl "$f" "$out/$name.png"
     done
   '';
+
+  # Hyprland 0.55+ Lua-config mode rejects the legacy `workspace N` dispatch
+  # IPC syntax: caelestia's bar sends classic strings, Hyprland tries to eval
+  # them as Lua and crashes with `')' expected near '2'`. Upstream Hyprland
+  # declared this expected behaviour — tools must update. Patch caelestia's
+  # workspace click handler to use the new Lua dispatcher syntax instead.
+  # https://github.com/hyprwm/Hyprland/discussions/14255
+  caelestiaShellPatched =
+    (inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli).overrideAttrs (old: {
+      postPatch =
+        (old.postPatch or "")
+        + ''
+          substituteInPlace modules/bar/components/workspaces/Workspaces.qml \
+            --replace-fail 'Hypr.dispatch(`workspace ''${ws}`);' \
+                           'Hypr.dispatch(`hl.dsp.focus({ workspace = ''${ws} })`);' \
+            --replace-fail 'Hypr.dispatch("togglespecialworkspace special");' \
+                           "Hypr.dispatch('hl.dsp.workspace.toggle_special(\"special\")');"
+        '';
+    });
 in {
   home-manager.sharedModules = [
     inputs.caelestia-shell.homeManagerModules.default
@@ -28,6 +47,7 @@ in {
 
       programs.caelestia = {
         enable = true;
+        package = caelestiaShellPatched;
 
         systemd = {
           enable = true;
@@ -81,6 +101,10 @@ in {
             useTwelveHourClock = false;
             audioIncrement = 0.02;
             brightnessIncrement = 0.02;
+            # Caelestia defaults to Fahrenheit; force Celsius for both the
+            # weather widget and the performance-tab CPU/GPU temps.
+            useFahrenheit = false;
+            useFahrenheitPerformance = false;
           };
 
           paths = {
