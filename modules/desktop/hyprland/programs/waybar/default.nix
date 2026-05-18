@@ -78,6 +78,7 @@
                 "discord" = "󰙯";
                 "slack" = "󰒱";
                 "teams-for-linux" = "󰊻";
+                "class<electron> title<.*Microsoft Teams.*>" = "󰊻";
                 "spotify" = "󰓇";
                 "vlc" = "󰕼";
                 "mpv" = "";
