@@ -18,15 +18,17 @@ in {
         settings = {
           general = {
             ignore_dbus_inhibit = false;
-            lock_cmd = "pidof hyprlock || hyprlock";
-            unlock_cmd = "pkill --signal SIGUSR1 hyprlock";
-            before_sleep_cmd = "loginctl lock-session";
+            # Drive caelestia's lock via its IPC. The shell daemon must already
+            # be running (it is, via caelestia.service in graphical-session.target).
+            lock_cmd = "caelestia shell lock lock";
+            unlock_cmd = "caelestia shell lock unlock";
+            before_sleep_cmd = "caelestia shell lock lock";
             after_sleep_cmd = "sleep 1 && hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
           };
           listener = [
             {
               timeout = 300; # 5 Minutes - lock screen (both AC and battery)
-              on-timeout = "loginctl lock-session";
+              on-timeout = "caelestia shell lock lock";
             }
             {
               timeout = 600; # 10 Minutes - turn off display (both AC and battery)

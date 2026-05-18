@@ -287,9 +287,12 @@
     jetbrains-mono
     fira-code
     open-dyslexic
+    caskaydia-cove # caelestia default mono font
   ]) ++ (with pkgs; [
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
+    material-symbols # caelestia icon font
+    rubik # caelestia default sans/clock font
   ]);
 
   nixpkgs = {

@@ -12,12 +12,9 @@
 }: {
   imports = [
     ../../themes/Catppuccin # Catppuccin GTK and QT themes
-    ./programs/waybar
-    ./programs/wlogout
-    ./programs/rofi
-    ./programs/hypridle
-    ./programs/hyprlock
-    ./programs/swaync
+    ./programs/caelestia # bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
+    ./programs/rofi # kept for games + music modes only
+    ./programs/hypridle # idle timeouts; drives caelestia lock
   ];
 
   nix.settings = {
@@ -85,12 +82,10 @@
   in [
     ({...}: {
       home.packages = with pkgs; [
-        hyprpaper
+        # Caelestia replaces: waybar, hyprpaper, cliphist, grimblast, swappy.
+        # Kept utilities still used by other binds / system integration:
         hyprpicker
         hyprland-qtutils
-        cliphist
-        grimblast
-        swappy
         libnotify
         brightnessctl
         networkmanagerapplet
@@ -98,13 +93,10 @@
         pamixer
         pavucontrol
         playerctl
-        waybar
         wtype
         wl-clipboard
         xdotool
         yad
-        # socat # for and autowaybar.sh
-        # jq # for and autowaybar.sh
       ];
 
       xdg.configFile."hypr/icons" = {
