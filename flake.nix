@@ -66,7 +66,7 @@
       username = "petur"; # automatically set with install.sh and live-install.sh
       editor = "cursor"; # cursor, vscode
       textEditor = "micro"; # micro, nano, vim
-      browser = "vivaldi"; # firefox, floorp, zen, microsoft-edge
+      browser = "firefox"; # firefox, google-chrome, helium, microsoft-edge
       terminal = "kitty"; # kitty, alacritty, wezterm
       terminalFileManager = "yazi"; # yazi or lf
       sddmTheme = "purple_leaves"; # astronaut, black_hole, purple_leaves, jake_the_dog, hyprland_kath
