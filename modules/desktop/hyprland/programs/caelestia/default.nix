@@ -1,16 +1,28 @@
 {
   inputs,
+  pkgs,
   terminal,
   ...
-}: {
+}: let
+  # Quickshell/Caelestia uses Qt6's built-in image decoders, which do not
+  # support JPEG XL out of the box. Our existing wallpapers in
+  # modules/themes/wallpapers are .jxl, so we decode them to .png at build
+  # time and expose the decoded set as the wallpaper directory.
+  wallpapersDecoded = pkgs.runCommand "caelestia-wallpapers" {
+    nativeBuildInputs = [pkgs.libjxl];
+  } ''
+    mkdir -p $out
+    for f in ${../../../../themes/wallpapers}/*.jxl; do
+      name=$(basename "$f" .jxl)
+      djxl "$f" "$out/$name.png"
+    done
+  '';
+in {
   home-manager.sharedModules = [
     inputs.caelestia-shell.homeManagerModules.default
     ({...}: {
-      # Make the flake's wallpaper collection available to caelestia's
-      # wallpaper picker. Caelestia reads from ~/Pictures/Wallpapers by default
-      # (see paths.wallpaperDir below).
       home.file."Pictures/Wallpapers" = {
-        source = ../../../../themes/wallpapers;
+        source = wallpapersDecoded;
         recursive = true;
       };
 

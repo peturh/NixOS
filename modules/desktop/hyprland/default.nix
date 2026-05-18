@@ -64,11 +64,8 @@
           rofi           = "${./scripts/rofi.sh}",
           keyboardswitch = "${./scripts/keyboardswitch.sh}",
           gamemode       = "${./scripts/gamemode.sh}",
-          clipManager    = "${./scripts/ClipManager.sh}",
           rofimusic      = "${./scripts/rofimusic.sh}",
-          screenshot     = "${./scripts/screenshot.sh}",
           rebuild        = "${./scripts/rebuild.sh}",
-          batterynotify  = "${./scripts/batterynotify.sh}",
         },
 
         bin = {
@@ -98,11 +95,6 @@
         xdotool
         yad
       ];
-
-      xdg.configFile."hypr/icons" = {
-        source = ./icons;
-        recursive = true;
-      };
 
       # Hyprland 0.55+ Lua config. Hyprland picks Lua over hyprlang at startup
       # whenever hyprland.lua is present, so home-manager's `settings`/`extraConfig`

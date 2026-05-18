@@ -8,14 +8,6 @@ hl.layer_rule({ match = { namespace = "rofi" }, blur = true })
 hl.layer_rule({ match = { namespace = "rofi" }, ignore_alpha = 0 })
 hl.layer_rule({ match = { namespace = "rofi" }, ignore_alpha = 0.7 })
 
-hl.layer_rule({ match = { namespace = "swaync-control-center" },     blur = true })
-hl.layer_rule({ match = { namespace = "swaync-notification-window" }, blur = true })
-hl.layer_rule({ match = { namespace = "swaync-control-center" },     ignore_alpha = 0 })
-hl.layer_rule({ match = { namespace = "swaync-notification-window" }, ignore_alpha = 0 })
-hl.layer_rule({ match = { namespace = "swaync-control-center" },     ignore_alpha = 0.7 })
--- hl.layer_rule({ match = { namespace = "swaync-notification-window" }, ignore_alpha = 0.8 })
--- hl.layer_rule({ match = { namespace = "swaync-control-center" },     dim_around = true })
-
 -----------------
 -- Window rules
 -----------------

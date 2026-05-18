@@ -41,8 +41,6 @@ yad \
   "SUPER F" "Launch browser" "$_browser" \
   "SUPER SHIFT S" "Launch spotify" "spotify" \
   "CTRL ALT Delete" "Open system monitor" "$_terminal -e 'btop'" \
-  "SUPER A" "Launch application menu" "scripts/rofi.sh drun" \
-  "SUPER SPACE" "Launch application menu" "scripts/rofi.sh drun" \
   "SUPER F9" "Enable night mode" "hyprsunset --temperature 2500" \
   "SUPER F10" "Disable night mode" "pkill hyprsunset" \
   "SUPER F8" "Toggle autoclicker" "scripts/autoclicker.nix" \
@@ -70,24 +68,26 @@ yad \
   "SUPER W" "Toggle floating window" "togglefloating" \
   "SUPER SHIFT G" "Toggle window group" "togglegroup" \
   "ALT Return" "Toggle fullscreen" "fullscreen" \
-  "SUPER ALT L" "Lock screen" "hyprlock" \
-  "SUPER Backspace" "Power menu" "wlogout -b 4" \
-  "CTRL Escape" "Toggle Waybar" "pkill waybar || waybar" \
-  "SUPER SHIFT N" "Open notification panel" "swaync-client -t -sw" \
-  "SUPER SHIFT Q" "Open notification panel" "swaync-client -t -sw" \
+  "SUPER ALT L" "Lock screen" "caelestia shell lock lock" \
+  "SUPER Backspace" "Power/session menu" "caelestia shell drawers toggle session" \
+  "CTRL Escape" "Restart caelestia shell" "systemctl --user restart caelestia" \
+  "SUPER SHIFT N" "Open dashboard" "caelestia shell drawers toggle dashboard" \
+  "SUPER SHIFT Q" "Open dashboard" "caelestia shell drawers toggle dashboard" \
   "SUPER Q" "Close active window" "scripts/dontkillsteam.sh" \
   "ALT F4" "Close active window" "scripts/dontkillsteam.sh" \
-  "SUPER Z" "Launch emoji picker" "scripts/rofi.sh emoji" \
+  "SUPER A" "Launch application menu" "caelestia shell drawers toggle launcher" \
+  "SUPER SPACE" "Launch application menu" "caelestia shell drawers toggle launcher" \
+  "SUPER Z" "Launch emoji picker" "caelestia emoji -p" \
   "SUPER ALT K" "Change keyboard layout" "scripts/keyboardswitch.sh" \
   "SUPER U" "Rebuild system" "$_terminal -e scripts/rebuild.sh" \
   "SUPER G" "Game launcher" "scripts/rofi.sh games" \
   "SUPER ALT G" "Enable game mode" "scripts/gamemode.sh" \
-  "SUPER V" "Clipboard manager" "scripts/ClipManager.sh" \
+  "SUPER V" "Clipboard manager" "caelestia clipboard" \
   "SUPER M" "Online music" "scripts/rofimusic.sh" \
-  "SUPER P" "Screenshot (select area)" "scripts/screenshot.sh s" \
-  "SUPER CTRL P" "Screenshot (frozen screen)" "scripts/screenshot.sh sf" \
-  "SUPER Print" "Screenshot (current monitor)" "scripts/screenshot.sh m" \
-  "SUPER ALT P" "Screenshot (all monitors)" "scripts/screenshot.sh p" \
+  "SUPER P" "Screenshot (select area)" "caelestia screenshot" \
+  "SUPER CTRL P" "Screenshot (frozen screen)" "caelestia screenshot -f" \
+  "SUPER Print" "Screenshot (current monitor)" "caelestia screenshot -m" \
+  "SUPER ALT P" "Screenshot (all monitors)" "caelestia screenshot -m all" \
   "SUPER SHIFT CTRL ←" "Move window left" "movewindow l" \
   "SUPER SHIFT CTRL →" "Move window right" "movewindow r" \
   "SUPER SHIFT CTRL ↑" "Move window up" "movewindow u" \
