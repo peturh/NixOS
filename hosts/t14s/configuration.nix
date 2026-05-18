@@ -62,6 +62,7 @@
     ../../modules/programs/misc/lact
     ../../modules/programs/misc/porttelefon
     ../../modules/programs/hardware/modem
+    ../../modules/programs/security/bitwarden
     ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
@@ -96,7 +97,6 @@
 
   # T14s-specific packages
   environment.systemPackages = with pkgs; [
-    bitwarden-desktop
     mkcert
     solaar
   ];

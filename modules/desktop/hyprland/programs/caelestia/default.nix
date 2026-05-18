@@ -24,6 +24,13 @@
   # declared this expected behaviour — tools must update. Patch caelestia's
   # workspace click handler to use the new Lua dispatcher syntax instead.
   # https://github.com/hyprwm/Hyprland/discussions/14255
+  #
+  # We also silence the "Failed to save config" toast: programs.caelestia.settings
+  # below makes ~/.config/caelestia/shell.json a symlink into the read-only Nix
+  # store, and caelestia tries to rewrite the merged config back to that path on
+  # every launch. The write is harmless (settings are reapplied at the next
+  # rebuild) but caelestia surfaces the EROFS as a red toast on every login.
+  # The underlying qCWarning in rootconfig.cpp still goes to journalctl.
   caelestiaShellPatched =
     (inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli).overrideAttrs (old: {
       postPatch =
@@ -34,6 +41,11 @@
                            'Hypr.dispatch(`hl.dsp.focus({ workspace = ''${ws} })`);' \
             --replace-fail 'Hypr.dispatch("togglespecialworkspace special");' \
                            "Hypr.dispatch('hl.dsp.workspace.toggle_special(\"special\")');"
+
+          substituteInPlace modules/ConfigToasts.qml \
+            --replace-fail \
+              'Toaster.toast(qsTr("Failed to save config%1").arg(screen ? " for " + screen : ""), error, "settings_alert", Toast.Error);' \
+              '/* NixOS: suppressed — shell.json is a read-only Nix-store symlink. */'
         '';
     });
 in {
@@ -155,6 +167,9 @@ in {
 
                 # Networking
                 { regex = "transmission(-gtk|-qt)?"; icon = "download"; }
+
+                # Security / passwords
+                { regex = "[Bb]itwarden"; icon = "password"; }
 
                 # Gaming
                 { regex = "steam(_app_(default|[0-9]+))?"; icon = "sports_esports"; }
