@@ -23,4 +23,16 @@ hl.on("hyprland.start", function()
 
   hl.exec_cmd("polkit-agent-helper-1")
   hl.exec_cmd("pamixer --set-volume 50")
+
+  -- Clipboard history daemon for the noctalia "clipper" plugin
+  -- (SUPER+V). `wl-paste --watch cliphist store` listens to the
+  -- Wayland clipboard and streams entries into cliphist's DB; the
+  -- plugin reads from that DB. `pkill -x wl-paste` first so a
+  -- replayed hyprland.start (e.g. on session restart) doesn't leave
+  -- two watcher processes racing each other to write the same entry.
+  -- Two watchers are required because wl-paste only consumes one MIME
+  -- family at a time: text vs image. cliphist itself deduplicates
+  -- and dispatches per-type so the DB stays coherent.
+  hl.exec_cmd("pkill -x wl-paste; wl-paste --type text  --watch cliphist store")
+  hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)

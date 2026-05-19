@@ -116,6 +116,24 @@
       $out/manifest.json
     ${pkgs.gnugrep}/bin/grep -q '"screenshotEditor": "satty"' $out/manifest.json
   '';
+
+  # Upstream noctalia plugin: "Clipper" — advanced clipboard manager
+  # (history, search, pinned items, notecards, ToDo integration).
+  # https://github.com/noctalia-dev/noctalia-plugins/tree/main/clipper
+  # Same sparseCheckout pattern as the plugins above. Pinned to the most
+  # recent commit touching the clipper/ subdir (v2.4.4); bump `rev` (clear
+  # `hash`, Nix prints the right one) to update.
+  # Runtime backend `cliphist` is installed (and seeded with the
+  # `wl-paste --watch cliphist store` daemon) from
+  # modules/desktop/hyprland/{default.nix,lua/autostart.lua}; the plugin
+  # itself just talks to cliphist over its CLI.
+  clipperPluginSrc = pkgs.fetchFromGitHub {
+    owner = "noctalia-dev";
+    repo = "noctalia-plugins";
+    rev = "5ea40763c436c52eb7ee862d9b827665af6bd7d5";
+    hash = "sha256-c37Bhl8Bj8sfNozDq6v+lN4P0YUUQ/UePitH+v9V3rg=";
+    sparseCheckout = ["clipper"];
+  };
 in {
   # Install tlp-ctl system-wide rather than into the per-user home-manager
   # profile. Noctalia is spawned by Hyprland's autostart.lua before the
@@ -200,6 +218,17 @@ in {
         recursive = true;
       };
 
+      # Ship the upstream clipper plugin. Same recursive mount as the
+      # other upstream plugins above. Bound to SUPER+V in lua/binds.lua via:
+      #   noctalia-shell ipc call plugin:clipper toggle
+      # Backed by `cliphist` (added to home.packages in hyprland/default.nix)
+      # and a `wl-paste --watch cliphist store` daemon started from
+      # lua/autostart.lua so clipboard history is actually captured.
+      xdg.configFile."noctalia/plugins/clipper" = {
+        source = clipperPluginSrc + "/clipper";
+        recursive = true;
+      };
+
       programs.noctalia-shell = {
         enable = true;
 
@@ -239,6 +268,10 @@ in {
               enabled = true;
               sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
             };
+            clipper = {
+              enabled = true;
+              sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+            };
           };
         };
 
@@ -257,7 +290,7 @@ in {
                 # off (registry default) so the rainbow SVG renders in its
                 # native colours rather than being flattened to a single tint.
                 {id = "ControlCenter"; useDistroLogo = true;}
-                {id = "Workspace"; showApplications = true; hideUnoccupied = false;}
+                {id = "Workspace"; showApplications = true; hideUnoccupied = false; colorizeIcons = false;}
                 {id = "ActiveWindow";}
               ];
               center = [
@@ -303,7 +336,7 @@ in {
           };
 
           location = {
-            name = "Stockholm, Sweden";
+            name = "Malmö, Sweden";
             weatherEnabled = true;
             useFahrenheit = false;
             use12hourFormat = false;

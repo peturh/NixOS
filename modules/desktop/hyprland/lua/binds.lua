@@ -76,7 +76,7 @@ hl.bind(mainMod .. " + ALT + K",   hl.dsp.exec_cmd(v.scripts.keyboardswitch)) --
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle")) -- control center
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle")) -- control center
 hl.bind(mainMod .. " + ALT + G",   hl.dsp.exec_cmd(v.scripts.gamemode)) -- disable hypr effects for gamemode
-hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher clipboard")) -- Clipboard Manager
+hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("noctalia-shell ipc call plugin:clipper toggle")) -- Clipboard Manager (noctalia "clipper" plugin)
 
 -- Screenshot/Screencapture. Handled entirely by the noctalia
 -- "ScreenShot & Record" plugin (patched in noctalia/default.nix to skip

@@ -77,7 +77,7 @@
   in [
     ({...}: {
       home.packages = with pkgs; [
-        # Noctalia replaces: waybar, hyprpaper, cliphist, grimblast, hyprshot
+        # Noctalia replaces: waybar, hyprpaper, grimblast, hyprshot
         # (most are now built into the shell, screenshots go through the
         # "screen-shot-and-record" noctalia plugin). Kept utilities still
         # used by other binds / system integration:
@@ -92,6 +92,13 @@
         wl-clipboard # wl-copy (used by noctalia screen-shot plugin too)
         xdotool
         yad
+
+        # Runtime backend for the noctalia "clipper" plugin (bound to
+        # SUPER+V). cliphist stores wl-paste's clipboard stream to a
+        # local DB; the plugin reads from / writes to that DB via the
+        # cliphist CLI. The actual capture daemon is started from
+        # lua/autostart.lua as `wl-paste --watch cliphist store`.
+        cliphist
 
         # Runtime deps for the noctalia "screen-shot-and-record" plugin
         # (bound to SUPER+P). The plugin shells out to these by name, so
