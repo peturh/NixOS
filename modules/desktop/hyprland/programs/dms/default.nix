@@ -160,27 +160,48 @@ in {
       };
 
       # Harden the upstream dms.service so it can't get stuck in
-      # `start-limit-hit` after a startup race. The unit is `WantedBy=
-      # graphical-session.target`, and on a mid-session rebuild
-      # home-manager may kick it off *before* Hyprland's autostart.lua
-      # has propagated WAYLAND_DISPLAY into the systemd user environment
-      # via `dbus-update-activation-environment --systemd --all`. With
-      # the default `Restart=on-failure` + 5-tries-in-10s limit, that
-      # race left dms.service permanently failed on the active session.
+      # `start-limit-hit` after a startup race, and so it doesn't subscribe
+      # to Hyprland IPC before Hyprland has finished publishing its
+      # monitor/workspace state.
       #
-      # Two changes:
-      #   1. ExecStartPre waits up to ~12s for WAYLAND_DISPLAY to be set
-      #      and the corresponding socket to exist, so a too-early start
-      #      attempt fails cleanly instead of deep inside Qt's platform
-      #      init (which produces a coredump and noisy journal).
-      #   2. StartLimitIntervalSec=0 disables the burst limit so systemd
+      # The unit is `WantedBy=graphical-session.target`, and on a mid-
+      # session rebuild home-manager may kick it off *before* Hyprland's
+      # autostart.lua has propagated WAYLAND_DISPLAY into the systemd
+      # user environment via `dbus-update-activation-environment
+      # --systemd --all`. With the default `Restart=on-failure` +
+      # 5-tries-in-10s limit, that race left dms.service permanently
+      # failed on the active session.
+      #
+      # Separately, even when WAYLAND_DISPLAY *is* set, Hyprland may not
+      # yet have finished publishing monitors/workspaces over its IPC
+      # socket at the moment DMS subscribes. DMS bakes whatever half-
+      # built state it sees into the bar widgets — in particular the
+      # workspace switcher caches per-monitor "active workspace" state
+      # and ends up marking multiple pills active until the next
+      # `systemctl --user restart dms.service`. The second ExecStartPre
+      # waits for `hyprctl monitors -j` to return a non-empty list so
+      # DMS starts against a fully-populated compositor.
+      #
+      # Three changes:
+      #   1. First ExecStartPre waits up to ~12s for WAYLAND_DISPLAY to
+      #      be set and the corresponding socket to exist.
+      #   2. Second ExecStartPre waits up to ~15s for Hyprland's IPC
+      #      socket to exist and `hyprctl monitors -j` to return at
+      #      least one monitor.
+      #   3. StartLimitIntervalSec=0 disables the burst limit so systemd
       #      will keep retrying with RestartSec backoff until Hyprland
       #      finishes propagating the env.
-      systemd.user.services.dms = {
+      systemd.user.services.dms = let
+        hyprctl = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/hyprctl";
+        jq = "${pkgs.jq}/bin/jq";
+        bash = "${pkgs.bash}/bin/bash";
+        waitWayland = "${bash} -c 'for _ in $(seq 1 60); do [ -n \"$WAYLAND_DISPLAY\" ] && [ -S \"$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY\" ] && exit 0; sleep 0.2; done; echo \"dms: WAYLAND_DISPLAY never appeared in systemd user env\" >&2; exit 1'";
+        waitHyprlandIpc = "${bash} -c 'for _ in $(seq 1 60); do if [ -n \"$HYPRLAND_INSTANCE_SIGNATURE\" ] && [ -S \"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock\" ] && ${hyprctl} monitors -j 2>/dev/null | ${jq} -e \"length > 0\" >/dev/null 2>&1; then exit 0; fi; sleep 0.25; done; echo \"dms: Hyprland IPC never published a monitor list\" >&2; exit 1'";
+      in {
         Unit.StartLimitIntervalSec = 0;
         Service = {
           RestartSec = 2;
-          ExecStartPre = "${pkgs.bash}/bin/bash -c 'for _ in $(seq 1 60); do [ -n \"$WAYLAND_DISPLAY\" ] && [ -S \"$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY\" ] && exit 0; sleep 0.2; done; echo \"dms: WAYLAND_DISPLAY never appeared in systemd user env\" >&2; exit 1'";
+          ExecStartPre = [waitWayland waitHyprlandIpc];
         };
       };
     })
