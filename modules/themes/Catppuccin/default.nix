@@ -4,17 +4,14 @@
 }: let
   variant = "mocha";
   accent = "mauve";
-  catppuccin-kvantum-pkg = pkgs.catppuccin-kvantum.override {inherit variant accent;};
   catppuccin = "catppuccin-${variant}-${accent}";
 in {
   home-manager.sharedModules = [
     ({config, ...}: {
-      home.packages = [catppuccin-kvantum-pkg];
-
       qt = {
         enable = true;
         platformTheme.name = "gtk";
-        style.name = "kvantum";
+        style.name = "adwaita-dark";
       };
       gtk = {
         enable = true;
@@ -80,10 +77,6 @@ in {
           force = true;
         };
         "gtk-4.0/gtk-dark.css".source = "${config.gtk.theme.package}/share/themes/${config.gtk.theme.name}/gtk-4.0/gtk-dark.css";
-        "Kvantum/${catppuccin}".source = "${catppuccin-kvantum-pkg}/share/Kvantum/${catppuccin}";
-        "Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
-          General.theme = catppuccin;
-        };
       };
     })
   ];

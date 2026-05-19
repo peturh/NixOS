@@ -10,16 +10,11 @@
     if variant == "main"
     then "rose-pine"
     else "rose-pine-${variant}";
-  kvantumThemeName = "${baseName}-iris";
-
-  # Fetch the Rose Pine Kvantum repository
-  rose-pine-kvantum-pkg = pkgs.rose-pine-kvantum;
-  kvantumThemeDir = "${rose-pine-kvantum-pkg}/share/Kvantum/themes/${kvantumThemeName}";
 in {
   home-manager.sharedModules = [
     ({config, ...}: {
       # Include Rose Pine GTK and icon themes
-      home.packages = [rose-pine-kvantum-pkg pkgs.rose-pine-gtk-theme pkgs.rose-pine-icon-theme];
+      home.packages = [pkgs.rose-pine-gtk-theme pkgs.rose-pine-icon-theme];
 
       # GTK configuration
       gtk = {
@@ -45,17 +40,11 @@ in {
         };
       };
 
-      # Qt configuration with Kvantum
+      # Qt configuration
       qt = {
         enable = true;
         platformTheme.name = "gtk";
-        style.name = "kvantum";
-      };
-
-      # Kvantum configuration
-      xdg.dataFile."Kvantum/${kvantumThemeName}".source = kvantumThemeDir;
-      xdg.configFile."Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini {}).generate "kvantum.kvconfig" {
-        General.theme = kvantumThemeName;
+        style.name = "adwaita-dark";
       };
 
       # Wallpaper is owned by DMS; see modules/desktop/hyprland/programs/dms.

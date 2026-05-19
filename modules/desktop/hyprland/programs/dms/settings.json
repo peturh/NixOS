@@ -444,6 +444,10 @@
         {
           "id": "weather",
           "enabled": true
+        },
+        {
+          "id": "dmsAgent",
+          "enabled": true
         }
       ],
       "clickThrough": false,

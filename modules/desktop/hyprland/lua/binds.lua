@@ -31,11 +31,6 @@ hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("pamixer -i 2"),          { rep
 -- Regular binds
 ------------------
 
--- Keybinds help menu.
-hl.bind(mainMod .. " + question",   hl.dsp.exec_cmd(v.scripts.keybinds))
-hl.bind(mainMod .. " + slash",      hl.dsp.exec_cmd(v.scripts.keybinds))
-hl.bind(mainMod .. " + CTRL + K",   hl.dsp.exec_cmd(v.scripts.keybinds))
-
 -- Autoclicker toggle.
 hl.bind(mainMod .. " + F8", hl.dsp.exec_cmd("kill $(cat /tmp/auto-clicker.pid) 2>/dev/null || " .. v.bin.autoclicker .. " --cps 40"))
 -- hl.bind(mainMod .. " + ALT + mouse:276", hl.dsp.exec_cmd("kill $(cat /tmp/auto-clicker.pid) 2>/dev/null || " .. v.bin.autoclicker .. " --cps 60"))

@@ -58,7 +58,6 @@
         kbdVariant  = "${kbdVariant},",
 
         scripts = {
-          keybinds        = "${./scripts/keybinds.sh}",
           dontkillsteam   = "${./scripts/dontkillsteam.sh}",
           keyboardswitch  = "${./scripts/keyboardswitch.sh}",
           gamemode        = "${./scripts/gamemode.sh}",
@@ -92,7 +91,6 @@
         playerctl
         wl-clipboard # wl-copy (used by scripts/screenshot.sh)
         xdotool
-        yad
 
         # Runtime backend for DMS's built-in clipboard manager (bound
         # to SUPER+V via `dms ipc call clipboard toggle`). cliphist

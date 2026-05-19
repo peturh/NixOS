@@ -58,7 +58,6 @@ hl.window_rule({ match = { class = "^(org.kde.ark)$" },                         
 hl.window_rule({ match = { class = "^(nwg-look)$" },                                         opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(qt5ct)$" },                                            opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(qt6ct)$" },                                            opacity = "0.80 0.80" })
-hl.window_rule({ match = { class = "^(yad)$" },                                              opacity = "0.80 0.80" })
 
 hl.window_rule({ match = { class = "^(com.github.rafostar.Clapper)$" },         opacity = "0.90 0.90" }) -- Clapper-Gtk
 hl.window_rule({ match = { class = "^(com.github.tchx84.Flatseal)$" },          opacity = "0.80 0.80" }) -- Flatseal-Gtk
@@ -103,7 +102,6 @@ hl.window_rule({ match = { class = "^(app.drey.Warp)$" },                       
 hl.window_rule({ match = { class = "^(net.davidotek.pupgui2)$" },                      float = true }) -- ProtonUp-Qt
 hl.window_rule({ match = { class = "^(eog)$" },                                        float = true }) -- Imageviewer-Gtk
 hl.window_rule({ match = { class = "^(io.gitlab.theevilskeleton.Upscaler)$" },         float = true }) -- Upscaler-Gtk
-hl.window_rule({ match = { class = "^(yad)$" },                                        float = true })
 hl.window_rule({ match = { class = "^(pavucontrol)$" },                                float = true })
 hl.window_rule({ match = { class = "^(blueman-manager)$" },                            float = true })
 hl.window_rule({ match = { class = "^(.blueman-manager-wrapped)$" },                   float = true })
