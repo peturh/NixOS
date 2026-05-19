@@ -54,7 +54,9 @@ hl.bind("ALT + return",            hl.dsp.window.fullscreen({ action = "toggle" 
 hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("noctalia-shell ipc call lockScreen lock"))
 hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("noctalia-shell ipc call sessionMenu toggle"))
 -- Noctalia is spawned via autostart.lua (not systemd), so restart = pkill + respawn.
-hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd("sh -c 'pkill -x noctalia-shell; sleep 0.5; noctalia-shell &'"))
+-- Match by `quickshell` (noctalia is the wrapped binary `.quickshell-wrapped`,
+-- so neither `pkill -x noctalia-shell` nor `pkill -f noctalia-shell` works).
+hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd("sh -c 'pkill -f quickshell; sleep 0.5; noctalia-shell &'"))
 
 -- Applications/Programs.
 hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(v.term))

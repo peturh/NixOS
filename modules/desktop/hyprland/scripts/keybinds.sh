@@ -70,7 +70,7 @@ yad \
   "ALT Return" "Toggle fullscreen" "fullscreen" \
   "SUPER ALT L" "Lock screen" "noctalia-shell ipc call lockScreen lock" \
   "SUPER Backspace" "Power/session menu" "noctalia-shell ipc call sessionMenu toggle" \
-  "CTRL Escape" "Restart noctalia shell" "pkill -x noctalia-shell; noctalia-shell &" \
+  "CTRL Escape" "Restart noctalia shell" "pkill -f quickshell; noctalia-shell &" \
   "SUPER SHIFT N" "Open control center" "noctalia-shell ipc call controlCenter toggle" \
   "SUPER SHIFT Q" "Open control center" "noctalia-shell ipc call controlCenter toggle" \
   "SUPER Q" "Close active window" "scripts/dontkillsteam.sh" \
