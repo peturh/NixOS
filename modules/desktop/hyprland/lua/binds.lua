@@ -63,7 +63,7 @@ hl.bind(mainMod .. " + SHIFT + Y", hl.dsp.exec_cmd("youtube-music"))
 hl.bind("CTRL + ALT + DELETE",     hl.dsp.exec_cmd(v.term .. " -e '" .. v.bin.btop .. "'")) -- System Monitor
 hl.bind(mainMod .. " + CTRL + C",  hl.dsp.exec_cmd("hyprpicker --autocopy --format=hex")) -- Colour Picker
 
-hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("dms ipc call spotlight toggle")) -- launch desktop applications
+hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("dms ipc call plugins toggle aiAssistant")) -- toggle AI assistant plugin
 hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("dms ipc call spotlight toggle")) -- launch desktop applications
 hl.bind(mainMod .. " + ALT + K",   hl.dsp.exec_cmd(v.scripts.keyboardswitch)) -- change keyboard layout
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("dms ipc call control-center toggle")) -- control center
