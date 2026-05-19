@@ -46,7 +46,7 @@ in {
         };
       };
 
-      # Wallpapers are owned by Noctalia (see modules/desktop/hyprland/programs/noctalia);
+      # Wallpapers are owned by DMS (see modules/desktop/hyprland/programs/dms);
       # the boot-time default is seeded from flake.nix's `wallpaper` setting via a
       # home-manager activation script in that module.
 

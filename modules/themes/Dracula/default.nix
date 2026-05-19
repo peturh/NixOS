@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   home-manager.sharedModules = [
     ({config, ...}: {
-      # Wallpaper is owned by Noctalia; see modules/desktop/hyprland/programs/noctalia.
+      # Wallpaper is owned by DMS; see modules/desktop/hyprland/programs/dms.
 
       dconf.settings = {
         "org/gnome/desktop/interface" = {

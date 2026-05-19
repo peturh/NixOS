@@ -45,11 +45,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+    # DankMaterialShell (DMS) — the Quickshell-based desktop shell that
+    # replaced Noctalia. Tracks the `stable` branch so rebuilds aren't tied
+    # to whatever just landed on master. See:
+    #   https://danklinux.com/docs/dankmaterialshell/nixos-flake
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = {
@@ -82,28 +85,35 @@
 
     # Per-host overrides
     hostSettings = {
-      t14s = commonSettings // {
-        hostname = "t14s";
-        videoDriver = "amdgpu";
-        browser = "helium";
-      };
-      t470p = commonSettings // {
-        hostname = "t470p";
-        videoDriver = "nvidia";
-        browser = "google-chrome";
-      };
-      t450 = commonSettings // {
-        hostname = "t450";
-        videoDriver = "intel";
-        browser = "google-chrome";
-      };
+      t14s =
+        commonSettings
+        // {
+          hostname = "t14s";
+          videoDriver = "amdgpu";
+          browser = "helium";
+        };
+      t470p =
+        commonSettings
+        // {
+          hostname = "t470p";
+          videoDriver = "nvidia";
+          browser = "google-chrome";
+        };
+      t450 =
+        commonSettings
+        // {
+          hostname = "t450";
+          videoDriver = "intel";
+          browser = "google-chrome";
+        };
     };
 
-    mkHost = name: settings: nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {inherit self inputs outputs;} // settings;
-      modules = [./hosts/${name}/configuration.nix sops-nix.nixosModules.sops];
-    };
+    mkHost = name: settings:
+      nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit self inputs outputs;} // settings;
+        modules = [./hosts/${name}/configuration.nix sops-nix.nixosModules.sops];
+      };
 
     systems = [
       "x86_64-linux"
@@ -111,7 +121,10 @@
     ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    overlays = import ./overlays {inherit inputs; settings = commonSettings;};
+    overlays = import ./overlays {
+      inherit inputs;
+      settings = commonSettings;
+    };
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     nixosConfigurations = {
       t14s = mkHost "t14s" hostSettings.t14s;

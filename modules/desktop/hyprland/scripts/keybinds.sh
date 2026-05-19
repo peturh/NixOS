@@ -64,21 +64,25 @@ yad \
   "SUPER W" "Toggle floating window" "togglefloating" \
   "SUPER SHIFT G" "Toggle window group" "togglegroup" \
   "ALT Return" "Toggle fullscreen" "fullscreen" \
-  "SUPER ALT L" "Lock screen" "noctalia-shell ipc call lockScreen lock" \
-  "SUPER Backspace" "Power/session menu" "noctalia-shell ipc call sessionMenu toggle" \
-  "CTRL Escape" "Restart noctalia shell" "pkill -f quickshell; noctalia-shell &" \
-  "SUPER SHIFT N" "Open control center" "noctalia-shell ipc call controlCenter toggle" \
-  "SUPER SHIFT Q" "Open control center" "noctalia-shell ipc call controlCenter toggle" \
+  "SUPER ALT L" "Lock screen" "dms ipc call lock lock" \
+  "SUPER Backspace" "Power menu" "dms ipc call powermenu toggle" \
+  "CTRL Escape" "Restart DMS" "systemctl --user restart dms.service" \
+  "SUPER SHIFT N" "Open control center" "dms ipc call control-center toggle" \
+  "SUPER SHIFT Q" "Open control center" "dms ipc call control-center toggle" \
   "SUPER Q" "Close active window" "scripts/dontkillsteam.sh" \
   "ALT F4" "Close active window" "scripts/dontkillsteam.sh" \
-  "SUPER A" "Launch application menu" "noctalia-shell ipc call launcher toggle" \
-  "SUPER SPACE" "Launch application menu" "noctalia-shell ipc call launcher toggle" \
-  "SUPER Z" "Launch emoji picker" "noctalia-shell ipc call launcher emoji" \
+  "SUPER A" "Launch application menu" "dms ipc call spotlight toggle" \
+  "SUPER SPACE" "Launch application menu" "dms ipc call spotlight toggle" \
+  "SUPER N" "Notification center" "dms ipc call notifications toggle" \
+  "SUPER M" "Task / process list" "dms ipc call processlist focusOrToggle" \
+  "SUPER comma" "Open DMS settings" "dms ipc call settings toggle" \
+  "SUPER Y" "Wallpaper picker" "dms ipc call dankdash wallpaper" \
   "SUPER ALT K" "Change keyboard layout" "scripts/keyboardswitch.sh" \
   "SUPER U" "Rebuild system" "$_terminal -e scripts/rebuild.sh" \
   "SUPER ALT G" "Enable game mode" "scripts/gamemode.sh" \
-  "SUPER V" "Clipboard manager" "noctalia-shell ipc call launcher clipboard" \
-  "SUPER P" "Screenshot region (always opens satty for markup + save/copy)" "noctalia-shell ipc call plugin:screen-shot-and-record screenshot" \
+  "SUPER V" "Clipboard manager" "dms ipc call clipboard toggle" \
+  "SUPER P" "Screenshot region (always opens satty for markup + save/copy)" "scripts/screenshot.sh" \
+  "SUPER F11" "Cycle TLP power profile (low/balanced/performance)" "scripts/tlp-cycle.sh" \
   "SUPER SHIFT CTRL ←" "Move window left" "movewindow l" \
   "SUPER SHIFT CTRL →" "Move window right" "movewindow r" \
   "SUPER SHIFT CTRL ↑" "Move window up" "movewindow u" \

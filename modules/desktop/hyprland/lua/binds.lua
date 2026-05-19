@@ -51,12 +51,11 @@ hl.bind(mainMod .. " + delete",    hl.dsp.exit()) -- kill Hyprland session
 hl.bind(mainMod .. " + W",         hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.toggle())
 hl.bind("ALT + return",            hl.dsp.window.fullscreen({ action = "toggle" }))
-hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("noctalia-shell ipc call lockScreen lock"))
-hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("noctalia-shell ipc call sessionMenu toggle"))
--- Restart Noctalia. Logic lives in scripts/restart-noctalia.sh so the kill
--- command line doesn't contain the literal string "quickshell" (which would
--- cause `pkill -f quickshell` to kill its own wrapping shell mid-script).
-hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd(v.scripts.restartNoctalia))
+hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("dms ipc call lock lock"))
+hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
+-- Restart DMS. Wraps `systemctl --user restart dms.service` so the unit's
+-- environment, logging, and restart policy are preserved.
+hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd(v.scripts.restartDms))
 
 -- Applications/Programs.
 hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(v.term))
@@ -69,28 +68,31 @@ hl.bind(mainMod .. " + SHIFT + Y", hl.dsp.exec_cmd("youtube-music"))
 hl.bind("CTRL + ALT + DELETE",     hl.dsp.exec_cmd(v.term .. " -e '" .. v.bin.btop .. "'")) -- System Monitor
 hl.bind(mainMod .. " + CTRL + C",  hl.dsp.exec_cmd("hyprpicker --autocopy --format=hex")) -- Colour Picker
 
-hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle")) -- launch desktop applications
-hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle")) -- launch desktop applications
-hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher emoji")) -- launch emoji picker
+hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("dms ipc call spotlight toggle")) -- launch desktop applications
+hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("dms ipc call spotlight toggle")) -- launch desktop applications
 hl.bind(mainMod .. " + ALT + K",   hl.dsp.exec_cmd(v.scripts.keyboardswitch)) -- change keyboard layout
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle")) -- control center
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle")) -- control center
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("dms ipc call control-center toggle")) -- control center
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("dms ipc call control-center toggle")) -- control center
 hl.bind(mainMod .. " + ALT + G",   hl.dsp.exec_cmd(v.scripts.gamemode)) -- disable hypr effects for gamemode
-hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("noctalia-shell ipc call plugin:clipper toggle")) -- Clipboard Manager (noctalia "clipper" plugin)
+hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("dms ipc call clipboard toggle")) -- DMS built-in clipboard manager (cliphist-backed)
+hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("dms ipc call notifications toggle")) -- notification center
+hl.bind(mainMod .. " + comma",     hl.dsp.exec_cmd("dms ipc call settings toggle")) -- DMS settings panel
+hl.bind(mainMod .. " + M",         hl.dsp.exec_cmd("dms ipc call processlist focusOrToggle")) -- task / process list
+hl.bind(mainMod .. " + Y",         hl.dsp.exec_cmd("dms ipc call dankdash wallpaper")) -- wallpaper picker
 
--- Screenshot/Screencapture. Handled entirely by the noctalia
--- "ScreenShot & Record" plugin (patched in noctalia/default.nix to skip
--- the LMB-copy / RMB-edit split and always open the satty editor). Frozen-
--- screen overlay, window outlines are click-targetable, Esc cancels.
--- Inside satty: Ctrl+C copies, Ctrl+S saves, toolbar gives shapes/arrows/text.
-hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("noctalia-shell ipc call plugin:screen-shot-and-record screenshot"))
+-- Screenshot/Screencapture. DMS only ships a built-in screenshot IPC for
+-- the niri compositor; on Hyprland we drive grim + slurp + satty from
+-- scripts/screenshot.sh. Inside satty: Ctrl+C copies, Ctrl+S saves,
+-- toolbar gives shapes/arrows/text; saved files land in
+-- ~/Pictures/Screenshots/<timestamp>.png.
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(v.scripts.screenshot))
 
--- Claude Code Panel — toggle the Noctalia side panel that wraps the
--- Anthropic claude-code-acp ACP bridge. SUPER+C is already taken by
--- v.editor; SUPER+SHIFT+C is the closest free key. Requires a one-time
--- `claude` login (run it in a terminal once) so the ACP bridge can reuse
--- ~/.claude/ credentials.
-hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("noctalia-shell ipc call plugin:claude-code-panel toggle"))
+-- Cycle TLP power profile (low → medium → performance → low). Replaces
+-- the Noctalia bar widget that drove the same script. The keybind path
+-- avoids a custom DMS plugin (DMS plugin format is QML-API-incompatible
+-- with the noctalia version), and `power-profiles-daemon` is force-
+-- disabled in the dms module because it conflicts with TLP.
+hl.bind(mainMod .. " + F11",       hl.dsp.exec_cmd(v.scripts.tlpCycle))
 
 -- Functional keybinds.
 hl.bind("XF86Sleep",       hl.dsp.exec_cmd("systemctl suspend")) -- Put computer into sleep mode

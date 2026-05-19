@@ -18,18 +18,18 @@ in {
         settings = {
           general = {
             ignore_dbus_inhibit = false;
-            # Drive Noctalia's lock via its IPC. The shell is spawned from
-            # Hyprland's autostart.lua and listens on the noctalia-shell IPC
-            # socket as soon as it is up.
-            lock_cmd = "noctalia-shell ipc call lockScreen lock";
-            unlock_cmd = "noctalia-shell ipc call lockScreen unlock";
-            before_sleep_cmd = "noctalia-shell ipc call lockScreen lock";
+            # Drive DMS's lock via its IPC. dms.service is started by
+            # hyprland-session.target, so its IPC socket is up well before
+            # any of these timers can fire.
+            lock_cmd = "dms ipc call lock lock";
+            unlock_cmd = "dms ipc call lock unlock";
+            before_sleep_cmd = "dms ipc call lock lock";
             after_sleep_cmd = "sleep 1 && hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
           };
           listener = [
             {
               timeout = 300; # 5 Minutes - lock screen (both AC and battery)
-              on-timeout = "noctalia-shell ipc call lockScreen lock";
+              on-timeout = "dms ipc call lock lock";
             }
             {
               timeout = 600; # 10 Minutes - turn off display (both AC and battery)
@@ -48,8 +48,8 @@ in {
 
   # Handle lid close - always suspend (both AC and battery)
   services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";              # Close lid = always suspend
-    HandleLidSwitchDocked = "ignore";         # When docked: keep running
+    HandleLidSwitch = "suspend"; # Close lid = always suspend
+    HandleLidSwitchDocked = "ignore"; # When docked: keep running
     HandleLidSwitchExternalPower = "suspend"; # On AC with lid closed = suspend
   };
 }

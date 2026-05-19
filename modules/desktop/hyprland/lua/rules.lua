@@ -4,17 +4,20 @@
 -- Layer rules
 ----------------
 
--- Noctalia bar/panels backgrounds. The shell tags its layer surfaces with
--- "noctalia-background-<panel>" so we wildcard-match them all in one rule.
--- Matches the recipe from https://docs.noctalia.dev/v4/getting-started/compositor-settings/hyprland/
-hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, blur = true })
-hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, ignore_alpha = 0.5 })
-hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, blur_popups = true })
+-- DankMaterialShell (DMS) tags every layer-shell surface with the prefix
+-- "dms:" (e.g. dms:bar, dms:control-center, dms:spotlight, dms:popout).
+-- Disabling animations on every dms:* layer keeps panels feeling snappy
+-- under Hyprland — DMS already animates its content internally.
+-- See https://danklinux.com/docs/dankmaterialshell/layers for the full
+-- namespace list.
+hl.layer_rule({ match = { namespace = "^dms:.*$" }, no_anim = true })
 
--- Noctalia "screen-shot-and-record" plugin region selector overlay. Disable
--- animations so the freeze/select overlay appears instantly under the cursor
--- instead of fading in (recommended by the plugin's README).
-hl.layer_rule({ match = { namespace = "noctalia-shell:regionSelector" }, no_anim = true })
+-- Blur a curated subset of DMS modals/popouts. We deliberately *don't*
+-- blur dms:bar (kills bar performance with our existing 6-pass blur from
+-- looknfeel.lua) or dms:notification-popup (no aesthetic gain on a
+-- transient toast).
+hl.layer_rule({ match = { namespace = "^dms:(spotlight|clipboard|settings|control-center|color-picker|power-menu|app-launcher|process-list-modal|notification-center-popout|dash|notepad|polkit|modal|popout)$" }, blur = true })
+hl.layer_rule({ match = { namespace = "^dms:(spotlight|clipboard|settings|control-center|color-picker|power-menu|app-launcher|process-list-modal|notification-center-popout|dash|notepad|polkit|modal|popout)$" }, ignore_alpha = 0.5 })
 
 -----------------
 -- Window rules

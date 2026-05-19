@@ -58,7 +58,7 @@ in {
         General.theme = kvantumThemeName;
       };
 
-      # Wallpaper is owned by Noctalia; see modules/desktop/hyprland/programs/noctalia.
+      # Wallpaper is owned by DMS; see modules/desktop/hyprland/programs/dms.
 
       # GNOME dark mode
       dconf.settings = {

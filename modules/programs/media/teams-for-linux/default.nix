@@ -5,10 +5,10 @@
   # back to `name` in very recent Electron versions); the upstream
   # `package.json` defines neither, so the running window advertises itself as
   # `electron`. Hyprland faithfully reports the class as `electron`, and our
-  # Noctalia Workspace widget (`showApplications = true`) then asks the GTK
-  # icon theme for an `electron` icon. Papirus has no such file, so Quickshell
-  # falls through to `IconImageProvider::missingPixmap()` — the magenta-and-
-  # black quadrant placeholder rendered next to the workspace number badge.
+  # DMS workspace switcher then asks the GTK icon theme for an `electron`
+  # icon. Papirus has no such file, so Quickshell falls through to
+  # `IconImageProvider::missingPixmap()` — the magenta-and-black quadrant
+  # placeholder rendered next to the workspace number badge.
   #
   # Slack and Cursor avoid this because their nixpkgs packages ship their own
   # `slack`/`cursor` ELF launchers that exec into Electron; argv[0]'s basename

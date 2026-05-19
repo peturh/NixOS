@@ -12,8 +12,8 @@
 }: {
   imports = [
     ../../themes/Catppuccin # Catppuccin GTK and QT themes
-    ./programs/noctalia # bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
-    ./programs/hypridle # idle timeouts; drives noctalia lock
+    ./programs/dms # DankMaterialShell: bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
+    ./programs/hypridle # idle timeouts; drives DMS lock screen
   ];
 
   nix.settings = {
@@ -63,7 +63,9 @@
           keyboardswitch  = "${./scripts/keyboardswitch.sh}",
           gamemode        = "${./scripts/gamemode.sh}",
           rebuild         = "${./scripts/rebuild.sh}",
-          restartNoctalia = "${./scripts/restart-noctalia.sh}",
+          restartDms      = "${./scripts/restart-dms.sh}",
+          screenshot      = "${./scripts/screenshot.sh}",
+          tlpCycle        = "${./scripts/tlp-cycle.sh}",
         },
 
         bin = {
@@ -77,39 +79,40 @@
   in [
     ({...}: {
       home.packages = with pkgs; [
-        # Noctalia replaces: waybar, hyprpaper, grimblast, hyprshot
-        # (most are now built into the shell, screenshots go through the
-        # "screen-shot-and-record" noctalia plugin). Kept utilities still
-        # used by other binds / system integration:
+        # DMS replaces: waybar, hyprpaper, grimblast, hyprshot, copyq
+        # (bar, wallpaper, lock, notifications, OSD, control center, and
+        # built-in clipboard manager are all part of the shell). Kept
+        # utilities still used by other keybinds / system integration:
         hyprpicker
         hyprland-qtutils
-        libnotify # notify-send (used by noctalia screen-shot plugin too)
+        libnotify # notify-send (used by scripts/tlp-cycle.sh fallback)
         brightnessctl
         pamixer
         pavucontrol
         playerctl
-        wtype
-        wl-clipboard # wl-copy (used by noctalia screen-shot plugin too)
+        wl-clipboard # wl-copy (used by scripts/screenshot.sh)
         xdotool
         yad
 
-        # Runtime backend for the noctalia "clipper" plugin (bound to
-        # SUPER+V). cliphist stores wl-paste's clipboard stream to a
-        # local DB; the plugin reads from / writes to that DB via the
-        # cliphist CLI. The actual capture daemon is started from
-        # lua/autostart.lua as `wl-paste --watch cliphist store`.
+        # Runtime backend for DMS's built-in clipboard manager (bound
+        # to SUPER+V via `dms ipc call clipboard toggle`). cliphist
+        # stores wl-paste's clipboard stream to a local DB; DMS reads
+        # from / writes to that DB via the cliphist CLI. The actual
+        # capture daemon is started from lua/autostart.lua.
         cliphist
 
-        # Runtime deps for the noctalia "screen-shot-and-record" plugin
-        # (bound to SUPER+P). The plugin shells out to these by name, so
-        # they have to be on $PATH for the graphical session.
+        # Runtime deps for the screenshot keybind (SUPER+P → scripts/
+        # screenshot.sh). DMS only ships an `ipc niri screenshot` IPC
+        # for the niri compositor; on Hyprland we drive grim+slurp+satty
+        # ourselves. They have to be on $PATH for the graphical session.
         #   grim         region screenshot capture (Wayland)
-        #   satty        image markup editor (always opens after region
-        #                selection; default editor is overridden to satty
-        #                in the patched manifest.json — see noctalia module)
-        #   wf-recorder  screen recording backend
-        #   xdg-utils    xdg-open (Google Lens "search" action)
+        #   slurp        interactive region selector
+        #   satty        image markup editor
+        #   wf-recorder  screen recording backend (used ad-hoc; not
+        #                wired into a keybind today)
+        #   xdg-utils    xdg-open (used by various other apps)
         grim
+        slurp
         satty
         wf-recorder
         xdg-utils
