@@ -12,7 +12,7 @@
     # Reuse the system wallpaper for the SDDM greeter background so the login
     # screen matches the desktop. Set to `null` here to fall back to the
     # subtheme's bundled background.
-    wallpaper = ../modules/themes/wallpapers/${settings.wallpaper}.jxl;
+    wallpaper = ../modules/themes/wallpapers/${settings.wallpaper}.png;
   };
   lenovo-wwan-unlock = pkgs.callPackage ./easy-lenovo-wwan-unlock.nix {};
   cpyvpn = import ./cpyvpn.nix {inherit pkgs inputs;};

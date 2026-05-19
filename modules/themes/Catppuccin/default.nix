@@ -53,11 +53,11 @@ in {
         ipc = true
         splash = false
 
-        preload = ${../wallpapers/${wallpaper}.jxl}
+        preload = ${../wallpapers/${wallpaper}.png}
 
         wallpaper {
           monitor =
-          path = ${../wallpapers/${wallpaper}.jxl}
+          path = ${../wallpapers/${wallpaper}.png}
           fit_mode = cover
         }
       '';

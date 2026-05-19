@@ -4,19 +4,10 @@
   username,
   ...
 }: let
-  # Quickshell-based shells (Caelestia, Noctalia) use Qt6's built-in image
-  # decoders, which do not support JPEG XL out of the box. Our existing
-  # wallpapers in modules/themes/wallpapers are .jxl, so we decode them to
-  # .png at build time and expose the decoded set as the wallpaper dir.
-  wallpapersDecoded = pkgs.runCommand "noctalia-wallpapers" {
-    nativeBuildInputs = [pkgs.libjxl];
-  } ''
-    mkdir -p $out
-    for f in ${../../../../themes/wallpapers}/*.jxl; do
-      name=$(basename "$f" .jxl)
-      djxl "$f" "$out/$name.png"
-    done
-  '';
+  # Wallpapers live in modules/themes/wallpapers as plain .png; Qt6's built-in
+  # image decoders (used by Quickshell/Noctalia) handle PNG natively, so we
+  # just expose the directory as-is.
+  wallpapersDir = ../../../../themes/wallpapers;
 
   # Wrap modules/desktop/hyprland/scripts/tlp-ctl.sh as a `tlp-ctl` binary on
   # PATH so the Noctalia plugin (and any keybind) can call it without knowing
@@ -34,13 +25,20 @@
   # widget is then addressed as "plugin:tlp-ctl" in settings.bar.widgets.
   tlpPluginDir = ./plugin-tlp-ctl;
 in {
+  # Install tlp-ctl system-wide rather than into the per-user home-manager
+  # profile. Noctalia is spawned by Hyprland's autostart.lua before the
+  # home-manager profile is necessarily on PATH for the graphical session,
+  # so a home.packages install would leave Quickshell's Process unable to
+  # find `tlp-ctl` (the bar widget would stay stuck on the bolt/"…"
+  # placeholder and clicks would silently no-op). /run/current-system/sw/bin
+  # is always on PATH, and is where `tlp` itself lives.
+  environment.systemPackages = [tlpCtl];
+
   home-manager.sharedModules = [
     inputs.noctalia.homeModules.default
     ({...}: {
-      home.packages = [tlpCtl];
-
       home.file."Pictures/Wallpapers" = {
-        source = wallpapersDecoded;
+        source = wallpapersDir;
         recursive = true;
       };
 
@@ -156,8 +154,6 @@ in {
             location = "top_right";
           };
 
-          # Noctalia is still Quickshell/Qt6; same JPEG-XL caveat as
-          # Caelestia. The wallpaper directory points at the decoded PNGs.
           wallpaper = {
             enabled = true;
             directory = "/home/${username}/Pictures/Wallpapers";
@@ -166,7 +162,7 @@ in {
           };
 
           colorSchemes = {
-            predefinedScheme = "Noctalia (default)";
+            predefinedScheme = "Catppuccin Mocha";
             darkMode = true;
             useWallpaperColors = false;
           };

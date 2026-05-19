@@ -2,11 +2,10 @@
   stdenv,
   fetchFromGitHub,
   kdePackages,
-  libjxl,
   theme ? "astronaut",
   # Optional path to a wallpaper image. When set, it replaces the chosen
-  # subtheme's Background. JPEG XL (.jxl) is auto-decoded to PNG via libjxl;
-  # any other format (png/jpg/jpeg/webp/gif/mp4/...) is copied as-is.
+  # subtheme's Background. The file is copied verbatim into the theme; Qt6's
+  # built-in image decoders handle png/jpg/jpeg/webp natively.
   wallpaper ? null,
 }:
 stdenv.mkDerivation rec {
@@ -20,7 +19,6 @@ stdenv.mkDerivation rec {
     qtmultimedia
     qtvirtualkeyboard
   ];
-  nativeBuildInputs = [libjxl];
   src = fetchFromGitHub {
     owner = "Keyitdev";
     repo = "sddm-astronaut-theme";
@@ -62,22 +60,14 @@ stdenv.mkDerivation rec {
       then ""
       else ''
         # Replace the selected subtheme's Background with the user's wallpaper.
-        # Decode JXL to PNG (Qt6's image decoders don't support JXL); copy other
-        # formats verbatim so the theme's existing decoder pipeline handles them.
+        # Copy the source file verbatim; Qt6's built-in decoders handle the
+        # common raster formats (png/jpg/jpeg/webp) the theme is given.
         themeDir="$out/share/sddm/themes/sddm-astronaut-theme"
         mkdir -p "$themeDir/Backgrounds"
         src=${wallpaper}
         ext="''${src##*.}"
-        case "$ext" in
-          jxl|JXL)
-            djxl "$src" "$themeDir/Backgrounds/_custom_wallpaper.png"
-            out_rel="Backgrounds/_custom_wallpaper.png"
-            ;;
-          *)
-            cp "$src" "$themeDir/Backgrounds/_custom_wallpaper.$ext"
-            out_rel="Backgrounds/_custom_wallpaper.$ext"
-            ;;
-        esac
+        cp "$src" "$themeDir/Backgrounds/_custom_wallpaper.$ext"
+        out_rel="Backgrounds/_custom_wallpaper.$ext"
         sed -E -i "s|^Background=.*|Background=\"$out_rel\"|" \
           "$themeDir/Themes/${theme}.conf"
       ''

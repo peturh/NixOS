@@ -5,7 +5,17 @@ if ! command -v tlp >/dev/null; then
     exit 1
 fi
 
-PERF_MARKER="/tmp/tlp-performance-mode"
+# Records the user's explicit profile choice across invocations. Without
+# this, `get_profile` could only infer state from AC + a perf marker, which
+# meant choosing "low" while on AC would silently look like "medium" on the
+# next read (because on-AC + no-perf-marker == medium). The state file is
+# stamped with the AC state at write time: when AC plug state changes the
+# stored choice is treated as stale and we fall back to the AC-state
+# default (medium on AC, low on battery). This matches what TLP itself
+# does on udev plug events (it re-runs `tlp auto` and overrides our
+# manual `tlp ac` / `tlp bat` calls), so the stale-state fallback keeps
+# the indicator honest.
+STATE_FILE="/tmp/tlp-ctl-state"
 SCRIPT_PATH="$(readlink -f "$0")"
 
 # ==== Usage ====
@@ -53,60 +63,77 @@ is_on_ac() {
     return 1
 }
 
-is_performance_active() {
-    [ -f "$PERF_MARKER" ] || return 1
-    local gov
-    gov=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null)
-    if [ "$gov" != "performance" ]; then
-        rm -f "$PERF_MARKER"
-        return 1
-    fi
-    return 0
+current_ac_state() {
+    if is_on_ac; then echo 1; else echo 0; fi
+}
+
+# Default profile when nothing is manually set: balanced on AC, leaf on
+# battery. This is what `get_profile` returns whenever the state file is
+# missing or stale (AC plug state changed since we wrote it).
+default_profile() {
+    if is_on_ac; then echo medium; else echo low; fi
+}
+
+# State file format: "<profile>:<ac_state>", e.g. "performance:1".
+read_state() {
+    [ -f "$STATE_FILE" ] && cat "$STATE_FILE" 2>/dev/null
+}
+
+write_state() {
+    echo "$1:$(current_ac_state)" > "$STATE_FILE"
+}
+
+clear_state() {
+    rm -f "$STATE_FILE"
 }
 
 get_profile() {
-    local profile handling
-    if is_performance_active; then
-        profile="performance"
+    local profile handling format stored profile_part ac_part
+    format="${1:-}"
+    stored=$(read_state)
+    profile_part="${stored%%:*}"
+    ac_part="${stored##*:}"
+
+    if [ -n "$profile_part" ] && [ "$ac_part" = "$(current_ac_state)" ]; then
+        profile="$profile_part"
         handling="manual"
-    elif is_on_ac; then
-        profile="medium"
-        handling="auto"
     else
-        profile="low"
+        profile="$(default_profile)"
         handling="auto"
     fi
-    print_profile "$profile" "$handling" "$1"
+    print_profile "$profile" "$handling" "$format"
 }
 
 set_profile() {
-    case "$1" in
+    case "${1:-}" in
         low)
-            rm -f "$PERF_MARKER"
+            write_state low
             pkexec tlp bat
             ;;
         medium)
-            rm -f "$PERF_MARKER"
+            write_state medium
             pkexec tlp ac
             ;;
         performance)
+            write_state performance
             pkexec tlp ac
             pkexec "$SCRIPT_PATH" _apply_performance
-            touch "$PERF_MARKER"
             ;;
         auto)
-            rm -f "$PERF_MARKER"
+            clear_state
             pkexec tlp start
             ;;
         *)
-            echo "Unknown profile: $1" >&2
+            echo "Unknown profile: ${1:-}" >&2
             exit 1
             ;;
     esac
 }
 
 toggle_profile() {
-    if is_performance_active; then
+    local current
+    current=$(get_profile)
+    if [ "$current" = "performance" ]; then
         set_profile auto
     else
         set_profile performance
@@ -114,20 +141,22 @@ toggle_profile() {
 }
 
 cycle_profile() {
-    local current
+    local current next
     current=$(get_profile)
     case "$current" in
-        low)         set_profile medium ;;
-        medium)      set_profile performance ;;
-        performance) set_profile low ;;
+        low)         next=medium ;;
+        medium)      next=performance ;;
+        performance) next=low ;;
+        *)           next="$(default_profile)" ;;
     esac
+    set_profile "$next"
 }
 
 print_profile() {
-    local profile="$1"
-    local handling="$2"
+    local profile="${1:-}"
+    local handling="${2:-}"
 
-    case "$3" in
+    case "${3:-}" in
         --json)
             jq -n --unbuffered --compact-output \
                 --arg profile "$profile" \
@@ -153,16 +182,22 @@ print_profile() {
 
 # ==== Main ====
 
-case "$1" in
+# Wrapped by pkgs.writeShellApplication, which enables `set -euo pipefail`.
+# Guard every positional access with a default so `tlp-ctl get` (no $2),
+# bare `tlp-ctl` (no $1), etc. don't trip set -u with "unbound variable".
+cmd="${1:-}"
+arg="${2:-}"
+
+case "$cmd" in
     -h | --help)
         Help
         exit 0
         ;;
     "" | get)
-        get_profile "$2"
+        get_profile "$arg"
         ;;
     set)
-        set_profile "$2"
+        set_profile "$arg"
         ;;
     toggle)
         toggle_profile
@@ -177,7 +212,7 @@ case "$1" in
         tlp "${@:2}"
         ;;
     *)
-        echo "Unknown command: $1" >&2
+        echo "Unknown command: $cmd" >&2
         exit 1
         ;;
 esac

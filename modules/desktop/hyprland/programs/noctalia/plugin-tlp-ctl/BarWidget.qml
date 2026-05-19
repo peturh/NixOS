@@ -31,7 +31,6 @@ Item {
   readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
   readonly property bool isBarVertical: barPosition === "left" || barPosition === "right"
   readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
-  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
 
   readonly property int pollIntervalMs:
     pluginApi?.pluginSettings?.pollIntervalMs ||
@@ -48,13 +47,6 @@ Item {
     return "bolt"
   }
 
-  readonly property string labelText: {
-    if (root.profile === "performance") return "perf"
-    if (root.profile === "medium") return "bal"
-    if (root.profile === "low") return "save"
-    return "…"
-  }
-
   readonly property color accentColor: {
     if (root.profile === "performance") return Color.mPrimary
     if (root.profile === "medium") return Color.mTertiary
@@ -62,12 +54,10 @@ Item {
     return Color.mOnSurfaceVariant
   }
 
-  readonly property real contentWidth: isBarVertical
-    ? capsuleHeight
-    : row.implicitWidth + Style.marginM * 2
-  readonly property real contentHeight: isBarVertical
-    ? col.implicitHeight + Style.marginM * 2
-    : capsuleHeight
+  // Icon-only widget: capsule is square (height == capsuleHeight) on
+  // horizontal bars and width-locked on vertical bars.
+  readonly property real contentWidth: capsuleHeight
+  readonly property real contentHeight: capsuleHeight
   implicitWidth: contentWidth
   implicitHeight: contentHeight
 
@@ -140,37 +130,10 @@ Item {
     border.color: Style.capsuleBorderColor
     border.width: Style.capsuleBorderWidth
 
-    Item {
+    NIcon {
       anchors.centerIn: parent
-      implicitWidth: root.isBarVertical ? col.implicitWidth : row.implicitWidth
-      implicitHeight: root.isBarVertical ? col.implicitHeight : row.implicitHeight
-
-      RowLayout {
-        id: row
-        visible: !root.isBarVertical
-        spacing: Style.marginS
-        NIcon {
-          icon: root.iconName
-          color: root.accentColor
-        }
-        NText {
-          text: root.labelText
-          color: Color.mOnSurface
-          pointSize: root.barFontSize
-          font.weight: Font.Medium
-        }
-      }
-
-      ColumnLayout {
-        id: col
-        visible: root.isBarVertical
-        spacing: Style.marginXS
-        NIcon {
-          icon: root.iconName
-          color: root.accentColor
-          Layout.alignment: Qt.AlignHCenter
-        }
-      }
+      icon: root.iconName
+      color: root.accentColor
     }
   }
 

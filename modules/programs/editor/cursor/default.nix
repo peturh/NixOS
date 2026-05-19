@@ -16,7 +16,7 @@
         # mutableExtensionsDir = true; # TODO: test with home-manager
         # package defaults to pkgs.code-cursor; override only if needed.
         profiles.default = {
-          extensions = with pkgs.vscode-extensions; [
+          extensions = (with pkgs.vscode-extensions; [
             bbenoist.nix
             eamodio.gitlens
             yzhang.markdown-all-in-one
@@ -24,7 +24,15 @@
             catppuccin.catppuccin-vsc-icons
             tamasfe.even-better-toml
             rust-lang.rust-analyzer
-          ];  
+          ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+            # QML syntax highlighting (not packaged in nixpkgs).
+            {
+              name = "QML";
+              publisher = "bbenoist";
+              version = "1.0.0";
+              sha256 = "sha256-tphnVlD5LA6Au+WDrLZkAxnMJeTCd3UTyTN1Jelditk=";
+            }
+          ];
           keybindings = [
             {
               key = "ctrl+q";
