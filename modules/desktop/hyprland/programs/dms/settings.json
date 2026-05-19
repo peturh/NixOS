@@ -1,16 +1,17 @@
 {
   "currentThemeName": "dynamic",
   "currentThemeCategory": "dynamic",
-  "customThemeFile": "/home/petur/.config/DankMaterialShell/themes/amoledBlack/theme.json",
+  "customThemeFile": "/home/petur/.config/DankMaterialShell/themes/retrobox/theme.json",
   "registryThemeVariants": {
     "amoledBlack": {
       "dark": {
-        "flavor": "black-light",
-        "accent": "green"
+        "flavor": "black",
+        "accent": "white"
       }
-    }
+    },
+    "peaceAndQuiet": "salmon"
   },
-  "matugenScheme": "scheme-tonal-spot",
+  "matugenScheme": "scheme-rainbow",
   "runUserMatugenTemplates": true,
   "matugenTargetMonitor": "",
   "popupTransparency": 1,
@@ -35,7 +36,7 @@
   "useFahrenheit": false,
   "windSpeedUnit": "kmh",
   "nightModeEnabled": false,
-  "animationSpeed": 1,
+  "animationSpeed": 3,
   "customAnimationDuration": 500,
   "syncComponentAnimationSpeeds": true,
   "popoutAnimationSpeed": 1,
@@ -214,8 +215,8 @@
   "browserPickerViewMode": "grid",
   "browserUsageHistory": {
     "helium": {
-      "count": 1,
-      "lastUsed": 1779190839902,
+      "count": 2,
+      "lastUsed": 1779193983438,
       "name": "Helium"
     }
   },
@@ -238,7 +239,7 @@
   "useAutoLocation": false,
   "weatherEnabled": true,
   "networkPreference": "auto",
-  "iconTheme": "System Default",
+  "iconTheme": "Bibata-Original-Ice",
   "cursorSettings": {
     "theme": "Bibata-Original-Ice",
     "size": 24,
@@ -331,12 +332,12 @@
   "matugenTemplateVscode": false,
   "matugenTemplateEmacs": false,
   "matugenTemplateZed": false,
-  "showDock": false,
-  "dockAutoHide": false,
+  "showDock": true,
+  "dockAutoHide": true,
   "dockSmartAutoHide": false,
   "dockGroupByApp": false,
   "dockOpenOnOverview": false,
-  "dockPosition": 1,
+  "dockPosition": 2,
   "dockSpacing": 4,
   "dockBottomGap": 0,
   "dockMargin": 0,
@@ -383,7 +384,7 @@
   "notificationTimeoutCritical": 0,
   "notificationCompactMode": false,
   "notificationPopupPosition": 0,
-  "notificationAnimationSpeed": 1,
+  "notificationAnimationSpeed": 3,
   "notificationCustomAnimationDuration": 400,
   "notificationHistoryEnabled": true,
   "notificationHistoryMaxCount": 50,
@@ -564,7 +565,8 @@
       "centerWidgets": [
         {
           "id": "focusedWindow",
-          "enabled": true
+          "enabled": true,
+          "focusedWindowCompactMode": false
         }
       ],
       "rightWidgets": [
@@ -703,7 +705,161 @@
   "systemMonitorVariants": [],
   "desktopWidgetPositions": {},
   "desktopWidgetGridSettings": {},
-  "desktopWidgetInstances": [],
+  "desktopWidgetInstances": [
+    {
+      "id": "dw_1779193744500_aeqkajbxz",
+      "widgetType": "systemMonitor",
+      "name": "System Monitor",
+      "enabled": false,
+      "config": {
+        "showHeader": true,
+        "transparency": 0.8,
+        "colorMode": "primary",
+        "customColor": "#ffffff",
+        "showCpu": true,
+        "showCpuGraph": true,
+        "showCpuTemp": true,
+        "showGpuTemp": true,
+        "gpuPciId": "",
+        "showMemory": true,
+        "showMemoryGraph": true,
+        "showNetwork": true,
+        "showNetworkGraph": true,
+        "showDisk": true,
+        "showTopProcesses": false,
+        "topProcessCount": 3,
+        "topProcessSortBy": "cpu",
+        "layoutMode": "auto",
+        "graphInterval": 60,
+        "displayPreferences": [
+          "all"
+        ],
+        "showOnOverlay": false,
+        "clickThrough": false
+      },
+      "positions": {
+        "0x403A": {
+          "width": 320,
+          "height": 480,
+          "x": 800,
+          "y": 360
+        },
+        "LS32D80xU": {
+          "width": 1128,
+          "height": 864,
+          "x": 2702,
+          "y": 60
+        }
+      }
+    },
+    {
+      "id": "dw_1779193790110_w88o725wn",
+      "widgetType": "desktopClock",
+      "name": "Desktop Clock",
+      "enabled": false,
+      "config": {
+        "style": "analog",
+        "transparency": 0.8,
+        "colorMode": "primary",
+        "customColor": "#ffffff",
+        "showDate": true,
+        "showAnalogNumbers": false,
+        "showAnalogSeconds": true,
+        "displayPreferences": [
+          "all"
+        ]
+      },
+      "positions": {
+        "0x403A": {
+          "width": 200,
+          "height": 200,
+          "x": 860,
+          "y": 500
+        },
+        "LS32D80xU": {
+          "width": 243,
+          "height": 243,
+          "x": 199,
+          "y": 100
+        }
+      }
+    },
+    {
+      "id": "dw_1779193830779_mjt4fio36",
+      "widgetType": "keybindingCheatSheet",
+      "name": "Keybinding Cheat Sheet",
+      "enabled": false,
+      "config": {
+        "displayPreferences": [
+          "all"
+        ]
+      },
+      "positions": {
+        "0x403A": {
+          "width": 200,
+          "height": 200,
+          "x": 860,
+          "y": 500
+        },
+        "LS32D80xU": {
+          "width": 424,
+          "height": 354,
+          "x": 980,
+          "y": 1269
+        }
+      }
+    },
+    {
+      "id": "dw_1779193833130_nwykl9iok",
+      "widgetType": "dankDesktopWeather",
+      "name": "Dank Desktop Weather",
+      "enabled": false,
+      "config": {
+        "displayPreferences": [
+          "all"
+        ]
+      },
+      "positions": {
+        "0x403A": {
+          "width": 200,
+          "height": 200,
+          "x": 860,
+          "y": 500
+        },
+        "LS32D80xU": {
+          "width": 333,
+          "height": 236,
+          "x": 1225,
+          "y": 747
+        }
+      }
+    },
+    {
+      "id": "dw_1779193885969_13ryw1ilv",
+      "widgetType": "dankAudioVisualizer",
+      "name": "Dank Audio Visualizer",
+      "enabled": true,
+      "config": {
+        "displayPreferences": [
+          "all"
+        ]
+      },
+      "positions": {
+        "0x403A": {
+          "width": 200,
+          "height": 200,
+          "x": 860,
+          "y": 500
+        },
+        "LS32D80xU": {
+          "width": 559,
+          "height": 377,
+          "x": 367,
+          "y": 273
+        }
+      }
+    }
+  ],
   "desktopWidgetGroups": [],
   "builtInPluginSettings": {
     "dms_settings_search": {
