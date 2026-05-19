@@ -84,9 +84,10 @@ in {
 
         # Systemd startup is deprecated upstream; Noctalia is spawned from
         # Hyprland's autostart.lua instead. The running process is the
-        # NixOS-wrapped `.quickshell-wrapped` binary (argv[0] == quickshell),
-        # so the CTRL+ESCAPE restart keybind in lua/binds.lua kills via
-        # `pkill -f quickshell` rather than matching the noctalia-shell name.
+        # NixOS-wrapped `.quickshell-wrapped` binary (the noctalia-shell C
+        # wrapper exec's quickshell), so the CTRL+ESCAPE restart keybind
+        # (scripts/restart-noctalia.sh) matches via `pkill -f quickshell`
+        # rather than the noctalia-shell name.
         systemd.enable = false;
 
         plugins = {

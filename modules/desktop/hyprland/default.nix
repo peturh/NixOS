@@ -58,11 +58,12 @@
         kbdVariant  = "${kbdVariant},",
 
         scripts = {
-          keybinds       = "${./scripts/keybinds.sh}",
-          dontkillsteam  = "${./scripts/dontkillsteam.sh}",
-          keyboardswitch = "${./scripts/keyboardswitch.sh}",
-          gamemode       = "${./scripts/gamemode.sh}",
-          rebuild        = "${./scripts/rebuild.sh}",
+          keybinds        = "${./scripts/keybinds.sh}",
+          dontkillsteam   = "${./scripts/dontkillsteam.sh}",
+          keyboardswitch  = "${./scripts/keyboardswitch.sh}",
+          gamemode        = "${./scripts/gamemode.sh}",
+          rebuild         = "${./scripts/rebuild.sh}",
+          restartNoctalia = "${./scripts/restart-noctalia.sh}",
         },
 
         bin = {
