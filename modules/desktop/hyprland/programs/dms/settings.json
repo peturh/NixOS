@@ -1,0 +1,82 @@
+{
+  "barConfigs": [
+    {
+      "autoHide": false,
+      "autoHideDelay": 250,
+      "autoHideStrict": false,
+      "borderColor": "surfaceText",
+      "borderEnabled": false,
+      "borderOpacity": 1.0,
+      "borderThickness": 1,
+      "bottomGap": 0,
+      "centerWidgets": [
+        "music",
+        "clock",
+        "weather"
+      ],
+      "clickThrough": false,
+      "enabled": true,
+      "fontScale": 1.0,
+      "gothCornerRadiusOverride": false,
+      "gothCornerRadiusValue": 12,
+      "gothCornersEnabled": false,
+      "iconScale": 1.0,
+      "id": "default",
+      "innerPadding": 4,
+      "leftWidgets": [
+        "launcherButton",
+        "workspaceSwitcher",
+        "focusedWindow"
+      ],
+      "maximizeDetection": true,
+      "maximizeWidgetIcons": false,
+      "maximizeWidgetText": false,
+      "name": "Main Bar",
+      "noBackground": false,
+      "openOnOverview": false,
+      "popupGapsAuto": true,
+      "popupGapsManual": 4,
+      "position": 0,
+      "removeWidgetPadding": false,
+      "rightWidgets": [
+        "systemTray",
+        "privacyIndicator",
+        "clipboard",
+        "cpuUsage",
+        "memUsage",
+        "network_speed_monitor",
+        "vpn",
+        "battery",
+        "notificationButton",
+        "controlCenterButton"
+      ],
+      "screenPreferences": [
+        "all"
+      ],
+      "scrollEnabled": true,
+      "scrollXBehavior": "column",
+      "scrollYBehavior": "workspace",
+      "shadowColorMode": "default",
+      "shadowCustomColor": "#000000",
+      "shadowIntensity": 0,
+      "shadowOpacity": 60,
+      "showOnLastDisplay": true,
+      "showOnWindowsOpen": false,
+      "spacing": 4,
+      "squareCorners": false,
+      "transparency": 1.0,
+      "visible": true,
+      "widgetOutlineColor": "primary",
+      "widgetOutlineEnabled": false,
+      "widgetOutlineOpacity": 1.0,
+      "widgetOutlineThickness": 1,
+      "widgetPadding": 8,
+      "widgetTransparency": 1.0
+    }
+  ],
+  "configVersion": 11,
+  "currentThemeCategory": "generic",
+  "currentThemeName": "purple",
+  "lockBeforeSuspend": true,
+  "wallpaperFillMode": "Fill"
+}

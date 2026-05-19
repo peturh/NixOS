@@ -124,108 +124,27 @@ in {
         enableClipboardPaste = true; # wtype-backed clipboard paste-from-history
 
         # Settings written to ~/.config/DankMaterialShell/settings.json.
-        # DMS will consider the file read-only as long as home-manager
-        # owns it; settings UI changes pop up a banner with the JSON to
-        # paste back here. See:
+        #
+        # The contents live in a sibling JSON file rather than inline Nix
+        # so we can round-trip through DMS's own UI without hand-
+        # translating attrsets:
+        #
+        #   1. Set `settings = { };` and rebuild — DMS un-locks the file.
+        #   2. Tweak via SUPER+, (Settings UI). DMS writes settings.json.
+        #   3. `cp ~/.config/DankMaterialShell/settings.json
+        #         modules/desktop/hyprland/programs/dms/settings.json`
+        #   4. Restore the line below and rebuild — file goes back to a
+        #      read-only Nix-store symlink with your tweaks baked in.
+        #
+        # While this line is active the file is HM-owned and read-only;
+        # the in-shell Settings UI shows a banner with the JSON for
+        # changes you make there. See:
         # https://danklinux.com/docs/dankmaterialshell/nixos-flake#settings-home-manager-only
-        settings = {
-          configVersion = 11;
-
-          # Top bar with one config, "default", and a sensible widget
-          # layout. Widget IDs come from
-          # quickshell/Modules/DankBar/WidgetHost.qml's componentMap;
-          # bar config keys come from SettingsData.qml's barConfigs default.
-          barConfigs = [
-            {
-              id = "default";
-              name = "Main Bar";
-              enabled = true;
-              position = 0; # 0 = Top, 1 = Bottom (SettingsData.Position enum)
-              screenPreferences = ["all"];
-              showOnLastDisplay = true;
-              leftWidgets = [
-                "launcherButton"
-                "workspaceSwitcher"
-                "focusedWindow"
-              ];
-              centerWidgets = [
-                "music"
-                "clock"
-                "weather"
-              ];
-              rightWidgets = [
-                "systemTray"
-                "privacyIndicator"
-                "clipboard"
-                "cpuUsage"
-                "memUsage"
-                "network_speed_monitor"
-                "vpn"
-                "battery"
-                "notificationButton"
-                "controlCenterButton"
-              ];
-              spacing = 4;
-              innerPadding = 4;
-              bottomGap = 0;
-              transparency = 1.0;
-              widgetTransparency = 1.0;
-              squareCorners = false;
-              noBackground = false;
-              maximizeWidgetIcons = false;
-              maximizeWidgetText = false;
-              removeWidgetPadding = false;
-              widgetPadding = 8;
-              gothCornersEnabled = false;
-              gothCornerRadiusOverride = false;
-              gothCornerRadiusValue = 12;
-              borderEnabled = false;
-              borderColor = "surfaceText";
-              borderOpacity = 1.0;
-              borderThickness = 1;
-              widgetOutlineEnabled = false;
-              widgetOutlineColor = "primary";
-              widgetOutlineOpacity = 1.0;
-              widgetOutlineThickness = 1;
-              fontScale = 1.0;
-              iconScale = 1.0;
-              autoHide = false;
-              autoHideStrict = false;
-              autoHideDelay = 250;
-              showOnWindowsOpen = false;
-              openOnOverview = false;
-              visible = true;
-              popupGapsAuto = true;
-              popupGapsManual = 4;
-              maximizeDetection = true;
-              scrollEnabled = true;
-              scrollXBehavior = "column";
-              scrollYBehavior = "workspace";
-              shadowIntensity = 0;
-              shadowOpacity = 60;
-              shadowColorMode = "default";
-              shadowCustomColor = "#000000";
-              clickThrough = false;
-            }
-          ];
-
-          # DMS's stock theme set is small (blue, purple, green, orange, red,
-          # cyan, pink, amber, coral, monochrome) — there's no Catppuccin
-          # preset. `purple` is the upstream default and the closest match
-          # in feel; flip to "dynamic" once you set a wallpaper if you
-          # want matugen to derive the palette from it.
-          currentThemeName = "purple";
-          currentThemeCategory = "generic";
-
-          # Lock screen on suspend (replaces noctalia's general.lockOnSuspend).
-          lockBeforeSuspend = true;
-
-          # Wallpaper fill mode. "Fill" matches noctalia's "crop" — image
-          # is scaled and cropped to cover the whole screen, no letterbox.
-          # (The wallpaperTransition setting lives in session.json instead
-          # and defaults to "fade", so we leave that alone.)
-          wallpaperFillMode = "Fill";
-        };
+        #
+        # Schema reference: keys/widget-IDs come from DankMaterialShell's
+        # quickshell/Modules/DankBar/WidgetHost.qml (componentMap) and
+        # quickshell/Common/SettingsData.qml (barConfigs default).
+        settings = builtins.fromJSON (builtins.readFile ./settings.json);
 
         # Session state lives at ~/.local/state/DankMaterialShell/session.json
         # and intentionally stays *outside* home-manager so DMS can mutate
