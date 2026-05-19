@@ -29,6 +29,93 @@
   # `id` field of manifest.json must match the directory name; the bar
   # widget is then addressed as "plugin:tlp-ctl" in settings.bar.widgets.
   tlpPluginDir = ./plugin-tlp-ctl;
+
+  # Upstream noctalia plugin: "ScreenShot & Record"
+  # https://github.com/noctalia-dev/noctalia-plugins/tree/main/screen-shot-and-record
+  # Pinned by commit so rebuilds are reproducible; bump `rev` (and `hash`,
+  # leave empty and Nix will print the correct value on the next build) to
+  # update. We pull only the one plugin's subdirectory via sparseCheckout
+  # so a 100-plugin repo isn't dragged into the closure.
+  screenShotPluginSrc = pkgs.fetchFromGitHub {
+    owner = "noctalia-dev";
+    repo = "noctalia-plugins";
+    rev = "7f0b5568b2970ab4a263c0c7c5e7d03e9899dead";
+    hash = "sha256-fLCgRH4+jwYFHlDeZk0bOs83WNWy1+v/L2bLwUT4FtU=";
+    sparseCheckout = ["screen-shot-and-record"];
+  };
+
+  # Upstream noctalia plugin: "Claude Code Panel"
+  # https://github.com/noctalia-dev/noctalia-plugins/tree/main/claude-code-panel
+  # Same sparseCheckout pattern as screen-shot-and-record. Pinned at the most
+  # recent commit touching the plugin folder; bump `rev` (clear `hash`, Nix
+  # will print the correct value on next build) to update.
+  claudeCodePanelPluginSrc = pkgs.fetchFromGitHub {
+    owner = "noctalia-dev";
+    repo = "noctalia-plugins";
+    rev = "9530cc7be346c022135d61fd8e2cd9c823209733";
+    hash = "sha256-aqBAIdo/1xFpNa3vXpae9bPQ7qR4OE01W1GQYma3UCs=";
+    sparseCheckout = ["claude-code-panel"];
+  };
+  # Patch the upstream plugin so:
+  #   1) defaultSettings.claude.model in manifest.json is "opus" instead of
+  #      "". `opus` is the claude CLI's short alias that always resolves to
+  #      the latest Opus model, so this seeded default survives Anthropic
+  #      version bumps. Users can still override it via the plugin Settings
+  #      panel ("/model <name>") or the Settings.qml field — defaultSettings
+  #      only applies on first run when no stored value exists.
+  # The two greps are tripwires: the first checks that Main.qml is still
+  # wrapping `claude-code-acp` (the Zed-industries ACP bridge); if upstream
+  # switches binary names in a future rev the build fails loudly, prompting
+  # us to revisit the claudeCodeAcp wrapper below. The second confirms the
+  # model sed actually matched, so a future schema change to manifest.json
+  # can't silently revert the default back to "".
+  claudeCodePanelPlugin = pkgs.runCommand "noctalia-claude-code-panel" {} ''
+    set -euo pipefail
+    cp -r ${claudeCodePanelPluginSrc}/claude-code-panel $out
+    chmod -R u+w $out
+    ${pkgs.gnugrep}/bin/grep -q '"which", "claude-code-acp"' $out/Main.qml
+    ${pkgs.gnused}/bin/sed -i \
+      's|"model": ""|"model": "opus"|' \
+      $out/manifest.json
+    ${pkgs.gnugrep}/bin/grep -q '"model": "opus"' $out/manifest.json
+  '';
+
+  # The plugin's Main.qml hardcodes `which claude-code-acp`, but nixpkgs
+  # renamed `claude-code-acp` to `claude-agent-acp` (the binary inside is
+  # `claude-agent-acp` too). Provide a thin alias so the plugin keeps
+  # finding it on PATH without us having to fork the upstream QML on every
+  # bump. `pkgs.claude-agent-acp` already bundles its own `claude` SDK
+  # binary inside `@anthropic-ai/claude-agent-sdk-linux-x64/`, so we don't
+  # need `pkgs.claude-code` for the plugin to *run* — but we still install
+  # it below so the user can do `claude login` once to seed `~/.claude/`,
+  # which the ACP bridge then reuses.
+  claudeCodeAcp = pkgs.runCommand "claude-code-acp-alias" {} ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.claude-agent-acp}/bin/claude-agent-acp $out/bin/claude-code-acp
+  '';
+  # Patch the upstream plugin so:
+  #   1) ScreenShot.qml always opens the editor (satty), regardless of
+  #      whether the region was finalised with LMB or RMB. Upstream uses
+  #      LMB=copy / RMB=edit; we want one button, one behaviour.
+  #   2) manifest.json defaults `screenshotEditor` to "satty" instead of
+  #      "swappy" (acts as the seeded default; user can still flip in the
+  #      Noctalia plugin settings GUI).
+  # Each sed is followed by a grep so we'll *fail loudly* on the next
+  # upstream rev bump if the strings drift, rather than silently reverting
+  # to the LMB/RMB behaviour.
+  screenShotPlugin = pkgs.runCommand "noctalia-screen-shot-and-record-patched" {} ''
+    set -euo pipefail
+    cp -r ${screenShotPluginSrc}/screen-shot-and-record $out
+    chmod -R u+w $out
+    ${pkgs.gnused}/bin/sed -i \
+      's|const mode = (root.mouseButton === Qt.RightButton) ? "edit" : "copy"|const mode = "edit"|' \
+      $out/ScreenShot.qml
+    ${pkgs.gnugrep}/bin/grep -q 'const mode = "edit"' $out/ScreenShot.qml
+    ${pkgs.gnused}/bin/sed -i \
+      's|"screenshotEditor": "swappy"|"screenshotEditor": "satty"|' \
+      $out/manifest.json
+    ${pkgs.gnugrep}/bin/grep -q '"screenshotEditor": "satty"' $out/manifest.json
+  '';
 in {
   # Install tlp-ctl system-wide rather than into the per-user home-manager
   # profile. Noctalia is spawned by Hyprland's autostart.lua before the
@@ -37,7 +124,19 @@ in {
   # find `tlp-ctl` (the bar widget would stay stuck on the bolt/"…"
   # placeholder and clicks would silently no-op). /run/current-system/sw/bin
   # is always on PATH, and is where `tlp` itself lives.
-  environment.systemPackages = [tlpCtl];
+  #
+  # Same reasoning for the claude-code-panel plugin's runtime: the plugin
+  # shells out to `which claude-code-acp` at QML init, before the
+  # home-manager PATH is necessarily set up for the graphical session.
+  # `claudeCodeAcp` exposes the renamed `claude-agent-acp` binary under the
+  # plugin's expected name; `claude-code` ships the standalone `claude` CLI
+  # so the user can run `claude` once to seed `~/.claude/` auth (the ACP
+  # bridge reuses that auth state).
+  environment.systemPackages = [
+    tlpCtl
+    claudeCodeAcp
+    pkgs.claude-code
+  ];
 
   home-manager.sharedModules = [
     inputs.noctalia.homeModules.default
@@ -79,6 +178,28 @@ in {
       xdg.configFile."noctalia/plugins/tlp-ctl/BarWidget.qml".source =
         tlpPluginDir + "/BarWidget.qml";
 
+      # Ship the upstream screen-shot-and-record plugin the same way. The
+      # whole subdirectory is mounted recursively (it has ~13 QML/sh/json
+      # files plus an i18n/ folder), so we don't have to enumerate them.
+      # Bound to SUPER+P in lua/binds.lua via:
+      #   noctalia-shell ipc call plugin:screen-shot-and-record screenshot
+      xdg.configFile."noctalia/plugins/screen-shot-and-record" = {
+        source = screenShotPlugin;
+        recursive = true;
+      };
+
+      # Ship the upstream claude-code-panel plugin. Same recursive mount;
+      # see `claudeCodePanelPlugin` above for what's inside. Bound to
+      # SUPER+SHIFT+C in lua/binds.lua via:
+      #   noctalia-shell ipc call plugin:claude-code-panel toggle
+      # Runtime deps (`claude-code-acp` alias + `claude` CLI) are wired
+      # into environment.systemPackages above. First-time auth requires
+      # running `claude` once interactively to populate ~/.claude/.
+      xdg.configFile."noctalia/plugins/claude-code-panel" = {
+        source = claudeCodePanelPlugin;
+        recursive = true;
+      };
+
       programs.noctalia-shell = {
         enable = true;
 
@@ -110,6 +231,14 @@ in {
               enabled = true;
               sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
             };
+            screen-shot-and-record = {
+              enabled = true;
+              sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+            };
+            claude-code-panel = {
+              enabled = true;
+              sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+            };
           };
         };
 
@@ -120,7 +249,14 @@ in {
             showCapsule = true;
             widgets = {
               left = [
-                {id = "ControlCenter";}
+                # Show the NixOS snowflake instead of Noctalia's bundled owl
+                # logo. `useDistroLogo` makes the widget read LOGO= from
+                # /etc/os-release (set to "nix-snowflake" by NixOS) and resolve
+                # it via /run/current-system/sw/share/icons/hicolor/.../apps/,
+                # where nixos-icons ships nix-snowflake.svg. Colorization stays
+                # off (registry default) so the rainbow SVG renders in its
+                # native colours rather than being flattened to a single tint.
+                {id = "ControlCenter"; useDistroLogo = true;}
                 {id = "Workspace"; showApplications = true; hideUnoccupied = false;}
                 {id = "ActiveWindow";}
               ];

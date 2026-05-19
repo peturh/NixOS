@@ -11,6 +11,11 @@ hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, blur = true 
 hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, ignore_alpha = 0.5 })
 hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, blur_popups = true })
 
+-- Noctalia "screen-shot-and-record" plugin region selector overlay. Disable
+-- animations so the freeze/select overlay appears instantly under the cursor
+-- instead of fading in (recommended by the plugin's README).
+hl.layer_rule({ match = { namespace = "noctalia-shell:regionSelector" }, no_anim = true })
+
 -----------------
 -- Window rules
 -----------------

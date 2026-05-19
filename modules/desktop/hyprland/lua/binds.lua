@@ -78,13 +78,19 @@ hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("noctalia-shell ipc call cont
 hl.bind(mainMod .. " + ALT + G",   hl.dsp.exec_cmd(v.scripts.gamemode)) -- disable hypr effects for gamemode
 hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher clipboard")) -- Clipboard Manager
 
--- Screenshot/Screencapture (hyprshot). Noctalia's screenshot plugin wraps
--- hyprshot under the hood; calling hyprshot directly removes the IPC
--- round-trip and works even before noctalia-shell has finished starting.
-hl.bind(mainMod .. " + P",         hl.dsp.exec_cmd("hyprshot -m region --clipboard-only")) -- region capture
-hl.bind(mainMod .. " + CTRL + P",  hl.dsp.exec_cmd("hyprshot -m region --freeze --clipboard-only")) -- frozen region
-hl.bind(mainMod .. " + print",     hl.dsp.exec_cmd("hyprshot -m output --clipboard-only")) -- current monitor
-hl.bind(mainMod .. " + ALT + P",   hl.dsp.exec_cmd("sh -c 'hyprshot -m output --raw | wl-copy'")) -- all monitors
+-- Screenshot/Screencapture. Handled entirely by the noctalia
+-- "ScreenShot & Record" plugin (patched in noctalia/default.nix to skip
+-- the LMB-copy / RMB-edit split and always open the satty editor). Frozen-
+-- screen overlay, window outlines are click-targetable, Esc cancels.
+-- Inside satty: Ctrl+C copies, Ctrl+S saves, toolbar gives shapes/arrows/text.
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("noctalia-shell ipc call plugin:screen-shot-and-record screenshot"))
+
+-- Claude Code Panel — toggle the Noctalia side panel that wraps the
+-- Anthropic claude-code-acp ACP bridge. SUPER+C is already taken by
+-- v.editor; SUPER+SHIFT+C is the closest free key. Requires a one-time
+-- `claude` login (run it in a terminal once) so the ACP bridge can reuse
+-- ~/.claude/ credentials.
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("noctalia-shell ipc call plugin:claude-code-panel toggle"))
 
 -- Functional keybinds.
 hl.bind("XF86Sleep",       hl.dsp.exec_cmd("systemctl suspend")) -- Put computer into sleep mode

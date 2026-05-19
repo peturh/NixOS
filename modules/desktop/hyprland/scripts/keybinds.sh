@@ -78,10 +78,7 @@ yad \
   "SUPER U" "Rebuild system" "$_terminal -e scripts/rebuild.sh" \
   "SUPER ALT G" "Enable game mode" "scripts/gamemode.sh" \
   "SUPER V" "Clipboard manager" "noctalia-shell ipc call launcher clipboard" \
-  "SUPER P" "Screenshot (select area)" "hyprshot -m region --clipboard-only" \
-  "SUPER CTRL P" "Screenshot (frozen screen)" "hyprshot -m region --freeze --clipboard-only" \
-  "SUPER Print" "Screenshot (current monitor)" "hyprshot -m output --clipboard-only" \
-  "SUPER ALT P" "Screenshot (all monitors)" "hyprshot -m output --raw | wl-copy" \
+  "SUPER P" "Screenshot region (always opens satty for markup + save/copy)" "noctalia-shell ipc call plugin:screen-shot-and-record screenshot" \
   "SUPER SHIFT CTRL ←" "Move window left" "movewindow l" \
   "SUPER SHIFT CTRL →" "Move window right" "movewindow r" \
   "SUPER SHIFT CTRL ↑" "Move window up" "movewindow u" \

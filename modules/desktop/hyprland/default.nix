@@ -77,21 +77,35 @@
   in [
     ({...}: {
       home.packages = with pkgs; [
-        # Noctalia replaces: waybar, hyprpaper, cliphist, grimblast, swappy
-        # (most are now built into the shell). Kept utilities still used by
-        # other binds / system integration:
+        # Noctalia replaces: waybar, hyprpaper, cliphist, grimblast, hyprshot
+        # (most are now built into the shell, screenshots go through the
+        # "screen-shot-and-record" noctalia plugin). Kept utilities still
+        # used by other binds / system integration:
         hyprpicker
-        hyprshot # SUPER+P screenshot region capture
         hyprland-qtutils
-        libnotify
+        libnotify # notify-send (used by noctalia screen-shot plugin too)
         brightnessctl
         pamixer
         pavucontrol
         playerctl
         wtype
-        wl-clipboard
+        wl-clipboard # wl-copy (used by noctalia screen-shot plugin too)
         xdotool
         yad
+
+        # Runtime deps for the noctalia "screen-shot-and-record" plugin
+        # (bound to SUPER+P). The plugin shells out to these by name, so
+        # they have to be on $PATH for the graphical session.
+        #   grim         region screenshot capture (Wayland)
+        #   satty        image markup editor (always opens after region
+        #                selection; default editor is overridden to satty
+        #                in the patched manifest.json — see noctalia module)
+        #   wf-recorder  screen recording backend
+        #   xdg-utils    xdg-open (Google Lens "search" action)
+        grim
+        satty
+        wf-recorder
+        xdg-utils
       ];
 
       # Hyprland 0.55+ Lua config. Hyprland picks Lua over hyprlang at startup
