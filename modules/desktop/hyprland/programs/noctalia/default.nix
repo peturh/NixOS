@@ -2,12 +2,17 @@
   inputs,
   pkgs,
   username,
+  wallpaper,
   ...
 }: let
   # Wallpapers live in modules/themes/wallpapers as plain .png; Qt6's built-in
   # image decoders (used by Quickshell/Noctalia) handle PNG natively, so we
   # just expose the directory as-is.
   wallpapersDir = ../../../../themes/wallpapers;
+
+  # The path Noctalia will use as its boot-time fallback wallpaper. Matches the
+  # filename selected by `commonSettings.wallpaper` in flake.nix.
+  defaultWallpaperPath = "/home/${username}/Pictures/Wallpapers/${wallpaper}.png";
 
   # Wrap modules/desktop/hyprland/scripts/tlp-ctl.sh as a `tlp-ctl` binary on
   # PATH so the Noctalia plugin (and any keybind) can call it without knowing
@@ -36,11 +41,33 @@ in {
 
   home-manager.sharedModules = [
     inputs.noctalia.homeModules.default
-    ({...}: {
+    ({lib, ...}: {
       home.file."Pictures/Wallpapers" = {
         source = wallpapersDir;
         recursive = true;
       };
+
+      # Seed Noctalia's wallpaper cache so it boots straight to the wallpaper
+      # picked in flake.nix instead of flashing its bundled "owl" logo
+      # (Assets/Wallpaper/noctalia.png) while WallpaperService loads. Noctalia
+      # reads `defaultWallpaper` from ~/.cache/noctalia/wallpapers.json before
+      # any per-monitor entry is set; we patch only that one key with jq so a
+      # user who later picks a different wallpaper through Noctalia's UI keeps
+      # their selection across rebuilds.
+      home.activation.seedNoctaliaWallpaper = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        cacheDir="$HOME/.cache/noctalia"
+        cacheFile="$cacheDir/wallpapers.json"
+        desired="${defaultWallpaperPath}"
+        ${pkgs.coreutils}/bin/mkdir -p "$cacheDir"
+        if [ -s "$cacheFile" ] && ${pkgs.jq}/bin/jq -e . "$cacheFile" >/dev/null 2>&1; then
+          tmp="$cacheFile.tmp"
+          ${pkgs.jq}/bin/jq --arg p "$desired" '.defaultWallpaper = $p' "$cacheFile" > "$tmp" \
+            && mv "$tmp" "$cacheFile"
+        else
+          printf '{"defaultWallpaper":"%s","wallpapers":{},"usedRandomWallpapers":{}}\n' \
+            "$desired" > "$cacheFile"
+        fi
+      '';
 
       # Ship the local tlp-ctl plugin into Noctalia's plugin directory. We
       # bypass the git-sparse-checkout install path entirely; PluginRegistry

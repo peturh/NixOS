@@ -55,7 +55,7 @@ All three share: Hyprland, Kitty, Cursor, Firefox, Chrome, Steam, Docker, and th
 
 ### Module Organization
 - **Hardware modules**: `modules/hardware/` (video, audio, networking)
-- **Desktop environments**: `modules/desktop/` (hyprland, gnome, i3-gaps)
+- **Desktop environments**: `modules/desktop/` (hyprland, gnome)
 - **Programs**: `modules/programs/` organized by category:
   - `browser/` - web browsers
   - `cli/` - command-line tools

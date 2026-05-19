@@ -13,7 +13,6 @@
   imports = [
     ../../themes/Catppuccin # Catppuccin GTK and QT themes
     ./programs/noctalia # bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
-    ./programs/rofi # kept for games + music modes only
     ./programs/hypridle # idle timeouts; drives noctalia lock
   ];
 
@@ -61,10 +60,8 @@
         scripts = {
           keybinds       = "${./scripts/keybinds.sh}",
           dontkillsteam  = "${./scripts/dontkillsteam.sh}",
-          rofi           = "${./scripts/rofi.sh}",
           keyboardswitch = "${./scripts/keyboardswitch.sh}",
           gamemode       = "${./scripts/gamemode.sh}",
-          rofimusic      = "${./scripts/rofimusic.sh}",
           rebuild        = "${./scripts/rebuild.sh}",
         },
 
@@ -88,7 +85,6 @@
         libnotify
         brightnessctl
         networkmanagerapplet
-        networkmanager_dmenu
         pamixer
         pavucontrol
         playerctl

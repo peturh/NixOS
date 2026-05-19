@@ -1,6 +1,5 @@
 {
   pkgs,
-  wallpaper,
   ...
 }: let
   # Choose the desired variant: "main", "moon", or "dawn"
@@ -59,14 +58,7 @@ in {
         General.theme = kvantumThemeName;
       };
 
-      # Wallpaper configuration
-      services.hyprpaper = {
-        enable = true;
-        settings = {
-          preload = ["${../wallpapers/${wallpaper}}"];
-          wallpaper = [",${../wallpapers/${wallpaper}}"];
-        };
-      };
+      # Wallpaper is owned by Noctalia; see modules/desktop/hyprland/programs/noctalia.
 
       # GNOME dark mode
       dconf.settings = {

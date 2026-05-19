@@ -1,14 +1,7 @@
 {pkgs, ...}: {
   home-manager.sharedModules = [
     ({config, ...}: {
-      # Set wallpaper
-      services.hyprpaper = {
-        enable = true;
-        settings = {
-          preload = ["${../wallpapers/moon.png}"];
-          wallpaper = [",${../wallpapers/moon.png}"];
-        };
-      };
+      # Wallpaper is owned by Noctalia; see modules/desktop/hyprland/programs/noctalia.
 
       dconf.settings = {
         "org/gnome/desktop/interface" = {

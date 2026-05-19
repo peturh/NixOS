@@ -4,10 +4,6 @@
 -- Layer rules
 ----------------
 
-hl.layer_rule({ match = { namespace = "rofi" }, blur = true })
-hl.layer_rule({ match = { namespace = "rofi" }, ignore_alpha = 0 })
-hl.layer_rule({ match = { namespace = "rofi" }, ignore_alpha = 0.7 })
-
 -- Noctalia bar/panels backgrounds. The shell tags its layer surfaces with
 -- "noctalia-background-<panel>" so we wildcard-match them all in one rule.
 -- Matches the recipe from https://docs.noctalia.dev/v4/getting-started/compositor-settings/hyprland/
@@ -18,8 +14,6 @@ hl.layer_rule({ match = { namespace = "^noctalia-background-.*$" }, blur_popups 
 -----------------
 -- Window rules
 -----------------
-
--- hl.window_rule({ match = { class = "^(Rofi)$" }, no_anim = true })
 
 hl.window_rule({ match = { title = "(.*)(Godot)(.*)$" }, tile = true })
 

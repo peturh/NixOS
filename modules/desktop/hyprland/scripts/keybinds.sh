@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if pidof rofi >/dev/null; then
-  pkill rofi
-fi
-
 if pidof yad >/dev/null; then
   pkill yad
 fi
@@ -80,10 +76,8 @@ yad \
   "SUPER Z" "Launch emoji picker" "noctalia-shell ipc call launcher emoji" \
   "SUPER ALT K" "Change keyboard layout" "scripts/keyboardswitch.sh" \
   "SUPER U" "Rebuild system" "$_terminal -e scripts/rebuild.sh" \
-  "SUPER G" "Game launcher" "scripts/rofi.sh games" \
   "SUPER ALT G" "Enable game mode" "scripts/gamemode.sh" \
   "SUPER V" "Clipboard manager" "noctalia-shell ipc call launcher clipboard" \
-  "SUPER M" "Online music" "scripts/rofimusic.sh" \
   "SUPER P" "Screenshot (select area)" "hyprshot -m region --clipboard-only" \
   "SUPER CTRL P" "Screenshot (frozen screen)" "hyprshot -m region --freeze --clipboard-only" \
   "SUPER Print" "Screenshot (current monitor)" "hyprshot -m output --clipboard-only" \

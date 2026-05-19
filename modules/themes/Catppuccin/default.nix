@@ -1,6 +1,5 @@
 {
   pkgs,
-  wallpaper,
   ...
 }: let
   variant = "mocha";
@@ -47,20 +46,9 @@ in {
         };
       };
 
-      # Set wallpaper - hyprpaper 0.8.0+ block syntax
-      services.hyprpaper.enable = true;
-      xdg.configFile."hypr/hyprpaper.conf".text = ''
-        ipc = true
-        splash = false
-
-        preload = ${../wallpapers/${wallpaper}.png}
-
-        wallpaper {
-          monitor =
-          path = ${../wallpapers/${wallpaper}.png}
-          fit_mode = cover
-        }
-      '';
+      # Wallpapers are owned by Noctalia (see modules/desktop/hyprland/programs/noctalia);
+      # the boot-time default is seeded from flake.nix's `wallpaper` setting via a
+      # home-manager activation script in that module.
 
       dconf.settings = {
         "org/gnome/desktop/interface" = {
