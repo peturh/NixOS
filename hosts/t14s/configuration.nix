@@ -61,6 +61,7 @@
     ../../modules/programs/misc/usbimager
     ../../modules/programs/misc/lact
     ../../modules/programs/misc/porttelefon
+    ../../modules/programs/misc/valent
     ../../modules/programs/hardware/modem
     ../../modules/programs/security/bitwarden
     ../../modules/programs/security/microsoft-intune

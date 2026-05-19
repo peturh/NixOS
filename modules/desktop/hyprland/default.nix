@@ -11,7 +11,11 @@
   ...
 }: {
   imports = [
-    ../../themes/Catppuccin # Catppuccin GTK and QT themes
+    # GTK/Qt/icon/cursor + dark-light mode are managed dynamically by DMS
+    # (matugen templates + syncModeWithPortal). No static theme module is
+    # imported here on purpose — adding one re-applies its color-scheme
+    # and gtk-application-prefer-dark-theme keys on every rebuild and
+    # overrides whatever the user picked in DMS Settings.
     ./programs/dms # DankMaterialShell: bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
     ./programs/hypridle # idle timeouts; drives DMS lock screen
   ];
