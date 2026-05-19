@@ -1,0 +1,20 @@
+{
+  "id": "tlp-ctl",
+  "name": "TLP Power Profile",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "4.0.0",
+  "author": "petur",
+  "license": "MIT",
+  "description": "Bar widget that reports the current TLP profile and cycles low \u2192 medium \u2192 performance on click. Requires the `tlp-ctl` binary on PATH (shipped by the NixOS Noctalia module).",
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "pollIntervalMs": 5000
+    }
+  }
+}

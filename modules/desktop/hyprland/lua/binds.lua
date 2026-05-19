@@ -51,9 +51,10 @@ hl.bind(mainMod .. " + delete",    hl.dsp.exit()) -- kill Hyprland session
 hl.bind(mainMod .. " + W",         hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.toggle())
 hl.bind("ALT + return",            hl.dsp.window.fullscreen({ action = "toggle" }))
-hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("caelestia shell lock lock"))
-hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("caelestia shell drawers toggle session"))
-hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd("systemctl --user restart caelestia"))
+hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("noctalia-shell ipc call lockScreen lock"))
+hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("noctalia-shell ipc call sessionMenu toggle"))
+-- Noctalia is spawned via autostart.lua (not systemd), so restart = pkill + respawn.
+hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd("sh -c 'pkill -x noctalia-shell; sleep 0.5; noctalia-shell &'"))
 
 -- Applications/Programs.
 hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(v.term))
@@ -66,23 +67,25 @@ hl.bind(mainMod .. " + SHIFT + Y", hl.dsp.exec_cmd("youtube-music"))
 hl.bind("CTRL + ALT + DELETE",     hl.dsp.exec_cmd(v.term .. " -e '" .. v.bin.btop .. "'")) -- System Monitor
 hl.bind(mainMod .. " + CTRL + C",  hl.dsp.exec_cmd("hyprpicker --autocopy --format=hex")) -- Colour Picker
 
-hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("caelestia shell drawers toggle launcher")) -- launch desktop applications
-hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("caelestia shell drawers toggle launcher")) -- launch desktop applications
-hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("caelestia emoji -p")) -- launch emoji picker
+hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle")) -- launch desktop applications
+hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle")) -- launch desktop applications
+hl.bind(mainMod .. " + Z",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher emoji")) -- launch emoji picker
 hl.bind(mainMod .. " + ALT + K",   hl.dsp.exec_cmd(v.scripts.keyboardswitch)) -- change keyboard layout
 hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("networkmanager_dmenu")) -- network manager
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("caelestia shell drawers toggle dashboard")) -- caelestia dashboard
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("caelestia shell drawers toggle dashboard")) -- caelestia dashboard
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle")) -- control center
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle")) -- control center
 hl.bind(mainMod .. " + G",         hl.dsp.exec_cmd(v.scripts.rofi .. " games")) -- game launcher
 hl.bind(mainMod .. " + ALT + G",   hl.dsp.exec_cmd(v.scripts.gamemode)) -- disable hypr effects for gamemode
-hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("caelestia clipboard")) -- Clipboard Manager
+hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("noctalia-shell ipc call launcher clipboard")) -- Clipboard Manager
 hl.bind(mainMod .. " + M",         hl.dsp.exec_cmd("pkill -x rofi || " .. v.scripts.rofimusic)) -- online music
 
--- Screenshot/Screencapture (caelestia).
-hl.bind(mainMod .. " + P",         hl.dsp.exec_cmd("caelestia screenshot"))         -- region capture
-hl.bind(mainMod .. " + CTRL + P",  hl.dsp.exec_cmd("caelestia screenshot -f"))      -- frozen-screen region capture
-hl.bind(mainMod .. " + print",     hl.dsp.exec_cmd("caelestia screenshot -m"))      -- current monitor
-hl.bind(mainMod .. " + ALT + P",   hl.dsp.exec_cmd("caelestia screenshot -m all"))  -- all monitors
+-- Screenshot/Screencapture (hyprshot). Noctalia's screenshot plugin wraps
+-- hyprshot under the hood; calling hyprshot directly removes the IPC
+-- round-trip and works even before noctalia-shell has finished starting.
+hl.bind(mainMod .. " + P",         hl.dsp.exec_cmd("hyprshot -m region --clipboard-only")) -- region capture
+hl.bind(mainMod .. " + CTRL + P",  hl.dsp.exec_cmd("hyprshot -m region --freeze --clipboard-only")) -- frozen region
+hl.bind(mainMod .. " + print",     hl.dsp.exec_cmd("hyprshot -m output --clipboard-only")) -- current monitor
+hl.bind(mainMod .. " + ALT + P",   hl.dsp.exec_cmd("sh -c 'hyprshot -m output --raw | wl-copy'")) -- all monitors
 
 -- Functional keybinds.
 hl.bind("XF86Sleep",       hl.dsp.exec_cmd("systemctl suspend")) -- Put computer into sleep mode

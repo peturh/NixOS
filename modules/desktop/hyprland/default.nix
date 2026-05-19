@@ -12,9 +12,9 @@
 }: {
   imports = [
     ../../themes/Catppuccin # Catppuccin GTK and QT themes
-    ./programs/caelestia # bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
+    ./programs/noctalia # bar, launcher, notifs, lock, OSD, session, clipboard, wallpaper
     ./programs/rofi # kept for games + music modes only
-    ./programs/hypridle # idle timeouts; drives caelestia lock
+    ./programs/hypridle # idle timeouts; drives noctalia lock
   ];
 
   nix.settings = {
@@ -79,9 +79,11 @@
   in [
     ({...}: {
       home.packages = with pkgs; [
-        # Caelestia replaces: waybar, hyprpaper, cliphist, grimblast, swappy.
-        # Kept utilities still used by other binds / system integration:
+        # Noctalia replaces: waybar, hyprpaper, cliphist, grimblast, swappy
+        # (most are now built into the shell). Kept utilities still used by
+        # other binds / system integration:
         hyprpicker
+        hyprshot # SUPER+P screenshot region capture
         hyprland-qtutils
         libnotify
         brightnessctl

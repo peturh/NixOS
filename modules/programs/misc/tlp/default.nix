@@ -1,9 +1,9 @@
 {pkgs, ...}: {
   # UPower exposes battery/AC state over D-Bus. Quickshell's UPower service
-  # (used by caelestia's battery popout and performance dashboard) reads from
-  # this daemon — without it the popout shows "No battery detected" even
-  # though /sys/class/power_supply/BAT0 exists. UPower is a query daemon and
-  # does not conflict with TLP.
+  # (used by Noctalia's Battery widget, SystemMonitor, and lockscreen) reads
+  # from this daemon — without it the widget reports "No battery detected"
+  # even though /sys/class/power_supply/BAT0 exists. UPower is a query
+  # daemon and does not conflict with TLP.
   services.upower.enable = true;
 
   services.tlp = {

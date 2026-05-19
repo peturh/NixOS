@@ -68,26 +68,26 @@ yad \
   "SUPER W" "Toggle floating window" "togglefloating" \
   "SUPER SHIFT G" "Toggle window group" "togglegroup" \
   "ALT Return" "Toggle fullscreen" "fullscreen" \
-  "SUPER ALT L" "Lock screen" "caelestia shell lock lock" \
-  "SUPER Backspace" "Power/session menu" "caelestia shell drawers toggle session" \
-  "CTRL Escape" "Restart caelestia shell" "systemctl --user restart caelestia" \
-  "SUPER SHIFT N" "Open dashboard" "caelestia shell drawers toggle dashboard" \
-  "SUPER SHIFT Q" "Open dashboard" "caelestia shell drawers toggle dashboard" \
+  "SUPER ALT L" "Lock screen" "noctalia-shell ipc call lockScreen lock" \
+  "SUPER Backspace" "Power/session menu" "noctalia-shell ipc call sessionMenu toggle" \
+  "CTRL Escape" "Restart noctalia shell" "pkill -x noctalia-shell; noctalia-shell &" \
+  "SUPER SHIFT N" "Open control center" "noctalia-shell ipc call controlCenter toggle" \
+  "SUPER SHIFT Q" "Open control center" "noctalia-shell ipc call controlCenter toggle" \
   "SUPER Q" "Close active window" "scripts/dontkillsteam.sh" \
   "ALT F4" "Close active window" "scripts/dontkillsteam.sh" \
-  "SUPER A" "Launch application menu" "caelestia shell drawers toggle launcher" \
-  "SUPER SPACE" "Launch application menu" "caelestia shell drawers toggle launcher" \
-  "SUPER Z" "Launch emoji picker" "caelestia emoji -p" \
+  "SUPER A" "Launch application menu" "noctalia-shell ipc call launcher toggle" \
+  "SUPER SPACE" "Launch application menu" "noctalia-shell ipc call launcher toggle" \
+  "SUPER Z" "Launch emoji picker" "noctalia-shell ipc call launcher emoji" \
   "SUPER ALT K" "Change keyboard layout" "scripts/keyboardswitch.sh" \
   "SUPER U" "Rebuild system" "$_terminal -e scripts/rebuild.sh" \
   "SUPER G" "Game launcher" "scripts/rofi.sh games" \
   "SUPER ALT G" "Enable game mode" "scripts/gamemode.sh" \
-  "SUPER V" "Clipboard manager" "caelestia clipboard" \
+  "SUPER V" "Clipboard manager" "noctalia-shell ipc call launcher clipboard" \
   "SUPER M" "Online music" "scripts/rofimusic.sh" \
-  "SUPER P" "Screenshot (select area)" "caelestia screenshot" \
-  "SUPER CTRL P" "Screenshot (frozen screen)" "caelestia screenshot -f" \
-  "SUPER Print" "Screenshot (current monitor)" "caelestia screenshot -m" \
-  "SUPER ALT P" "Screenshot (all monitors)" "caelestia screenshot -m all" \
+  "SUPER P" "Screenshot (select area)" "hyprshot -m region --clipboard-only" \
+  "SUPER CTRL P" "Screenshot (frozen screen)" "hyprshot -m region --freeze --clipboard-only" \
+  "SUPER Print" "Screenshot (current monitor)" "hyprshot -m output --clipboard-only" \
+  "SUPER ALT P" "Screenshot (all monitors)" "hyprshot -m output --raw | wl-copy" \
   "SUPER SHIFT CTRL ←" "Move window left" "movewindow l" \
   "SUPER SHIFT CTRL →" "Move window right" "movewindow r" \
   "SUPER SHIFT CTRL ↑" "Move window up" "movewindow u" \
