@@ -84,7 +84,6 @@
         hyprland-qtutils
         libnotify
         brightnessctl
-        networkmanagerapplet
         pamixer
         pavucontrol
         playerctl

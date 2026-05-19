@@ -115,7 +115,7 @@ in {
         settings = {
           bar = {
             position = "top";
-            density = "compact";
+            density = "default";
             showCapsule = true;
             widgets = {
               left = [

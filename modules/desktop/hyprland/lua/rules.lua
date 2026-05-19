@@ -68,7 +68,6 @@ hl.window_rule({ match = { class = "^(pavucontrol)$" },                         
 hl.window_rule({ match = { class = "^(org.pulseaudio.pavucontrol)$" },                 opacity = "0.80 0.70" })
 hl.window_rule({ match = { class = "^(blueman-manager)$" },                            opacity = "0.80 0.70" })
 hl.window_rule({ match = { class = "^(.blueman-manager-wrapped)$" },                   opacity = "0.80 0.70" })
-hl.window_rule({ match = { class = "^(nm-connection-editor)$" },                       opacity = "0.80 0.70" })
 hl.window_rule({ match = { class = "^(org.kde.polkit-kde-authentication-agent-1)$" },  opacity = "0.80 0.70" })
 
 -- Games: tag + content + fullscreen rules.
@@ -100,5 +99,4 @@ hl.window_rule({ match = { class = "^(yad)$" },                                 
 hl.window_rule({ match = { class = "^(pavucontrol)$" },                                float = true })
 hl.window_rule({ match = { class = "^(blueman-manager)$" },                            float = true })
 hl.window_rule({ match = { class = "^(.blueman-manager-wrapped)$" },                   float = true })
-hl.window_rule({ match = { class = "^(nm-connection-editor)$" },                       float = true })
 hl.window_rule({ match = { class = "^(org.kde.polkit-kde-authentication-agent-1)$" },  float = true })
