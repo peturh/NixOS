@@ -19,7 +19,7 @@ hl.monitor({
 -- Work Setup: Samsung 4K (LS32D80xU) on the left, laptop auto-positioned to the right.
 -- Center-aligned vertically for easier mouse movement.
 hl.monitor({
-  output = "desc:Samsung Electric Company LS32D80xU HK2Y400075",
+  output = "desc:Samsung Electric Company LS32D80xU",
   mode = "3840x2160@60",
   position = "auto-left",
   scale = 1,
@@ -28,7 +28,7 @@ hl.monitor({
 -- Home Setup: laptop auto-positioned to the left, Samsung ultrawide on the right.
 -- Center-aligned vertically for easier mouse movement.
 hl.monitor({
-  output = "desc:Samsung Electric Company S34C65xU HNTWC03661",
+  output = "desc:Samsung Electric Company S34C65xU",
   mode = "3440x1440@60",
   position = "auto-right",
   scale = 1,
