@@ -48,7 +48,11 @@ in {
 
   home-manager.sharedModules = [
     inputs.dms.homeModules.dank-material-shell
-    ({lib, ...}: {
+    ({
+      config,
+      lib,
+      ...
+    }: {
       # Mount our wallpaper collection into ~/Pictures/Wallpapers so DMS's
       # built-in wallpaper picker (Settings → Personalization → Wallpaper)
       # can browse them. Files are read-only symlinks into the Nix store.
@@ -56,6 +60,26 @@ in {
         source = wallpapersDir;
         recursive = true;
       };
+
+      # Two-way settings sync. We want both:
+      #   • DMS's own Settings UI (SUPER+,) can save changes immediately,
+      #   • those changes live inside this Nix repo (git-tracked, survive
+      #     rebuilds, replicate to other hosts).
+      #
+      # `programs.dank-material-shell.settings` would deploy settings.json
+      # as a *read-only* Nix-store symlink, breaking the UI write path.
+      # Instead we bypass that option entirely and have home-manager
+      # symlink ~/.config/DankMaterialShell/settings.json straight at the
+      # working copy at modules/desktop/hyprland/programs/dms/settings.json
+      # via `mkOutOfStoreSymlink`. DMS writes through the symlink and
+      # `git status` immediately picks the change up.
+      #
+      # The upstream module already gates its own xdg.configFile entry on
+      # `cfg.settings != { }`, so leaving that option unset means our
+      # entry wins without a conflict.
+      xdg.configFile."DankMaterialShell/settings.json".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/settings.json";
 
       # Seed DMS's session.json so the shell boots straight to the
       # configured wallpaper, weather location, and theme mode instead of
@@ -123,34 +147,16 @@ in {
         enableCalendarEvents = true; # khal calendar events in the dash
         enableClipboardPaste = true; # wtype-backed clipboard paste-from-history
 
-        # Settings written to ~/.config/DankMaterialShell/settings.json.
-        #
-        # The contents live in a sibling JSON file rather than inline Nix
-        # so we can round-trip through DMS's own UI without hand-
-        # translating attrsets:
-        #
-        #   1. Set `settings = { };` and rebuild — DMS un-locks the file.
-        #   2. Tweak via SUPER+, (Settings UI). DMS writes settings.json.
-        #   3. `cp ~/.config/DankMaterialShell/settings.json
-        #         modules/desktop/hyprland/programs/dms/settings.json`
-        #   4. Restore the line below and rebuild — file goes back to a
-        #      read-only Nix-store symlink with your tweaks baked in.
-        #
-        # While this line is active the file is HM-owned and read-only;
-        # the in-shell Settings UI shows a banner with the JSON for
-        # changes you make there. See:
-        # https://danklinux.com/docs/dankmaterialshell/nixos-flake#settings-home-manager-only
-        #
-        # Schema reference: keys/widget-IDs come from DankMaterialShell's
+        # NB: `programs.dank-material-shell.settings` is intentionally
+        # left unset — the file is wired up above via xdg.configFile +
+        # mkOutOfStoreSymlink so the UI can write to it. The schema
+        # reference (keys, widget IDs) lives in DankMaterialShell's
         # quickshell/Modules/DankBar/WidgetHost.qml (componentMap) and
         # quickshell/Common/SettingsData.qml (barConfigs default).
-        settings = builtins.fromJSON (builtins.readFile ./settings.json);
-
-        # Session state lives at ~/.local/state/DankMaterialShell/session.json
-        # and intentionally stays *outside* home-manager so DMS can mutate
-        # it (wallpaper picker, theme toggles, weather location, …). The
-        # `seedDmsSession` activation above seeds the values we care about
-        # on first run while preserving any later changes from the UI.
+        #
+        # Session state at ~/.local/state/DankMaterialShell/session.json
+        # is similarly DMS-owned; `seedDmsSession` above writes initial
+        # values on first install while preserving any later UI changes.
       };
 
       # Harden the upstream dms.service so it can't get stuck in
