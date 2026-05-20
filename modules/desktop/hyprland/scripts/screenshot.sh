@@ -30,4 +30,5 @@ grim -g "$geometry" - | satty \
   --copy-command wl-copy \
   --initial-tool brush \
   --actions-on-enter save-to-clipboard \
-  --save-after-copy
+  --save-after-copy \
+  --floating-hack
