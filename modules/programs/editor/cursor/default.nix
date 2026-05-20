@@ -20,8 +20,6 @@
             bbenoist.nix
             eamodio.gitlens
             yzhang.markdown-all-in-one
-            catppuccin.catppuccin-vsc
-            catppuccin.catppuccin-vsc-icons
             tamasfe.even-better-toml
             rust-lang.rust-analyzer
           ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -51,15 +49,11 @@
             "window.menuBarVisibility" = "classic";
             "window.zoomLevel" = 0.5;
             "window.autoDetectColorScheme" = true;
-            "workbench.preferredDarkColorTheme" = "Catppuccin Mocha";
-            "workbench.preferredLightColorTheme" = "Catppuccin Latte";
+            "workbench.preferredDarkColorTheme" = "Default Dark Modern";
+            "workbench.preferredLightColorTheme" = "Default Light Modern";
             "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'SymbolsNerdFont', 'monospace', monospace";
             "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font', 'SymbolsNerdFont'";
             "editor.fontSize" = 14;
-            "workbench.colorTheme" = "Catppuccin Mocha";
-            "workbench.iconTheme" = "catppuccin-latte";
-            "catppuccin.accentColor" = "lavender";
-            "vsicons.dontShowNewVersionMessage" = true;
             "explorer.confirmDragAndDrop" = false;
             "editor.fontLigatures" = true;
             "workbench.startupEditor" = "none";
@@ -251,8 +245,6 @@
                 "commands" = ["editor.action.commentLine"];
               }
             ];
-
-            "geminicodeassist.project" = "stunning-outrider-324z7";
           };
         };
       };

@@ -322,7 +322,7 @@
   "matugenTemplateVesktop": false,
   "matugenTemplateEquibop": false,
   "matugenTemplateGhostty": true,
-  "matugenTemplateKitty": true,
+  "matugenTemplateKitty": false,
   "matugenTemplateFoot": false,
   "matugenTemplateAlacritty": false,
   "matugenTemplateNeovim": false,
