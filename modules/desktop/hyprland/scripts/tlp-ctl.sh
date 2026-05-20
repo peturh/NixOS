@@ -98,8 +98,16 @@ get_profile() {
         profile="$profile_part"
         handling="manual"
     else
+        # No state, or AC plug-state changed since we wrote it. Materialize
+        # the AC-state default into the state file so callers (the widget)
+        # see a concrete profile with handling="manual" immediately, instead
+        # of a transient "auto" that some UI elements don't highlight. The
+        # state file is in /tmp (boot.tmp.cleanOnBoot = true), so this also
+        # gives a clean reset to medium-on-AC / low-on-battery on every
+        # reboot, regardless of what was chosen before.
         profile="$(default_profile)"
-        handling="auto"
+        write_state "$profile"
+        handling="manual"
     fi
     print_profile "$profile" "$handling" "$format"
 }

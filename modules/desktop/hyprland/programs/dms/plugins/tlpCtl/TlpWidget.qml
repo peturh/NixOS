@@ -22,7 +22,12 @@ PluginComponent {
     // that — three explicit buttons make the current choice obvious).
     // We still keep these properties around so the active button can
     // be highlighted.
-    property string profile: "auto"
+    // Seed with `medium` so the popout's segmented selector has a button
+    // highlighted from the moment it opens, even before the first
+    // refreshProfile() call returns. tlp-ctl get auto-initializes the state
+    // file on missing/stale reads, so this seed is overwritten quickly with
+    // the real AC-state default (medium on AC, low on battery).
+    property string profile: "medium"
     property string handling: "auto"
     property int pollIntervalMs: 5000
 
