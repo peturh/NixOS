@@ -82,6 +82,10 @@ hl.bind(mainMod .. " + Y",         hl.dsp.exec_cmd("dms ipc call dankdash wallpa
 -- ~/Pictures/Screenshots/<timestamp>.png.
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(v.scripts.screenshot))
 
+-- Screen Capture Toolbar (DMS plugin: screenCaptureToolbar). Floating pill
+-- with photo + video capture controls, backed by gpu-screen-recorder.
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("dms ipc call screenCaptureToolbar toggle"))
+
 -- Cycle TLP power profile (low → medium → performance → low). Replaces
 -- the Noctalia bar widget that drove the same script. The keybind path
 -- avoids a custom DMS plugin (DMS plugin format is QML-API-incompatible

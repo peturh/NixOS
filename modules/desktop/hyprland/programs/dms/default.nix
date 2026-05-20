@@ -164,6 +164,17 @@ in {
         config.lib.file.mkOutOfStoreSymlink
         "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/wwanCtl";
 
+      # Screen capture toolbar (third-party plugin from
+      # github.com/JDKamalakar/DMS-ScreenCapture_Toolbar). Daemon-type
+      # plugin: provides a `dms ipc call screenCaptureToolbar toggle`
+      # entrypoint for a pill toolbar with screenshot + screen-recording
+      # controls. Runtime deps (grim, slurp, satty, wl-clipboard,
+      # gpu-screen-recorder, jq) are already installed via the Hyprland
+      # module and the per-host gpu-screen-recorder import.
+      xdg.configFile."DankMaterialShell/plugins/screenCaptureToolbar".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/screenCaptureToolbar";
+
       # Seed DMS's session.json so the shell boots straight to the
       # configured wallpaper, weather location, and theme mode instead of
       # the upstream defaults (empty background, "New York, NY" weather).
