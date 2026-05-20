@@ -45,6 +45,7 @@
     ../../modules/programs/media/transmission
     ../../modules/programs/media/vlc
     ../../modules/programs/media/gimp
+    ../../modules/programs/media/gpu-screen-recorder
     ../../modules/programs/misc/archive
     ../../modules/programs/misc/celeste
     ../../modules/programs/misc/gparted

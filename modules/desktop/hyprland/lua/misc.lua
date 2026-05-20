@@ -23,10 +23,14 @@ hl.config({
     vrr = 0, -- enable variable refresh rate (0=off, 1=on, 2=fullscreen only)
   },
 
-  -- Hyprland 0.55 moved vfr out of `misc` into `debug` (it's a debug-only knob
-  -- and should normally stay at its default value, which is `true`/enabled).
+  -- Hyprland 0.55 moved vfr out of `misc` into `debug`. Default is `true`
+  -- (skip redraws when nothing changes — good for idle battery), but with
+  -- VFR on, PipeWire screencast frames go out at a jittery cadence and
+  -- Teams' encoder renders the gaps as visible flicker on the receiving
+  -- end. Force constant frame delivery so screen-sharing looks clean to
+  -- the other side; the idle-power cost on the AMD iGPU is small.
   debug = {
-    vfr = true,
+    vfr = false,
   },
 
   xwayland = {

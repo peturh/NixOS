@@ -169,36 +169,140 @@ PluginComponent {
     // PopoutComponent.qml — `Column { id: root; ... }`), so children stack
     // vertically with `spacing` honored. No ColumnLayout needed.
 
+    // Mirror the stock DMS BatteryPopout look: big icon + percentage header,
+    // nestedSurface stat cards, and a connected DankButtonGroup for profile
+    // selection. We leave PopoutComponent.headerText empty and roll our own
+    // header so the layout matches the stock widget exactly (icon + bold
+    // percentage + status text + close button), instead of the bold title
+    // + subtitle that PopoutComponent renders by default.
+
     popoutContent: Component {
         PopoutComponent {
             id: popout
 
-            headerText: "Battery & Power"
-            detailsText: BatteryService.batteryAvailable
-                ? BatteryService.batteryStatus + " · " + BatteryService.batteryLevel + "%"
-                : "No battery detected"
-            showCloseButton: true
+            showCloseButton: false
             spacing: Theme.spacingM
 
+            property var profiles: ["low", "medium", "performance"]
+            property var profileLabels: ["Power Save", "Balanced", "Performance"]
+
+            // --- Custom header row (icon + percentage + status + close) ---
+            Row {
+                width: parent.width - Theme.spacingL * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+                height: 48
+                spacing: Theme.spacingM
+
+                DankIcon {
+                    name: BatteryService.batteryAvailable ? BatteryService.getBatteryIcon() : "power"
+                    size: Theme.iconSizeLarge
+                    color: {
+                        if (BatteryService.isLowBattery && !BatteryService.isCharging)
+                            return Theme.error
+                        if (BatteryService.isCharging || BatteryService.isPluggedIn)
+                            return Theme.primary
+                        return Theme.surfaceText
+                    }
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Column {
+                    spacing: Theme.spacingXS
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - Theme.iconSizeLarge - 32 - Theme.spacingM * 2
+
+                    Row {
+                        spacing: Theme.spacingS
+
+                        StyledText {
+                            text: BatteryService.batteryAvailable ? BatteryService.batteryLevel + "%" : "Power"
+                            font.pixelSize: Theme.fontSizeXLarge
+                            font.weight: Font.Bold
+                            color: {
+                                if (BatteryService.isLowBattery && !BatteryService.isCharging)
+                                    return Theme.error
+                                if (BatteryService.isCharging)
+                                    return Theme.primary
+                                return Theme.surfaceText
+                            }
+                        }
+
+                        StyledText {
+                            text: BatteryService.batteryStatus
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Medium
+                            color: {
+                                if (BatteryService.isLowBattery && !BatteryService.isCharging)
+                                    return Theme.error
+                                if (BatteryService.isCharging)
+                                    return Theme.primary
+                                return Theme.surfaceText
+                            }
+                            visible: BatteryService.batteryAvailable
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    StyledText {
+                        text: {
+                            if (!BatteryService.batteryAvailable)
+                                return ""
+                            const time = BatteryService.formatTimeRemaining()
+                            if (time !== "Unknown") {
+                                return BatteryService.isCharging ? "Time until full: " + time : "Time remaining: " + time
+                            }
+                            return ""
+                        }
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.surfaceTextMedium
+                        visible: text.length > 0
+                        elide: Text.ElideRight
+                        width: parent.width
+                    }
+                }
+
+                Rectangle {
+                    width: 32
+                    height: 32
+                    radius: 16
+                    color: closeArea.containsMouse ? Theme.errorHover : "transparent"
+                    anchors.top: parent.top
+
+                    DankIcon {
+                        anchors.centerIn: parent
+                        name: "close"
+                        size: Theme.iconSize - 4
+                        color: closeArea.containsMouse ? Theme.error : Theme.surfaceText
+                    }
+
+                    MouseArea {
+                        id: closeArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onPressed: {
+                            if (popout.closePopout)
+                                popout.closePopout()
+                        }
+                    }
+                }
+            }
+
             // --- Battery stats: two side-by-side cards ---
-            //
-            // Each card is a StyledRect with a primary-colored label
-            // (e.g. "Health") above a bold surfaceText value (e.g. "90%").
-            // Time-remaining is intentionally omitted — the popout is for
-            // quick status + profile swap, not a full diagnostic panel.
             Row {
                 width: parent.width - Theme.spacingL * 2
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: Theme.spacingM
+                visible: BatteryService.batteryAvailable
 
                 property real cardWidth: (width - spacing) / 2
-                property int cardHeight: 72
 
                 StyledRect {
                     width: parent.cardWidth
-                    height: parent.cardHeight
-                    color: Theme.surfaceVariant
+                    height: 64
                     radius: Theme.cornerRadius
+                    color: Theme.nestedSurface
+                    border.width: 0
 
                     Column {
                         anchors.centerIn: parent
@@ -207,6 +311,7 @@ PluginComponent {
                         StyledText {
                             text: "Health"
                             font.pixelSize: Theme.fontSizeSmall
+                            font.weight: Font.Medium
                             color: Theme.primary
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
@@ -214,7 +319,12 @@ PluginComponent {
                             text: BatteryService.batteryHealth
                             font.pixelSize: Theme.fontSizeLarge
                             font.weight: Font.Bold
-                            color: Theme.surfaceText
+                            color: {
+                                if (BatteryService.batteryHealth === "N/A")
+                                    return Theme.surfaceText
+                                const healthNum = parseInt(BatteryService.batteryHealth)
+                                return healthNum < 80 ? Theme.error : Theme.surfaceText
+                            }
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                     }
@@ -222,9 +332,10 @@ PluginComponent {
 
                 StyledRect {
                     width: parent.cardWidth
-                    height: parent.cardHeight
-                    color: Theme.surfaceVariant
+                    height: 64
                     radius: Theme.cornerRadius
+                    color: Theme.nestedSurface
+                    border.width: 0
 
                     Column {
                         anchors.centerIn: parent
@@ -233,6 +344,7 @@ PluginComponent {
                         StyledText {
                             text: "Capacity"
                             font.pixelSize: Theme.fontSizeSmall
+                            font.weight: Font.Medium
                             color: Theme.primary
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
@@ -249,64 +361,32 @@ PluginComponent {
                 }
             }
 
-            // --- Power-profile buttons ---
-            //
-            // Selection cue mirrors the stock DMS battery widget: a leading
-            // "check" Material icon + a primary-tinted background on the
-            // active button. Unselected buttons use surfaceVariant (Material
-            // 3's neutral "filled but not accented" surface) — *not*
-            // Theme.buttonBg, which the upstream Theme.qml at this rev
-            // defaults to `primary` (matugen ends up making that red on
-            // wallpaper-derived palettes, so unselected buttons looked the
-            // same as the active one).
-            //
-            // Text colors:
-            //   • Unselected → Theme.surfaceText (follows light/dark mode,
-            //     so it reads correctly on the gray surfaceVariant).
-            //   • Selected   → literal white. We tried Theme.onPrimary
-            //     (matugen computed it as black on this red palette) and
-            //     Theme.surfaceText (flips to black in light mode); both
-            //     gave dark-on-red, which is what we're trying to avoid.
-            //     A fixed white is the only color guaranteed to read on
-            //     any wallpaper-derived primary in either mode.
-            //
-            // `auto` profile is intentionally not surfaced; users can still
-            // hit `tlp-ctl set auto` from a shell if they want it.
-            Row {
+            // --- Power-profile buttons: connected segmented group ---
+            // Matches the stock DankBar BatteryPopout, which uses
+            // DankButtonGroup for the profile selector. `auto` is
+            // intentionally not surfaced; `tlp-ctl set auto` from a shell
+            // still works.
+            Item {
                 width: parent.width - Theme.spacingL * 2
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: Theme.spacingM
+                height: profileButtonGroup.height * profileButtonGroup.scale
 
-                property real btnWidth: (width - spacing * 2) / 3
-
-                DankButton {
-                    width: parent.btnWidth
-                    text: "Power Save"
-                    iconName: root.profile === "low" ? "check" : ""
-                    backgroundColor: root.profile === "low" ? Theme.primary : Theme.surfaceVariant
-                    textColor: root.profile === "low" ? "#ffffff" : Theme.surfaceText
-                    onClicked: root.setProfile("low")
-                }
-                DankButton {
-                    width: parent.btnWidth
-                    text: "Balanced"
-                    iconName: root.profile === "medium" ? "check" : ""
-                    backgroundColor: root.profile === "medium" ? Theme.primary : Theme.surfaceVariant
-                    textColor: root.profile === "medium" ? "#ffffff" : Theme.surfaceText
-                    onClicked: root.setProfile("medium")
-                }
-                DankButton {
-                    width: parent.btnWidth
-                    text: "Performance"
-                    iconName: root.profile === "performance" ? "check" : ""
-                    backgroundColor: root.profile === "performance" ? Theme.primary : Theme.surfaceVariant
-                    textColor: root.profile === "performance" ? "#ffffff" : Theme.surfaceText
-                    onClicked: root.setProfile("performance")
+                DankButtonGroup {
+                    id: profileButtonGroup
+                    scale: Math.min(1, parent.width / implicitWidth)
+                    transformOrigin: Item.Center
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    model: popout.profileLabels
+                    currentIndex: popout.profiles.indexOf(root.profile)
+                    selectionMode: "single"
+                    onSelectionChanged: (index, selected) => {
+                        if (!selected)
+                            return
+                        root.setProfile(popout.profiles[index])
+                    }
                 }
             }
 
-            // Bottom padding so the buttons aren't flush with the popout
-            // edge. PopoutComponent doesn't add its own.
             Item {
                 width: 1
                 height: Theme.spacingL
@@ -315,5 +395,5 @@ PluginComponent {
     }
 
     popoutWidth: 420
-    popoutHeight: 360
+    popoutHeight: 280
 }

@@ -111,3 +111,4 @@ hl.window_rule({ match = { class = "^(pavucontrol)$" },                         
 hl.window_rule({ match = { class = "^(blueman-manager)$" },                            float = true })
 hl.window_rule({ match = { class = "^(.blueman-manager-wrapped)$" },                   float = true })
 hl.window_rule({ match = { class = "^(org.kde.polkit-kde-authentication-agent-1)$" },  float = true })
+hl.window_rule({ match = { class = "^(satty)$" },                                      float = true }) -- screenshot markup editor (SUPER+P)

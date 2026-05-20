@@ -1,0 +1,13 @@
+{
+    "id": "wwanCtl",
+    "name": "WWAN (Telenor)",
+    "description": "Bar pill showing the WWAN modem state and signal. Click to open a popout with operator, signal quality, IP and a connect/disconnect toggle.",
+    "version": "0.1.0",
+    "author": "petur",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./WwanWidget.qml",
+    "icon": "signal_cellular_alt",
+    "requires": ["wwan-ctl"],
+    "permissions": []
+}

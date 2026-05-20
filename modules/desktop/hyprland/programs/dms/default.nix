@@ -29,6 +29,7 @@
   dmsSettings = builtins.fromJSON (builtins.readFile ./settings.json);
   cursorTheme = dmsSettings.cursorSettings.theme or "Bibata-Original-Ice";
   cursorSize = dmsSettings.cursorSettings.size or 24;
+  iconTheme = dmsSettings.iconTheme or "Adwaita";
 
   # Wrap modules/desktop/hyprland/scripts/tlp-ctl.sh as a `tlp-ctl` binary on
   # PATH so a keybind, the DMS plugin (plugins/tlpCtl/TlpWidget.qml), or
@@ -41,12 +42,24 @@
     runtimeInputs = with pkgs; [tlp jq coreutils];
     text = builtins.readFile ../../scripts/tlp-ctl.sh;
   };
+
+  # Wrap modules/desktop/hyprland/scripts/wwan-ctl.sh as a `wwan-ctl` binary
+  # on PATH for the DMS wwanCtl plugin (plugins/wwanCtl/WwanWidget.qml).
+  # Backed by `nmcli connection up/down "Telenor WWAN"` which NM resolves
+  # through ModemManager — works without polkit because the user is in the
+  # `networkmanager` group.
+  wwanCtl = pkgs.writeShellApplication {
+    name = "wwan-ctl";
+    runtimeInputs = with pkgs; [modemmanager networkmanager jq gnugrep gnused gawk coreutils];
+    text = builtins.readFile ../../scripts/wwan-ctl.sh;
+  };
 in {
   # Install tlp-ctl system-wide. Same reasoning as the previous Noctalia
   # module: keybinds and any session-spawned scripts need it on
   # /run/current-system/sw/bin, not just home-manager's per-user profile.
   environment.systemPackages = [
     tlpCtl
+    wwanCtl
     pkgs.claude-code
   ];
 
@@ -100,6 +113,15 @@ in {
         hyprcursor.enable = true;
       };
 
+      # DMS's in-shell icon theme picker writes ~/.config/gtk-{3,4}.0/settings.ini
+      # and pokes xdg-desktop-portal, but does NOT directly set the GNOME
+      # gsettings key org.gnome.desktop.interface.icon-theme. GTK4 /
+      # libadwaita apps (nautilus, etc.) read from gsettings, so the
+      # portal-only sync silently fails and folders fall back to compiled-in
+      # Adwaita. Propagate DMS's choice into dconf ourselves, mirroring how
+      # home.pointerCursor above propagates cursorSettings.
+      dconf.settings."org/gnome/desktop/interface".icon-theme = iconTheme;
+
       # Two-way settings sync. We want both:
       #   • DMS's own Settings UI (SUPER+,) can save changes immediately,
       #   • those changes live inside this Nix repo (git-tracked, survive
@@ -133,6 +155,14 @@ in {
       xdg.configFile."DankMaterialShell/plugins/tlpCtl".source =
         config.lib.file.mkOutOfStoreSymlink
         "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/tlpCtl";
+
+      # wwan-ctl bar widget. Same out-of-store symlink pattern as tlpCtl so
+      # QML edits are picked up by a plugin reload (DMS Settings → Plugins)
+      # without a nixos-rebuild. Shells out to the `wwan-ctl` binary
+      # installed above.
+      xdg.configFile."DankMaterialShell/plugins/wwanCtl".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/wwanCtl";
 
       # Seed DMS's session.json so the shell boots straight to the
       # configured wallpaper, weather location, and theme mode instead of

@@ -1,5 +1,8 @@
-{...}: {
+{pkgs, ...}: {
   networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-openvpn
+  ];
 
   # Samba client support for network shares
   services.samba.enable = true;

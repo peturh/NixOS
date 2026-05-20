@@ -3,6 +3,8 @@
     nautilus
     nautilus-python
     nautilus-open-any-terminal
+    morewaita-icon-theme
+    adwaita-icon-theme
   ];
 
   environment.pathsToLink = [

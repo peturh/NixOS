@@ -97,9 +97,14 @@
       "width": 50
     },
     {
-      "id": "brightnessSlider",
+      "id": "inputVolumeSlider",
       "enabled": true,
       "width": 50
+    },
+    {
+      "id": "brightnessSlider",
+      "enabled": true,
+      "width": 100
     },
     {
       "id": "wifi",
@@ -112,12 +117,12 @@
       "width": 50
     },
     {
-      "id": "audioOutput",
+      "id": "audioInput",
       "enabled": true,
       "width": 50
     },
     {
-      "id": "audioInput",
+      "id": "audioOutput",
       "enabled": true,
       "width": 50
     },
@@ -238,8 +243,8 @@
   "dankLauncherV2UnloadOnClose": false,
   "useAutoLocation": false,
   "weatherEnabled": true,
-  "networkPreference": "auto",
-  "iconTheme": "Bibata-Modern-Amber",
+  "networkPreference": "wifi",
+  "iconTheme": "MoreWaita",
   "cursorSettings": {
     "theme": "Bibata-Original-Ice",
     "size": 24,
@@ -297,7 +302,11 @@
   "fadeToDpmsGracePeriod": 5,
   "launchPrefix": "",
   "brightnessDevicePins": {},
-  "wifiNetworkPins": {},
+  "wifiNetworkPins": {
+    "preferredWifi": [
+      "Karateboiz"
+    ]
+  },
   "bluetoothDevicePins": {},
   "audioInputDevicePins": {},
   "audioOutputDevicePins": {},
@@ -500,6 +509,10 @@
           "showBatteryIcon": false
         },
         {
+          "id": "wwanCtl",
+          "enabled": true
+        },
+        {
           "id": "idleInhibitor",
           "enabled": true
         },
@@ -550,10 +563,6 @@
       "showOnLastDisplay": false,
       "leftWidgets": [
         {
-          "id": "music",
-          "enabled": true
-        },
-        {
           "id": "controlCenterButton",
           "enabled": true,
           "showNetworkIcon": false,
@@ -568,6 +577,11 @@
           "showBatteryIcon": false,
           "showPrinterIcon": false,
           "showScreenSharingIcon": false
+        },
+        {
+          "id": "music",
+          "enabled": true,
+          "mediaSize": 3
         }
       ],
       "centerWidgets": [
@@ -600,10 +614,6 @@
         },
         {
           "id": "tlpCtl",
-          "enabled": true
-        },
-        {
-          "id": "battery",
           "enabled": true
         }
       ],
@@ -642,9 +652,9 @@
       "scrollEnabled": true,
       "scrollXBehavior": "column",
       "scrollYBehavior": "workspace",
-      "shadowIntensity": 0,
+      "shadowIntensity": 53,
       "shadowOpacity": 60,
-      "shadowColorMode": "default",
+      "shadowColorMode": "primary",
       "shadowCustomColor": "#000000"
     }
   ],
