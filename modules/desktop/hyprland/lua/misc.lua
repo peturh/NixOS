@@ -15,7 +15,10 @@ hl.config({
   misc = {
     disable_hyprland_logo = true,
     mouse_move_focuses_monitor = true,
-    swallow_regex = "^(Alacritty|kitty)$",
+    -- Hyprland swallows the launching terminal when a graphical child opens.
+    -- Match against `initialClass`: ghostty announces itself as
+    -- `com.mitchellh.ghostty` over Wayland, kitty as `kitty`.
+    swallow_regex = "^(com\\.mitchellh\\.ghostty|kitty)$",
     enable_swallow = true,
     vrr = 0, -- enable variable refresh rate (0=off, 1=on, 2=fullscreen only)
   },

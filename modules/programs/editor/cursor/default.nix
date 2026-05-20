@@ -57,7 +57,7 @@
             "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font', 'SymbolsNerdFont'";
             "editor.fontSize" = 14;
             "workbench.colorTheme" = "Catppuccin Mocha";
-            "workbench.iconTheme" = "catppuccin-mocha";
+            "workbench.iconTheme" = "catppuccin-latte";
             "catppuccin.accentColor" = "lavender";
             "vsicons.dontShowNewVersionMessage" = true;
             "explorer.confirmDragAndDrop" = false;

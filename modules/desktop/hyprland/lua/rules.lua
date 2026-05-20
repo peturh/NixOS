@@ -26,7 +26,7 @@ hl.layer_rule({ match = { namespace = "^dms:(spotlight|clipboard|settings|contro
 hl.window_rule({ match = { title = "(.*)(Godot)(.*)$" }, tile = true })
 
 -- Workspace placement examples (kept disabled, matching the legacy config):
--- hl.window_rule({ match = { class = "^(kitty|Alacritty|org.wezfurlong.wezterm)$" }, workspace = "1" })
+-- hl.window_rule({ match = { class = "^(com\\.mitchellh\\.ghostty|kitty)$" }, workspace = "1" })
 -- hl.window_rule({ match = { class = "^(code|VSCodium|code-url-handler|codium-url-handler)$" }, workspace = "2" })
 -- hl.window_rule({ match = { class = "^(krita)$" }, workspace = "3" })
 -- hl.window_rule({ match = { title = "(.*)(Godot)(.*)$" }, workspace = "3" })
@@ -38,7 +38,12 @@ hl.window_rule({ match = { title = "(.*)(Godot)(.*)$" }, tile = true })
 -- hl.window_rule({ match = { title = "(.*)(Spotify)(.*)$" }, workspace = "6" })
 
 -- Opacity rules. Format: "active inactive" or "active" only.
-hl.window_rule({ match = { class = "^(kitty|alacritty|Alacritty|org.wezfurlong.wezterm)$" }, opacity = "0.80 0.80" })
+-- Terminals are intentionally left fully opaque: the DMS-generated kitty /
+-- ghostty palette already provides a deliberate background colour, and a
+-- 0.80 window-rule opacity bled the wallpaper through it and made the
+-- matugen light-mode colours look washed out. Restore the rule if you ever
+-- want per-window transparency back.
+-- hl.window_rule({ match = { class = "^(com\\.mitchellh\\.ghostty|kitty)$" }, opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(gcr-prompter)$" },                                     opacity = "0.90 0.90" }) -- keyring prompt
 hl.window_rule({ match = { title = "^(Hyprland Polkit Agent)$" },                            opacity = "0.90 0.90" }) -- polkit prompt
 hl.window_rule({ match = { class = "^(firefox)$" },                                          opacity = "1.00 1.00" })

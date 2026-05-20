@@ -1,7 +1,7 @@
 {
   "currentThemeName": "dynamic",
   "currentThemeCategory": "dynamic",
-  "customThemeFile": "/home/petur/.config/DankMaterialShell/themes/retrobox/theme.json",
+  "customThemeFile": "/home/petur/.config/DankMaterialShell/themes/peaceAndQuiet/theme.json",
   "registryThemeVariants": {
     "amoledBlack": {
       "dark": {
@@ -9,7 +9,7 @@
         "accent": "white"
       }
     },
-    "peaceAndQuiet": "salmon"
+    "peaceAndQuiet": "lavender"
   },
   "matugenScheme": "scheme-rainbow",
   "runUserMatugenTemplates": true,
@@ -264,7 +264,7 @@
   "launcherLogoContrast": 1,
   "launcherLogoSizeOffset": 0,
   "fontFamily": "Inter Variable",
-  "monoFontFamily": "Fira Code",
+  "monoFontFamily": "FiraCode Nerd Font Light",
   "fontWeight": 400,
   "fontScale": 1,
   "notepadUseMonospace": true,
@@ -321,7 +321,7 @@
   "matugenTemplateZenBrowser": false,
   "matugenTemplateVesktop": false,
   "matugenTemplateEquibop": false,
-  "matugenTemplateGhostty": false,
+  "matugenTemplateGhostty": true,
   "matugenTemplateKitty": true,
   "matugenTemplateFoot": false,
   "matugenTemplateAlacritty": false,
@@ -471,10 +471,6 @@
         {
           "id": "workspaceSwitcher",
           "enabled": true
-        },
-        {
-          "id": "dankKDEConnect",
-          "enabled": true
         }
       ],
       "maximizeDetection": true,
@@ -508,7 +504,15 @@
           "enabled": true
         },
         {
+          "id": "dankKDEConnect",
+          "enabled": true
+        },
+        {
           "id": "notificationButton",
+          "enabled": true
+        },
+        {
+          "id": "privacyIndicator",
           "enabled": true
         }
       ],

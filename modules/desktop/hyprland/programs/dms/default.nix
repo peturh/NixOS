@@ -15,6 +15,21 @@
   # filename selected by `commonSettings.wallpaper` in flake.nix.
   defaultWallpaperPath = "/home/${username}/Pictures/Wallpapers/${wallpaper}.png";
 
+  # Pull cursor theme + size out of DMS's settings.json so the DMS UI
+  # (Settings → Personalization → Cursor) stays the single source of truth.
+  # When the user picks a new cursor there, settings.json is updated through
+  # the mkOutOfStoreSymlink below; the next `nixos-rebuild` re-reads this
+  # file and propagates the choice to home.pointerCursor.
+  #
+  # We deliberately do NOT pull in the old themes/Catppuccin module just for
+  # the cursor — that module also forces gtk/qt/icon themes and dark-mode
+  # keys that fight DMS's matugen + portal-driven theming on every rebuild
+  # (see modules/desktop/hyprland/default.nix). Keeping the wiring local to
+  # the DMS module preserves that "DMS owns the look" invariant.
+  dmsSettings = builtins.fromJSON (builtins.readFile ./settings.json);
+  cursorTheme = dmsSettings.cursorSettings.theme or "Bibata-Original-Ice";
+  cursorSize = dmsSettings.cursorSettings.size or 24;
+
   # Wrap modules/desktop/hyprland/scripts/tlp-ctl.sh as a `tlp-ctl` binary on
   # PATH so a keybind can call it without knowing the script's nix-store
   # path. The script itself shells out to `pkexec tlp ...`; the polkit rule
@@ -59,6 +74,35 @@ in {
       home.file."Pictures/Wallpapers" = {
         source = wallpapersDir;
         recursive = true;
+      };
+
+      # System-wide pointer cursor. DMS already exports XCURSOR_THEME /
+      # HYPRCURSOR_THEME into the Hyprland session via its matugen Hyprland
+      # template (see settings.json: matugenTemplateHyprland), so the live
+      # cursor in the compositor follows the DMS UI without a rebuild.
+      #
+      # What that path does NOT do is:
+      #   • create ~/.icons/default/index.theme (GTK/Qt/X11 fallback path),
+      #   • set XCURSOR_SIZE (without it Hyprland often falls back to its
+      #     built-in yellow pointer when hyprcursor can't find the theme),
+      #   • register the cursor with gtk3/gtk4/dconf, or
+      #   • make sure the chosen cursor package is actually realised into
+      #     the user profile.
+      #
+      # home.pointerCursor handles all of that in one place. The name/size
+      # are read from settings.json above so DMS remains authoritative; the
+      # package is pinned to bibata-cursors because every variant DMS ships
+      # in its cursor picker dropdown by default lives in that single
+      # derivation (Bibata-{Modern,Original}-{Classic,Ice,Amber}). If the
+      # user later picks a non-Bibata theme via the DMS UI they'll need to
+      # swap the package here too.
+      home.pointerCursor = {
+        package = pkgs.bibata-cursors;
+        name = cursorTheme;
+        size = cursorSize;
+        gtk.enable = true;
+        x11.enable = true;
+        hyprcursor.enable = true;
       };
 
       # Two-way settings sync. We want both:

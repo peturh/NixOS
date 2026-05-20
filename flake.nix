@@ -70,7 +70,7 @@
       editor = "cursor"; # cursor, vscode
       textEditor = "micro"; # micro, nano, vim
       browser = "firefox"; # firefox, google-chrome, helium, microsoft-edge
-      terminal = "kitty"; # kitty, alacritty, wezterm
+      terminal = "ghostty"; # ghostty, kitty
       terminalFileManager = "yazi"; # yazi or lf
       sddmTheme = "purple_leaves"; # astronaut, black_hole, purple_leaves, jake_the_dog, hyprland_kath
       wallpaper = "thinkpad"; # see modules/themes/wallpapers
