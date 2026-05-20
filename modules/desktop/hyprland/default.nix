@@ -57,7 +57,7 @@
         term        = "${getExe pkgs.${terminal}}",
         editor      = "${editor}",
         browser     = "${browser}",
-        fileManager = "${getExe pkgs.${terminal}} --class terminalFileManager -e ${terminalFileManager}",
+        fileManager = "${getExe pkgs.${terminal}} --class=terminalFileManager -e ${terminalFileManager}",
         kbdLayout   = "${kbdLayout},is",
         kbdVariant  = "${kbdVariant},",
 

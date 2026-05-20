@@ -31,16 +31,11 @@
   cursorSize = dmsSettings.cursorSettings.size or 24;
 
   # Wrap modules/desktop/hyprland/scripts/tlp-ctl.sh as a `tlp-ctl` binary on
-  # PATH so a keybind can call it without knowing the script's nix-store
-  # path. The script itself shells out to `pkexec tlp ...`; the polkit rule
-  # in modules/programs/misc/tlp/default.nix grants the `power` group pkexec
+  # PATH so a keybind, the DMS plugin (plugins/tlpCtl/TlpWidget.qml), or
+  # anything else can call it without knowing the script's nix-store path.
+  # The script itself shells out to `pkexec tlp ...`; the polkit rule in
+  # modules/programs/misc/tlp/default.nix grants the `power` group pkexec
   # without a password prompt.
-  #
-  # In the Noctalia setup this drove a custom QML bar widget. DMS uses
-  # plugin.json/QML APIs that don't map 1:1, so we trade the bar widget for
-  # a SUPER+F11 keybind (see lua/binds.lua) and a `tlp-ctl` CLI users can
-  # invoke from anywhere. Nothing is lost functionally; just a click less
-  # discoverable.
   tlpCtl = pkgs.writeShellApplication {
     name = "tlp-ctl";
     runtimeInputs = with pkgs; [tlp jq coreutils];
@@ -124,6 +119,20 @@ in {
       xdg.configFile."DankMaterialShell/settings.json".source =
         config.lib.file.mkOutOfStoreSymlink
         "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/settings.json";
+
+      # tlp-ctl bar widget. DMS discovers plugins from
+      # ~/.config/DankMaterialShell/plugins/<id>/ and the directory name
+      # must match the `id` field in plugin.json ("tlpCtl"). We symlink
+      # the whole working-copy directory (plugin.json + TlpWidget.qml)
+      # via mkOutOfStoreSymlink so iterating on the QML is just a file
+      # save + plugin reload from DMS Settings → Plugins — no rebuild.
+      #
+      # The widget shells out to the `tlp-ctl` binary installed above
+      # via writeShellApplication, so it works on any host that imports
+      # this module.
+      xdg.configFile."DankMaterialShell/plugins/tlpCtl".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/tlpCtl";
 
       # Seed DMS's session.json so the shell boots straight to the
       # configured wallpaper, weather location, and theme mode instead of

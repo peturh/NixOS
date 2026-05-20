@@ -7,6 +7,7 @@
         lm_sensors
         jq
         rsync
+        unimatrix
       ];
     })
   ];

@@ -36,15 +36,15 @@
   "useFahrenheit": false,
   "windSpeedUnit": "kmh",
   "nightModeEnabled": false,
-  "animationSpeed": 3,
-  "customAnimationDuration": 500,
-  "syncComponentAnimationSpeeds": true,
-  "popoutAnimationSpeed": 1,
-  "popoutCustomAnimationDuration": 150,
+  "animationSpeed": 4,
+  "customAnimationDuration": 480,
+  "syncComponentAnimationSpeeds": false,
+  "popoutAnimationSpeed": 4,
+  "popoutCustomAnimationDuration": 516,
   "modalAnimationSpeed": 1,
   "modalCustomAnimationDuration": 150,
   "enableRippleEffects": true,
-  "blurEnabled": false,
+  "blurEnabled": true,
   "blurForegroundLayers": true,
   "blurLayerOutlineOpacity": 0.12,
   "blurBorderColor": "outline",
@@ -239,7 +239,7 @@
   "useAutoLocation": false,
   "weatherEnabled": true,
   "networkPreference": "auto",
-  "iconTheme": "Bibata-Original-Ice",
+  "iconTheme": "Bibata-Modern-Amber",
   "cursorSettings": {
     "theme": "Bibata-Original-Ice",
     "size": 24,
@@ -579,18 +579,14 @@
       ],
       "rightWidgets": [
         {
-          "id": "cpuUsage",
-          "enabled": true,
-          "minimumWidth": true
-        },
-        {
           "id": "cpuTemp",
           "enabled": true,
           "minimumWidth": true
         },
         {
-          "id": "battery",
-          "enabled": true
+          "id": "cpuUsage",
+          "enabled": true,
+          "minimumWidth": true
         },
         {
           "id": "diskUsage",
@@ -601,6 +597,14 @@
           "id": "memUsage",
           "enabled": true,
           "minimumWidth": true
+        },
+        {
+          "id": "tlpCtl",
+          "enabled": true
+        },
+        {
+          "id": "battery",
+          "enabled": true
         }
       ],
       "spacing": 2,

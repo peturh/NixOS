@@ -253,7 +253,12 @@
       wayland.enable = true;
       enableHidpi = true;
       package = pkgs.kdePackages.sddm;
-      theme = "sddm-astronaut-theme";
+      # Declarative default. Overridden at greeter start by the
+      # sddm-theme-by-time service below (see /etc/sddm.conf.d/10-thinkpad-mode.conf),
+      # which swaps in the light variant during daytime hours. If that
+      # service ever fails to run, SDDM falls back to this dark theme — a
+      # safe, always-working baseline.
+      theme = "sddm-thinkpad-dark";
       settings.General.Numlock = "on";
       settings.Theme.CursorTheme = "Bibata-Modern-Classic";
       extraPackages = with pkgs; [
@@ -262,6 +267,43 @@
         kdePackages.qtvirtualkeyboard
       ];
     };
+  };
+
+  # Pick the SDDM theme variant based on time of day. Runs once before
+  # display-manager.service starts (i.e. at boot or when sddm is restarted)
+  # and writes a drop-in that overrides the declarative theme above.
+  # Notes / limits:
+  #   • SDDM only re-reads its config when it (re)starts. Logging out keeps
+  #     the same sddm process alive, so the greeter you see at logout matches
+  #     the time of the last boot, not the current clock.
+  #   • If this script fails for any reason, the drop-in isn't written and
+  #     SDDM uses the declarative default ("sddm-thinkpad-dark"). The login
+  #     screen never breaks because of this service.
+  systemd.services.sddm-theme-by-time = {
+    description = "Select SDDM ThinkPad theme variant based on time of day";
+    wantedBy = ["display-manager.service"];
+    before = ["display-manager.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = false;
+    };
+    script = ''
+      set -eu
+      mkdir -p /etc/sddm.conf.d
+      hour=$(${pkgs.coreutils}/bin/date +%H)
+      # Daytime: 07:00–18:59 → light variant. Otherwise dark.
+      if [ "$hour" -ge 7 ] && [ "$hour" -lt 19 ]; then
+        theme="sddm-thinkpad-light"
+      else
+        theme="sddm-thinkpad-dark"
+      fi
+      tmp=$(${pkgs.coreutils}/bin/mktemp /etc/sddm.conf.d/10-thinkpad-mode.conf.XXXXXX)
+      {
+        echo "[Theme]"
+        echo "Current=$theme"
+      } > "$tmp"
+      mv "$tmp" /etc/sddm.conf.d/10-thinkpad-mode.conf
+    '';
   };
 
   # Setup keyring
@@ -317,6 +359,8 @@
     pkgs."8bitdo-updater"
     bibata-cursors
     sddm-astronaut # Overlayed
+    sddm-thinkpad-dark # Overlayed — active at night
+    sddm-thinkpad-light # Overlayed — active during the day
     pkgs.kdePackages.qtsvg
     pkgs.kdePackages.qtmultimedia
     pkgs.kdePackages.qtvirtualkeyboard

@@ -80,9 +80,10 @@ All three share: Hyprland, Kitty, Cursor, Firefox, Chrome, Steam, Docker, and th
 
 ### Installing New Packages
 When I ask for you to install new application and packages:
-1. Search for the application on `nixpkgs`. 
-   1. Createa new flake for the installation
-   2. Make it avaialble directly so I can use it.
+1. Search for the application on `nixpkgs`.
+   1. **Simple terminal applications** (single-binary CLI tools with no config — e.g. `jq`, `rsync`, `cmatrix`, `unimatrix`) just go into the existing `modules/programs/cli/utilities/default.nix` bundle. No need for their own module.
+   2. **Anything that needs configuration** (dotfiles, home-manager options, services, theming) gets its own module dir at `modules/programs/<category>/<name>/default.nix`.
+   3. Either way, make it available directly (system or home-manager packages list) so I can use it.
 2. If you cant find it on `nixpkgs`, install it from source on github.
    1. Create the derivation in `pkgs/<name>.nix`
    2. Register it in `pkgs/default.nix` via `callPackage`

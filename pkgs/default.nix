@@ -14,6 +14,19 @@
     # subtheme's bundled background.
     wallpaper = ../modules/themes/wallpapers/${settings.wallpaper}.png;
   };
+  # Self-contained ThinkPad-branded SDDM themes. Two variants share the same
+  # QML (Keyitdev's astronaut) but differ in wallpaper, palette, and form
+  # placement to suit the dark and light ThinkPad wallpapers respectively.
+  # Both are installed; a systemd oneshot (see hosts/common.nix) picks which
+  # one SDDM uses at each greeter start based on the current hour.
+  sddm-thinkpad-dark = pkgs.callPackage ./sddm-themes/thinkpad.nix {
+    variant = "dark";
+    wallpaper = ../modules/themes/wallpapers/thinkpad-dark.png;
+  };
+  sddm-thinkpad-light = pkgs.callPackage ./sddm-themes/thinkpad.nix {
+    variant = "light";
+    wallpaper = ../modules/themes/wallpapers/thinkpad-light.png;
+  };
   lenovo-wwan-unlock = pkgs.callPackage ./easy-lenovo-wwan-unlock.nix {};
   cpyvpn = import ./cpyvpn.nix {inherit pkgs inputs;};
   extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
