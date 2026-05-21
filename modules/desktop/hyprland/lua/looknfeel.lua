@@ -16,7 +16,7 @@ hl.config({
       },
     },
     resize_on_border = true,
-    layout = "dwindle", -- dwindle or master
+    layout = "scrolling", -- dwindle | master | scrolling (PaperWM-style, built-in since 0.55)
     -- allow_tearing = true, -- Allow tearing for games (use immediate window rules for specific games or all titles)
   },
 

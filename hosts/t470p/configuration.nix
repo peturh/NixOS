@@ -24,7 +24,6 @@
     ../../modules/programs/terminal/${terminal}
     ../../modules/programs/editor/${editor}
     ../../modules/programs/cli/${terminalFileManager}
-    ../../modules/programs/cli/starship
     ../../modules/programs/cli/tmux
     ../../modules/programs/cli/direnv
 

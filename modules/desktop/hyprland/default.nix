@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   browser,
   editor,
   terminal,
@@ -20,11 +19,6 @@
     ./programs/hypridle # idle timeouts; drives DMS lock screen
   ];
 
-  nix.settings = {
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-  };
-
   systemd.user.services.hyprpolkitagent = {
     description = "Hyprpolkitagent - Polkit authentication agent";
     wantedBy = ["graphical-session.target"];
@@ -42,8 +36,6 @@
 
   programs.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     # withUWSM = true;
   };
 
@@ -139,11 +131,7 @@
       #test later systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
       wayland.windowManager.hyprland = {
         enable = true;
-        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-        portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-        plugins = [
-          # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprwinwrap
-        ];
+        plugins = [];
         systemd = {
           enable = true;
           variables = ["--all"];

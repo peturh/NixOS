@@ -7,9 +7,11 @@
 # polkit / pkexec — the user is in the `networkmanager` group.
 
 # Single-modem assumption: matches the t14s hardware (one Intel XMM7560
-# soldered down, exposed at /org/freedesktop/ModemManager1/Modem/0). If a
-# second modem ever appears we'd have to resolve the path from `mmcli -L`
-# instead of hardcoding `-m 0`.
+# soldered down). We use `-m any` rather than `-m 0` because the modem's
+# D-Bus index isn't stable — it bumps to /Modem/1, /Modem/2, … each time
+# ModemManager rediscovers the device (hot-replug, suspend/resume, MM
+# restart). If a second modem ever appears we'd have to resolve the path
+# from `mmcli -L` instead.
 
 CONNECTION_NAME="Telenor WWAN"
 WWAN_DEVICE="wwan0mbim0"
@@ -34,10 +36,15 @@ _strip_ansi() {
 
 # Pull a field out of `mmcli -m 0` by suffix-matching its label.
 # Example: mm_field "$mm" "state" → "connected"
+#
+# Returns 0 with empty stdout when the field is absent. mmcli omits
+# fields depending on modem state (an enabled-but-not-registered modem
+# has no `access tech` / `operator name`), and since writeShellApplication
+# turns on `set -euo pipefail` a failing grep here would kill the script.
 mm_field() {
     local haystack="$1" needle="$2"
     printf "%s" "$haystack" \
-        | grep -E "^\s*\|\s*${needle}:" \
+        | { grep -E "^\s*\|\s*${needle}:" || true; } \
         | head -1 \
         | sed -E "s/^[^:]*${needle}:\s*//" \
         | sed 's/^[ \t]*//;s/[ \t]*$//'
@@ -46,7 +53,7 @@ mm_field() {
 get_status() {
     local mm_raw mm state signal tech operator ip nm_state present
 
-    mm_raw=$(mmcli -m 0 2>/dev/null || true)
+    mm_raw=$(mmcli -m any 2>/dev/null || true)
     mm=$(printf "%s" "$mm_raw" | _strip_ansi)
 
     if [ -z "$mm" ]; then
@@ -58,8 +65,9 @@ get_status() {
     else
         present="true"
         state=$(mm_field "$mm" "state")
-        # "38% (recent)" → "38"
-        signal=$(mm_field "$mm" "signal quality" | grep -oE '[0-9]+' | head -1)
+        # "38% (recent)" → "38". Same set-e survival trick as mm_field —
+        # an absent signal-quality line would otherwise abort the pipeline.
+        signal=$(mm_field "$mm" "signal quality" | { grep -oE '[0-9]+' || true; } | head -1)
         tech=$(mm_field "$mm" "access tech")
         operator=$(mm_field "$mm" "operator name")
     fi

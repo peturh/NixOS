@@ -1,19 +1,11 @@
 {
   pkgs,
-  settings,
   inputs,
   ...
 }: {
   # these will be overlayed in nixpkgs automatically.
   # for example: environment.systemPackages = with pkgs; [pokego];
   pokego = pkgs.callPackage ./pokego.nix {};
-  sddm-astronaut = pkgs.callPackage ./sddm-themes/astronaut.nix {
-    theme = settings.sddmTheme;
-    # Reuse the system wallpaper for the SDDM greeter background so the login
-    # screen matches the desktop. Set to `null` here to fall back to the
-    # subtheme's bundled background.
-    wallpaper = ../modules/themes/wallpapers/${settings.wallpaper}.png;
-  };
   # Self-contained ThinkPad-branded SDDM themes. Two variants share the same
   # QML (Keyitdev's astronaut) but differ in wallpaper, palette, and form
   # placement to suit the dark and light ThinkPad wallpapers respectively.

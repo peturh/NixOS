@@ -17,6 +17,7 @@
     inputs.home-manager.nixosModules.home-manager
     inputs.nix-index-database.nixosModules.nix-index
     ../modules/programs/development/claude-code
+    ../modules/programs/editor/vscode
   ];
 
   programs.nix-index-database.comma.enable = true;
@@ -26,7 +27,7 @@
     defaultSopsFile = ../secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/home/${username}/NixOS/age.key";
-    
+
     secrets = {
       "vpn-server" = {
         key = "server";
@@ -95,10 +96,8 @@
       xdg.portal = {
         enable = true;
         # xdg-desktop-portal-hyprland is added automatically by the home-manager
-        # hyprland module (using the same flake-pinned version), so we omit it
-        # here to avoid a buildEnv conflict between the nixpkgs copy and the
-        # flake copy.
-        extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+        # hyprland module, so we omit it here.
+        extraPortals = with pkgs; [xdg-desktop-portal-gtk];
         xdgOpenUsePortal = true;
       };
       home.username = username;
@@ -117,7 +116,7 @@
       home.packages = with pkgs; [
         # Applications
         obsidian
-        remmina  # VNC/RDP/SSH remote desktop client
+        remmina # VNC/RDP/SSH remote desktop client
 
         # Terminal
         file
@@ -138,9 +137,9 @@
   };
 
   zramSwap = {
-  enable = true;
-  algorithm = "zstd";
-  memoryPercent = 50;
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
   };
 
   boot.kernel.sysctl = {
@@ -152,17 +151,17 @@
   };
 
   nix.settings = {
-  # ... your existing settings ...
-  max-jobs = "auto"; # Use all available cores
-  cores = 0; # Use all cores per build job (0 = auto)
-  
-  # Reduce memory usage during builds
-  builders-use-substitutes = true;
-  
-  # Enable parallel downloads
-  http-connections = 0; # 0 = unlimited (default is 25)
-  max-substitution-jobs = 16; # Parallel downloads from binary caches
-};
+    # ... your existing settings ...
+    max-jobs = "auto"; # Use all available cores
+    cores = 0; # Use all cores per build job (0 = auto)
+
+    # Reduce memory usage during builds
+    builders-use-substitutes = true;
+
+    # Enable parallel downloads
+    http-connections = 0; # 0 = unlimited (default is 25)
+    max-substitution-jobs = 16; # Parallel downloads from binary caches
+  };
 
   # Filesystems support
   boot.supportedFilesystems = ["ntfs" "exfat" "ext4" "fat32" "btrfs"];
@@ -324,17 +323,19 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
-  fonts.packages = (with pkgs.nerd-fonts; [
-    jetbrains-mono
-    fira-code
-    open-dyslexic
-    caskaydia-cove
-  ]) ++ (with pkgs; [
-    noto-fonts-cjk-sans
-    noto-fonts-cjk-serif
-    material-symbols # DMS (and Noctalia before it) use Material Symbols Rounded for icons
-    rubik
-  ]);
+  fonts.packages =
+    (with pkgs.nerd-fonts; [
+      jetbrains-mono
+      fira-code
+      open-dyslexic
+      caskaydia-cove
+    ])
+    ++ (with pkgs; [
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      material-symbols # DMS (and Noctalia before it) use Material Symbols Rounded for icons
+      rubik
+    ]);
 
   nixpkgs = {
     overlays = builtins.attrValues outputs.overlays;
@@ -358,18 +359,17 @@
     gnome-firmware
     pkgs."8bitdo-updater"
     bibata-cursors
-    sddm-astronaut # Overlayed
     sddm-thinkpad-dark # Overlayed — active at night
     sddm-thinkpad-light # Overlayed — active during the day
     pkgs.kdePackages.qtsvg
     pkgs.kdePackages.qtmultimedia
     pkgs.kdePackages.qtvirtualkeyboard
-    sops  # For managing encrypted secrets
-    age   # Age encryption tool for sops
-    extract-xiso  # Xbox ISO creation/extraction utility
-    iptvnator  # IPTV player with Xtream Codes support (overlayed)
-    makerom  # CLI tool to create Nintendo 3DS CXI/CFA/CCI/CIA files (overlayed)
-    ctrtool  # CLI tool to read/extract Nintendo 3DS files (overlayed)
+    sops # For managing encrypted secrets
+    age # Age encryption tool for sops
+    extract-xiso # Xbox ISO creation/extraction utility
+    iptvnator # IPTV player with Xtream Codes support (overlayed)
+    makerom # CLI tool to create Nintendo 3DS CXI/CFA/CCI/CIA files (overlayed)
+    ctrtool # CLI tool to read/extract Nintendo 3DS files (overlayed)
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -422,7 +422,6 @@
         "https://chaotic-nyx.cachix.org/"
         "https://cachix.cachix.org"
         "https://nix-gaming.cachix.org/"
-        "https://hyprland.cachix.org"
         # "https://nixpkgs-wayland.cachix.org"
         # "https://devenv.cachix.org"
       ];
@@ -432,7 +431,6 @@
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
         "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         # "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
         # "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       ];

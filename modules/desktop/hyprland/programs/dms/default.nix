@@ -3,7 +3,6 @@
   lib,
   pkgs,
   username,
-  wallpaper,
   ...
 }: let
   # Wallpapers live in modules/themes/wallpapers as plain .png; Qt6's built-in
@@ -11,9 +10,9 @@
   # expose the directory as-is into ~/Pictures/Wallpapers.
   wallpapersDir = ../../../../themes/wallpapers;
 
-  # The path DMS will use as its boot-time fallback wallpaper. Matches the
-  # filename selected by `commonSettings.wallpaper` in flake.nix.
-  defaultWallpaperPath = "/home/${username}/Pictures/Wallpapers/${wallpaper}.png";
+  # Boot-time fallback wallpaper for DMS. Picked from the files synced into
+  # ~/Pictures/Wallpapers below.
+  defaultWallpaperPath = "/home/${username}/Pictures/Wallpapers/thinkpad-dark.png";
 
   # Pull cursor theme + size out of DMS's settings.json so the DMS UI
   # (Settings → Personalization → Cursor) stays the single source of truth.
@@ -21,11 +20,11 @@
   # the mkOutOfStoreSymlink below; the next `nixos-rebuild` re-reads this
   # file and propagates the choice to home.pointerCursor.
   #
-  # We deliberately do NOT pull in the old themes/Catppuccin module just for
-  # the cursor — that module also forces gtk/qt/icon themes and dark-mode
-  # keys that fight DMS's matugen + portal-driven theming on every rebuild
-  # (see modules/desktop/hyprland/default.nix). Keeping the wiring local to
-  # the DMS module preserves that "DMS owns the look" invariant.
+  # Cursor wiring is kept local to this DMS module on purpose: any sibling
+  # module that forces gtk/qt/icon themes or dark-mode keys would fight DMS's
+  # matugen + portal-driven theming on every rebuild (see
+  # modules/desktop/hyprland/default.nix). Keeping it here preserves the
+  # "DMS owns the look" invariant.
   dmsSettings = builtins.fromJSON (builtins.readFile ./settings.json);
   cursorTheme = dmsSettings.cursorSettings.theme or "Bibata-Original-Ice";
   cursorSize = dmsSettings.cursorSettings.size or 24;
@@ -286,7 +285,7 @@ in {
       #      will keep retrying with RestartSec backoff until Hyprland
       #      finishes propagating the env.
       systemd.user.services.dms = let
-        hyprctl = "${inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland}/bin/hyprctl";
+        hyprctl = "${pkgs.hyprland}/bin/hyprctl";
         jq = "${pkgs.jq}/bin/jq";
         bash = "${pkgs.bash}/bin/bash";
         waitWayland = "${bash} -c 'for _ in $(seq 1 60); do [ -n \"$WAYLAND_DISPLAY\" ] && [ -S \"$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY\" ] && exit 0; sleep 0.2; done; echo \"dms: WAYLAND_DISPLAY never appeared in systemd user env\" >&2; exit 1'";

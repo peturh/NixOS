@@ -33,11 +33,6 @@
       url = "github:schembriaiden/helium-browser-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # DankMaterialShell (DMS) — the Quickshell-based desktop shell that
     # replaced Noctalia. Tracks the `stable` branch so rebuilds aren't tied
     # to whatever just landed on master. See:
@@ -65,8 +60,6 @@
       browser = "firefox"; # firefox, google-chrome, helium, microsoft-edge
       terminal = "ghostty"; # ghostty, kitty
       terminalFileManager = "yazi"; # yazi or lf
-      sddmTheme = "purple_leaves"; # astronaut, black_hole, purple_leaves, jake_the_dog, hyprland_kath
-      wallpaper = "thinkpad"; # see modules/themes/wallpapers
 
       # System configuration
       locale = "en_GB.UTF-8"; # CHOOSE YOUR LOCALE
@@ -116,7 +109,6 @@
   in {
     overlays = import ./overlays {
       inherit inputs;
-      settings = commonSettings;
     };
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     nixosConfigurations = {

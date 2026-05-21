@@ -75,4 +75,37 @@ hl.config({
     -- allow_workspace_cycles = true,
     -- pass_mouse_when_bound = false,
   },
+
+  -- Tuning for the workspace swipe gesture (CTRL + 3-finger, bound below).
+  -- In 0.55 the enable toggle and finger count moved out of this block into
+  -- the new `hl.gesture` API; only the behavioral knobs live here. `use_r`
+  -- makes the swipe use relative (`r±1`) workspace targeting so it matches
+  -- the keyboard/scroll-wheel bindings (infinite, creates as you go).
+  gestures = {
+    workspace_swipe_distance = 300,
+    workspace_swipe_create_new = true,
+    workspace_swipe_forever = true,
+    workspace_swipe_use_r = true,
+    workspace_swipe_cancel_ratio = 0.5,
+    workspace_swipe_min_speed_to_force = 30,
+  },
+})
+
+-- Touchpad gestures.
+--   3-finger horizontal             → pan the scrolling-layout tape (columns)
+--   CTRL + 3-finger horizontal      → switch workspaces
+-- `scroll_move` directly drives the scrolling layout's viewport offset, with
+-- momentum and snap-to-column-grid on release (tuned by `gestures:scrolling:
+-- move_snap_to_grid` / `move_snap_cursor`, both default true). Holding CTRL
+-- escalates to the older workspace-swipe gesture.
+hl.gesture({
+  fingers = 3,
+  direction = "horizontal",
+  action = "scroll_move",
+})
+hl.gesture({
+  fingers = 3,
+  direction = "horizontal",
+  mods = "CTRL",
+  action = "workspace",
 })

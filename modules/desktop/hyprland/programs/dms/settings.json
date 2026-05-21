@@ -132,9 +132,14 @@
       "width": 50
     },
     {
-      "id": "darkMode",
+      "id": "idleInhibitor",
       "enabled": true,
       "width": 50
+    },
+    {
+      "id": "darkMode",
+      "enabled": true,
+      "width": 100
     }
   ],
   "showWorkspaceIndex": true,
@@ -426,7 +431,7 @@
   "powerMenuDefaultAction": "logout",
   "powerMenuGridLayout": false,
   "customPowerActionLock": "",
-  "customPowerActionLogout": "",
+  "customPowerActionLogout": "hyprctl dispatch exit",
   "customPowerActionSuspend": "",
   "customPowerActionHibernate": "",
   "customPowerActionReboot": "",
@@ -510,10 +515,6 @@
         },
         {
           "id": "wwanCtl",
-          "enabled": true
-        },
-        {
-          "id": "idleInhibitor",
           "enabled": true
         },
         {

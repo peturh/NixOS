@@ -47,7 +47,7 @@ hl.bind(mainMod .. " + W",         hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SHIFT + G", hl.dsp.group.toggle())
 hl.bind("ALT + return",            hl.dsp.window.fullscreen({ action = "toggle" }))
 hl.bind(mainMod .. " + ALT + L",   hl.dsp.exec_cmd("dms ipc call lock lock"))
-hl.bind(mainMod .. " + backspace", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("dms ipc call powermenu toggle"))
 -- Restart DMS. Wraps `systemctl --user restart dms.service` so the unit's
 -- environment, logging, and restart policy are preserved.
 hl.bind("CTRL + ESCAPE",           hl.dsp.exec_cmd(v.scripts.restartDms))
@@ -67,8 +67,6 @@ hl.bind(mainMod .. " + A",         hl.dsp.exec_cmd("dms ipc call plugins toggle 
 hl.bind(mainMod .. " + SPACE",     hl.dsp.exec_cmd("dms ipc call spotlight toggle")) -- launch desktop applications
 hl.bind(mainMod .. " + ALT + K",   hl.dsp.exec_cmd(v.scripts.keyboardswitch)) -- change keyboard layout
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd("dms ipc call control-center toggle")) -- control center
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("dms ipc call control-center toggle")) -- control center
-hl.bind(mainMod .. " + ALT + G",   hl.dsp.exec_cmd(v.scripts.gamemode)) -- disable hypr effects for gamemode
 hl.bind(mainMod .. " + V",         hl.dsp.exec_cmd("dms ipc call clipboard toggle")) -- DMS built-in clipboard manager (cliphist-backed)
 hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("dms ipc call notifications toggle")) -- notification center
 hl.bind(mainMod .. " + comma",     hl.dsp.exec_cmd("dms ipc call settings toggle")) -- DMS settings panel
@@ -81,10 +79,6 @@ hl.bind(mainMod .. " + Y",         hl.dsp.exec_cmd("dms ipc call dankdash wallpa
 -- toolbar gives shapes/arrows/text; saved files land in
 -- ~/Pictures/Screenshots/<timestamp>.png.
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(v.scripts.screenshot))
-
--- Screen Capture Toolbar (DMS plugin: screenCaptureToolbar). Floating pill
--- with photo + video capture controls, backed by gpu-screen-recorder.
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("dms ipc call screenCaptureToolbar toggle"))
 
 -- Cycle TLP power profile (low → medium → performance → low). Replaces
 -- the Noctalia bar widget that drove the same script. The keybind path
@@ -139,9 +133,19 @@ hl.bind(mainMod .. " + CTRL + mouse:275",  hl.dsp.window.move({ workspace = 6, f
 -- Rebuild NixOS with a keybind.
 hl.bind(mainMod .. " + U", hl.dsp.exec_cmd(v.term .. " -e " .. v.scripts.rebuild))
 
--- Scroll through existing workspaces with mainMod + scroll.
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+-- Scroll through workspaces with mainMod + scroll. `r±1` is relative (infinite
+-- scroll, creates workspaces as you go) rather than `e±1` (existing-only) — the
+-- mental model is a single horizontal strip of workspaces you can scroll into.
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "r-1" }))
+
+-- Scrolling-workspace keyboard shortcuts. `[` / `]` mirror the browser-tab
+-- prev/next idiom and are ergonomic without CTRL+arrow gymnastics. Add SHIFT
+-- to drag the active window along.
+hl.bind(mainMod .. " + bracketleft",          hl.dsp.focus({ workspace = "r-1" }))
+hl.bind(mainMod .. " + bracketright",         hl.dsp.focus({ workspace = "r+1" }))
+hl.bind(mainMod .. " + SHIFT + bracketleft",  hl.dsp.window.move({ workspace = "r-1", follow = true }))
+hl.bind(mainMod .. " + SHIFT + bracketright", hl.dsp.window.move({ workspace = "r+1", follow = true }))
 
 -- Move active window to a relative workspace.
 hl.bind(mainMod .. " + CTRL + ALT + right", hl.dsp.window.move({ workspace = "r+1", follow = true }))
@@ -158,6 +162,27 @@ hl.bind(mainMod .. " + SHIFT + CTRL + H", hl.dsp.window.move({ direction = "l" }
 hl.bind(mainMod .. " + SHIFT + CTRL + L", hl.dsp.window.move({ direction = "r" }))
 hl.bind(mainMod .. " + SHIFT + CTRL + K", hl.dsp.window.move({ direction = "u" }))
 hl.bind(mainMod .. " + SHIFT + CTRL + J", hl.dsp.window.move({ direction = "d" }))
+
+----------------------------
+-- Scrolling layout (0.55+)
+----------------------------
+-- The `scrolling` layout (set in looknfeel.lua) treats each workspace as an
+-- infinite horizontal row of columns. Focus/move with direction = "l"/"r"
+-- already navigate between columns via moveFocus/moveInDirection, so the
+-- existing arrow + HJKL binds above keep working. These extras drive the
+-- layout-specific operations that have no generic dispatcher equivalent:
+--   colresize ±conf  cycle through `scrolling:explicit_column_widths`
+--   fit all          rebalance every column to share the viewport evenly
+--   fit active       blow current column up to full viewport width
+--   center           recenter current column without resizing
+--   promote/expel    pop the focused window out into its own column
+hl.bind(mainMod .. " + minus",       hl.dsp.layout("colresize -conf"))
+hl.bind(mainMod .. " + equal",       hl.dsp.layout("colresize +conf"))
+hl.bind(mainMod .. " + G",           hl.dsp.layout("fit all"))
+hl.bind(mainMod .. " + SHIFT + F",   hl.dsp.layout("fit active"))
+hl.bind(mainMod .. " + SHIFT + ALT + C", hl.dsp.layout("center"))
+hl.bind(mainMod .. " + SHIFT + ALT + P", hl.dsp.layout("promote"))
+hl.bind(mainMod .. " + SHIFT + ALT + E", hl.dsp.layout("expel"))
 
 -- Special workspaces (scratchpad).
 hl.bind(mainMod .. " + CTRL + S", hl.dsp.window.move({ workspace = "special", follow = false }))

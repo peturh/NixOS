@@ -29,7 +29,6 @@
     ../../modules/programs/terminal/${terminal}
     ../../modules/programs/editor/${editor}
     ../../modules/programs/cli/${terminalFileManager}
-    ../../modules/programs/cli/starship
     ../../modules/programs/cli/tmux
     ../../modules/programs/cli/direnv
 
@@ -62,7 +61,6 @@
     ../../modules/programs/misc/usbimager
     ../../modules/programs/misc/lact
     ../../modules/programs/misc/porttelefon
-    ../../modules/programs/misc/valent
     ../../modules/programs/hardware/modem
     ../../modules/programs/security/bitwarden
     ../../modules/programs/security/microsoft-intune

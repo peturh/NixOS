@@ -25,6 +25,15 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("polkit-agent-helper-1")
   hl.exec_cmd("pamixer --set-volume 50")
 
+  -- Work comms autostart on workspace 10 (pinned to the laptop by
+  -- monitors.lua when an external display is connected). `silent` keeps
+  -- focus on the active workspace so the session doesn't yank to ws10
+  -- mid-login. `command -v` guards mean the other two ThinkPads (which
+  -- don't ship Slack/Teams — work-only, see hosts/t14s) skip cleanly
+  -- instead of leaving "not found" noise in the journal.
+  hl.exec_cmd("[workspace 10 silent] command -v slack           >/dev/null && exec slack")
+  hl.exec_cmd("[workspace 10 silent] command -v teams-for-linux >/dev/null && exec teams-for-linux")
+
   -- Clipboard history daemon for DMS's built-in clipboard manager
   -- (SUPER+V → `dms ipc call clipboard toggle`). `wl-paste --watch
   -- cliphist store` listens to the Wayland clipboard and streams entries
