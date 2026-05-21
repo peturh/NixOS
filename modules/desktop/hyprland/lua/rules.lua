@@ -38,12 +38,11 @@ hl.window_rule({ match = { title = "(.*)(Godot)(.*)$" }, tile = true })
 -- hl.window_rule({ match = { title = "(.*)(Spotify)(.*)$" }, workspace = "6" })
 
 -- Opacity rules. Format: "active inactive" or "active" only.
--- Terminals are intentionally left fully opaque: the DMS-generated kitty /
--- ghostty palette already provides a deliberate background colour, and a
--- 0.80 window-rule opacity bled the wallpaper through it and made the
--- matugen light-mode colours look washed out. Restore the rule if you ever
--- want per-window transparency back.
--- hl.window_rule({ match = { class = "^(com\\.mitchellh\\.ghostty|kitty)$" }, opacity = "0.80 0.80" })
+-- Mild terminal transparency: 0.80 was too aggressive and washed out the
+-- matugen light-mode palette by bleeding the wallpaper through the DMS-
+-- generated kitty / ghostty background colour. 0.92 stays subtle enough to
+-- keep colours intact.
+hl.window_rule({ match = { class = "^(com\\.mitchellh\\.ghostty|kitty)$" }, opacity = "0.92 0.92" })
 hl.window_rule({ match = { class = "^(gcr-prompter)$" },                                     opacity = "0.90 0.90" }) -- keyring prompt
 hl.window_rule({ match = { title = "^(Hyprland Polkit Agent)$" },                            opacity = "0.90 0.90" }) -- polkit prompt
 hl.window_rule({ match = { class = "^(firefox)$" },                                          opacity = "1.00 1.00" })
@@ -53,10 +52,6 @@ hl.window_rule({ match = { class = "^(steam)$" },                               
 hl.window_rule({ match = { class = "^(steamwebhelper)$" },                                   opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(Spotify)$" },                                          opacity = "0.80 0.80" })
 hl.window_rule({ match = { title = "(.*)(Spotify)(.*)$" },                                   opacity = "0.80 0.80" })
-hl.window_rule({ match = { class = "^(VSCodium)$" },                                         opacity = "0.80 0.80" })
-hl.window_rule({ match = { class = "^(codium-url-handler)$" },                               opacity = "0.80 0.80" })
-hl.window_rule({ match = { class = "^(code)$" },                                             opacity = "0.80 0.80" })
-hl.window_rule({ match = { class = "^(code-url-handler)$" },                                 opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(terminalFileManager)$" },                              opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(org.kde.dolphin)$" },                                  opacity = "0.80 0.80" })
 hl.window_rule({ match = { class = "^(org.kde.ark)$" },                                      opacity = "0.80 0.80" })
