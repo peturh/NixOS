@@ -11,7 +11,7 @@
     },
     "peaceAndQuiet": "lavender"
   },
-  "matugenScheme": "scheme-rainbow",
+  "matugenScheme": "scheme-vibrant",
   "runUserMatugenTemplates": true,
   "matugenTargetMonitor": "",
   "popupTransparency": 1,
@@ -431,7 +431,7 @@
   "powerMenuDefaultAction": "logout",
   "powerMenuGridLayout": false,
   "customPowerActionLock": "",
-  "customPowerActionLogout": "hyprctl dispatch exit",
+  "customPowerActionLogout": "loginctl terminate-session \"$XDG_SESSION_ID\"",
   "customPowerActionSuspend": "",
   "customPowerActionHibernate": "",
   "customPowerActionReboot": "",
@@ -461,13 +461,16 @@
       "borderThickness": 1,
       "bottomGap": 0,
       "centerWidgets": [
-        "clock",
         {
-          "id": "weather",
+          "id": "clock",
           "enabled": true
         },
         {
           "id": "dmsAgent",
+          "enabled": true
+        },
+        {
+          "id": "weather",
           "enabled": true
         }
       ],
@@ -515,10 +518,6 @@
         },
         {
           "id": "wwanCtl",
-          "enabled": true
-        },
-        {
-          "id": "dankKDEConnect",
           "enabled": true
         },
         {

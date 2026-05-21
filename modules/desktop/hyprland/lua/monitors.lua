@@ -38,12 +38,13 @@ hl.monitor({
 -- Workspace anchoring
 ----------------
 
--- Workspace 1 is the "primary" workspace and 10 is the dedicated comms
--- workspace (Slack/Teams autostart there — see autostart.lua). Marking them
--- persistent keeps both visible on the DMS bar even when empty so the pager
--- stays stable across reboots, hot-plug, and `nixos-rebuild switch` reloads.
-hl.workspace_rule({ workspace = "1",  persistent = true })
-hl.workspace_rule({ workspace = "10", persistent = true })
+-- Workspace 10 is the dedicated comms workspace (Slack/Teams autostart
+-- there — see autostart.lua). Marking it persistent keeps it visible on the
+-- DMS bar even when empty so the pager stays stable across reboots, hot-plug,
+-- and `nixos-rebuild switch` reloads. Pinned to eDP-1 so the persistent
+-- placeholder materializes on the laptop rather than the first monitor
+-- Hyprland happens to pick (which is usually the external).
+hl.workspace_rule({ workspace = "10", monitor = "eDP-1", persistent = true })
 
 -- With an external display connected, workspace 1 lives on the external and
 -- workspace 10 stays pinned to the laptop (so comms apps never get yanked

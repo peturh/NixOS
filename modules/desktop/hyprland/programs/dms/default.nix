@@ -10,9 +10,15 @@
   # expose the directory as-is into ~/Pictures/Wallpapers.
   wallpapersDir = ../../../../themes/wallpapers;
 
-  # Boot-time fallback wallpaper for DMS. Picked from the files synced into
-  # ~/Pictures/Wallpapers below.
-  defaultWallpaperPath = "/home/${username}/Pictures/Wallpapers/thinkpad-dark.png";
+  # Boot-time fallback wallpapers for DMS. Picked from the files synced into
+  # ~/Pictures/Wallpapers below. We seed light/dark separately so the first-
+  # launch session.json doesn't have wallpaperPathLight pointing at the dark
+  # PNG — a mismatch that, combined with isLightMode=true and themeModeAuto,
+  # made the cold-start visibly flicker through dark on its way to light
+  # (matugen on dark image → light-mode auto-switch → matugen on light
+  # image). `wallpaperPath` matches the default isLightMode=true seed below.
+  defaultLightWallpaperPath = "/home/${username}/Pictures/Wallpapers/thinkpad-light.png";
+  defaultDarkWallpaperPath = "/home/${username}/Pictures/Wallpapers/thinkpad-dark.png";
 
   # Pull cursor theme + size out of DMS's settings.json so the DMS UI
   # (Settings → Personalization → Cursor) stays the single source of truth.
@@ -119,7 +125,17 @@ in {
       # portal-only sync silently fails and folders fall back to compiled-in
       # Adwaita. Propagate DMS's choice into dconf ourselves, mirroring how
       # home.pointerCursor above propagates cursorSettings.
-      dconf.settings."org/gnome/desktop/interface".icon-theme = iconTheme;
+      dconf.settings."org/gnome/desktop/interface" = {
+        icon-theme = iconTheme;
+        # Make the xdg-desktop-portal report `prefer-light` to DMS (which
+        # has syncModeWithPortal=true in settings.json) and to GTK apps.
+        # Without this the portal returns `default`, which DMS's QML
+        # treats as dark — visible as a dark flash on every dms.service
+        # restart (e.g. nixos-rebuild) before session.json finishes
+        # loading. The seedDmsSession activation below also defaults
+        # isLightMode to true for fresh installs.
+        color-scheme = "prefer-light";
+      };
 
       # Two-way settings sync. We want both:
       #   • DMS's own Settings UI (SUPER+,) can save changes immediately,
@@ -186,7 +202,8 @@ in {
       home.activation.seedDmsSession = lib.hm.dag.entryAfter ["writeBoundary"] ''
         stateDir="$HOME/.local/state/DankMaterialShell"
         stateFile="$stateDir/session.json"
-        desired="${defaultWallpaperPath}"
+        light="${defaultLightWallpaperPath}"
+        dark="${defaultDarkWallpaperPath}"
         ${pkgs.coreutils}/bin/mkdir -p "$stateDir"
 
         # Refuse to clobber a home-manager-owned symlink (i.e. if a future
@@ -197,25 +214,26 @@ in {
         elif [ -s "$stateFile" ] && ${pkgs.jq}/bin/jq -e . "$stateFile" >/dev/null 2>&1; then
           tmp="$stateFile.tmp"
           ${pkgs.jq}/bin/jq \
-            --arg wp "$desired" \
-            '.wallpaperPath = (.wallpaperPath // $wp)
-             | .wallpaperPathDark = (.wallpaperPathDark // $wp)
-             | .wallpaperPathLight = (.wallpaperPathLight // $wp)
+            --arg light "$light" \
+            --arg dark "$dark" \
+            '.wallpaperPath = (.wallpaperPath // $light)
+             | .wallpaperPathLight = (.wallpaperPathLight // $light)
+             | .wallpaperPathDark = (.wallpaperPathDark // $dark)
              | .weatherLocation = (.weatherLocation // "Malmö, Sweden")
              | .weatherCoordinates = (.weatherCoordinates // "55.6050,13.0038")
              | .nightModeUseIPLocation = (.nightModeUseIPLocation // true)
-             | .isLightMode = (.isLightMode // false)' \
+             | .isLightMode = (.isLightMode // true)' \
             "$stateFile" > "$tmp" \
             && mv "$tmp" "$stateFile"
         else
-          ${pkgs.jq}/bin/jq -n --arg wp "$desired" '{
-            "wallpaperPath": $wp,
-            "wallpaperPathDark": $wp,
-            "wallpaperPathLight": $wp,
+          ${pkgs.jq}/bin/jq -n --arg light "$light" --arg dark "$dark" '{
+            "wallpaperPath": $light,
+            "wallpaperPathLight": $light,
+            "wallpaperPathDark": $dark,
             "weatherLocation": "Malmö, Sweden",
             "weatherCoordinates": "55.6050,13.0038",
             "nightModeUseIPLocation": true,
-            "isLightMode": false
+            "isLightMode": true
           }' > "$stateFile"
         fi
       '';

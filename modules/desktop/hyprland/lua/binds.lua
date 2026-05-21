@@ -72,6 +72,7 @@ hl.bind(mainMod .. " + N",         hl.dsp.exec_cmd("dms ipc call notifications t
 hl.bind(mainMod .. " + comma",     hl.dsp.exec_cmd("dms ipc call settings toggle")) -- DMS settings panel
 hl.bind(mainMod .. " + M",         hl.dsp.exec_cmd("dms ipc call processlist focusOrToggle")) -- task / process list
 hl.bind(mainMod .. " + Y",         hl.dsp.exec_cmd("dms ipc call dankdash wallpaper")) -- wallpaper picker
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("dms ipc call theme toggle")) -- toggle DMS light/dark mode
 
 -- Screenshot/Screencapture. DMS only ships a built-in screenshot IPC for
 -- the niri compositor; on Hyprland we drive grim + slurp + satty from

@@ -31,8 +31,21 @@ hl.on("hyprland.start", function()
   -- mid-login. `command -v` guards mean the other two ThinkPads (which
   -- don't ship Slack/Teams — work-only, see hosts/t14s) skip cleanly
   -- instead of leaving "not found" noise in the journal.
-  hl.exec_cmd("[workspace 10 silent] command -v slack           >/dev/null && exec slack")
-  hl.exec_cmd("[workspace 10 silent] command -v teams-for-linux >/dev/null && exec teams-for-linux")
+  --
+  -- Wait for DMS's org.kde.StatusNotifierWatcher to appear on the user
+  -- bus before launching. Electron registers its tray icon exactly once
+  -- at startup; if the Watcher isn't on the bus yet it silently gives
+  -- up and the tray is empty for the rest of the session. On a cold
+  -- boot or after a compositor crash, dms.service can take several
+  -- seconds (or longer, see modules/desktop/hyprland/programs/dms's
+  -- ExecStartPre gates) to come up — so we poll up to ~30s.
+  -- The [workspace 10 silent] prefix is a Hyprland-dispatcher-level rule
+  -- tied to the spawned PID/PGRP. The inner `bash` waits for the Watcher
+  -- and then `exec`s into slack/teams — same PID, same PGRP — so the
+  -- rule still triggers when the comms app finally opens its first
+  -- window. `command -v` keeps the non-work hosts (t470p, t450) quiet.
+  hl.exec_cmd([=[[workspace 10 silent] bash -c 'command -v slack >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec slack']=])
+  hl.exec_cmd([=[[workspace 10 silent] bash -c 'command -v teams-for-linux >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec teams-for-linux']=])
 
   -- Clipboard history daemon for DMS's built-in clipboard manager
   -- (SUPER+V → `dms ipc call clipboard toggle`). `wl-paste --watch
