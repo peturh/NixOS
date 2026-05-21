@@ -13,3 +13,45 @@ require("input")
 require("rules")
 require("autostart")
 require("binds")
+
+-- DMS writes matugen-driven border/group colors to ~/.config/hypr/dms/colors.conf
+-- on every wallpaper change and dark/light toggle. Hyprland's lua API doesn't
+-- expose `source` / `keyword` (only known config keys via hl.config), so we
+-- parse the variable definitions in the generated file and apply them via
+-- hl.config. To pick up DMS palette changes live, `hyprctl reload` re-runs
+-- hyprland.lua and re-reads this file.
+local function applyDmsColors()
+  local f = io.open(os.getenv("HOME") .. "/.config/hypr/dms/colors.conf", "r")
+  if not f then return end
+  local content = f:read("*a")
+  f:close()
+
+  local vars = {}
+  for name, val in content:gmatch("%$([%w_]+)%s*=%s*(rgb%([^)]+%))") do
+    vars[name] = val
+  end
+
+  local primary = vars.primary
+  local outline = vars.outline or primary
+  local err     = vars["error"] or primary
+  if not primary then return end
+
+  hl.config({
+    general = {
+      col = {
+        active_border   = primary,
+        inactive_border = outline,
+      },
+    },
+    group = {
+      col = {
+        border_active          = primary,
+        border_inactive        = outline,
+        border_locked_active   = err,
+        border_locked_inactive = outline,
+      },
+    },
+  })
+end
+
+applyDmsColors()

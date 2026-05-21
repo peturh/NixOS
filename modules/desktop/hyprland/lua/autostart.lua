@@ -45,4 +45,17 @@ hl.on("hyprland.start", function()
   -- and dispatches per-type so the DB stays coherent.
   hl.exec_cmd("pkill -x wl-paste; wl-paste --type text  --watch cliphist store")
   hl.exec_cmd("wl-paste --type image --watch cliphist store")
+
+  -- DMS-driven border colors. hyprland.lua reads ~/.config/hypr/dms/colors.conf
+  -- at config load and applies via hl.config, but on a cold boot Hyprland
+  -- starts before DMS has had a chance to render the file, so the initial
+  -- pass is a no-op and borders fall back to compiled-in defaults. Wait for
+  -- DMS to write the file once, then trigger a single `hyprctl reload` so
+  -- hyprland.lua re-runs against the now-populated file. The flag in
+  -- $XDG_RUNTIME_DIR makes this idempotent across `hyprctl reload` (which
+  -- may re-fire `hyprland.start`) and self-clears on logout because
+  -- $XDG_RUNTIME_DIR/$UID is wiped when the last user process exits. On
+  -- subsequent DMS palette changes (wallpaper / dark-light toggle) Hyprland
+  -- is already up, so a manual reload picks them up.
+  hl.exec_cmd("sh -c 'f=\"$XDG_RUNTIME_DIR/hypr-dms-colors-loaded\"; [ -e \"$f\" ] && exit 0; colors=\"$HOME/.config/hypr/dms/colors.conf\"; for _ in $(seq 1 100); do [ -s \"$colors\" ] && { touch \"$f\"; exec hyprctl reload; }; sleep 0.3; done'")
 end)

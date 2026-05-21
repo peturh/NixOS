@@ -5,16 +5,9 @@ hl.config({
     gaps_in = 4,
     gaps_out = 9,
     border_size = 2,
-    col = {
-      active_border = {
-        colors = { "rgba(ca9ee6ff)", "rgba(f2d5cfff)" },
-        angle = 45,
-      },
-      inactive_border = {
-        colors = { "rgba(b4befecc)", "rgba(6c7086cc)" },
-        angle = 45,
-      },
-    },
+    -- Border colors come from DMS's matugen-generated dms/colors.conf
+    -- (sourced at the bottom of hyprland.lua). Don't set col.* here or it
+    -- will override the dynamic palette.
     resize_on_border = true,
     layout = "scrolling", -- dwindle | master | scrolling (PaperWM-style, built-in since 0.55)
     -- allow_tearing = true, -- Allow tearing for games (use immediate window rules for specific games or all titles)

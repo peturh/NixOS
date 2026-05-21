@@ -1,17 +1,4 @@
-{pkgs, ...}: let
-  dreamsofcode-io-catppuccin-tmux =
-    pkgs.tmuxPlugins.mkTmuxPlugin
-    {
-      pluginName = "catppuccin";
-      version = "unstable-2023-01-06";
-      src = pkgs.fetchFromGitHub {
-        owner = "dreamsofcode-io";
-        repo = "catppuccin-tmux";
-        rev = "b4e0715356f820fc72ea8e8baf34f0f60e891718";
-        sha256 = "sha256-FJHM6LJkiAwxaLd5pnAoF3a7AE1ZqHWoCpUJE0ncCA8=";
-      };
-    };
-in {
+{pkgs, ...}: {
   home-manager.sharedModules = [
     (_: {
       programs.tmux = {
@@ -22,8 +9,6 @@ in {
         # terminal = "screen-256color";
         historyLimit = 100000;
         plugins = with pkgs.tmuxPlugins; [
-          dreamsofcode-io-catppuccin-tmux
-          # catppuccin
           sensible
           vim-tmux-navigator
           /*
@@ -61,7 +46,6 @@ in {
           bind C-a send-prefix
 
           # Options
-          set -g @catppuccin_flavour 'mocha'
           set -g mouse on
           set -g allow-rename off
           set -g status-position top
