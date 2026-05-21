@@ -35,9 +35,23 @@
     "window.titleBarStyle" = "custom"; # needed otherwise vscode crashes, see https://github.com/NixOS/nixpkgs/issues/246509
     "window.menuBarVisibility" = "classic";
     "window.zoomLevel" = 0.5;
+    # Follow DMS's theme + mode automatically. Two pieces are at play:
+    #   1. DMS exports its current dark/light mode through xdg-desktop-portal
+    #      (settings.json: syncModeWithPortal=true), which VS Code/Cursor
+    #      reads via `window.autoDetectColorScheme` to pick between the
+    #      preferred dark/light themes below.
+    #   2. The "Dynamic Base16 DankShell" themes are recoloured by DMS's
+    #      matugen pipeline on every theme regen — it writes into
+    #      ~/.{vscode,cursor}/extensions/danklinux.dms-theme-*/themes/.
+    #
+    # The extension itself (DankLinux.dms-theme) must be installed
+    # *inside each editor* via the marketplace (VS Marketplace for VS Code,
+    # Open VSX for Cursor). It's not Nix-managed on purpose: matugen needs
+    # to overwrite the bundled theme JSONs at runtime, which Nix-store
+    # symlinks would block.
     "window.autoDetectColorScheme" = true;
-    "workbench.preferredDarkColorTheme" = "Dark Modern";
-    "workbench.preferredLightColorTheme" = "Default Light Modern";
+    "workbench.preferredDarkColorTheme" = "Dynamic Base16 DankShell (Dark)";
+    "workbench.preferredLightColorTheme" = "Dynamic Base16 DankShell (Light)";
     "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'SymbolsNerdFont', 'monospace', monospace";
     "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font', 'SymbolsNerdFont'";
     "editor.fontSize" = 14;

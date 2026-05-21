@@ -62,10 +62,14 @@ local function applyWorkspaceLayout()
     end
   end
   if external and laptop then
-    hl.exec_cmd("hyprctl dispatch moveworkspacetomonitor 1 "  .. external.name)
-    hl.exec_cmd("hyprctl dispatch moveworkspacetomonitor 10 " .. laptop.name)
+    hl.dsp.workspace.move({ workspace = "1",  monitor = external.name })
+    hl.dsp.workspace.move({ workspace = "10", monitor = laptop.name })
+  elseif laptop then
+    hl.dsp.workspace.move({ workspace = "10", monitor = laptop.name })
   end
 end
 
-hl.on("hyprland.start", applyWorkspaceLayout)
-hl.on("monitor.added",  applyWorkspaceLayout)
+-- Run on every config load (covers both initial startup and `hyprctl reload`,
+-- since hl.on("hyprland.start") only fires on Hyprland's first launch).
+applyWorkspaceLayout()
+hl.on("monitor.added", applyWorkspaceLayout)

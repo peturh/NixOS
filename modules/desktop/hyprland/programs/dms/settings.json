@@ -343,7 +343,7 @@
   "matugenTemplateWezterm": false,
   "matugenTemplateDgop": true,
   "matugenTemplateKcolorscheme": true,
-  "matugenTemplateVscode": false,
+  "matugenTemplateVscode": true,
   "matugenTemplateEmacs": false,
   "matugenTemplateZed": false,
   "showDock": true,
