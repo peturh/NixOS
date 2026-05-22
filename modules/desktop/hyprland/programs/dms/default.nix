@@ -58,6 +58,18 @@
     runtimeInputs = with pkgs; [modemmanager networkmanager jq gnugrep gnused gawk coreutils];
     text = builtins.readFile ../../scripts/wwan-ctl.sh;
   };
+
+  # Packages from the user's standalone DMS plugin flake at
+  # github.com/peturh/tlp-power-profile. `tlp-power-profile-helper` is the
+  # wrapped helper binary (TLP only exposes ac/bat; this script layers a
+  # "performance" overlay by forcing cpufreq governor / EPP / turbo /
+  # platform_profile). The plugin invokes it as
+  # `pkexec tlp-power-profile-helper performance` — pkexec on NixOS has
+  # /run/current-system/sw/bin on its PATH, so installing via
+  # environment.systemPackages below makes the name resolve.
+  # `tlp-power-profile-plugin` is a derivation containing plugin.json,
+  # qmldir, and the QML files at share/DankMaterialShell/plugins/tlp-power-profile.
+  tlpPowerProfile = inputs.tlp-power-profile.packages.${pkgs.stdenv.hostPlatform.system};
 in {
   # Install tlp-ctl system-wide. Same reasoning as the previous Noctalia
   # module: keybinds and any session-spawned scripts need it on
@@ -65,6 +77,7 @@ in {
   environment.systemPackages = [
     tlpCtl
     wwanCtl
+    tlpPowerProfile.tlp-power-profile-helper
     pkgs.claude-code
   ];
 
@@ -178,6 +191,22 @@ in {
       xdg.configFile."DankMaterialShell/plugins/wwanCtl".source =
         config.lib.file.mkOutOfStoreSymlink
         "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/wwanCtl";
+
+      # tlpPowerProfile bar widget — symlinked straight out of the
+      # tlp-power-profile-plugin derivation. The package installs its
+      # QML/plugin.json/qmldir under share/DankMaterialShell/plugins/tlp-power-profile,
+      # so pointing xdg.configFile at that subdir gives DMS exactly the
+      # plugin tree it expects without any of the repo's extra files
+      # (helper/, README.md, flake.nix, …) bleeding into the plugin dir.
+      # Bump the source revision with `nix flake update tlp-power-profile`.
+      #
+      # The plugin's "Performance" profile shells out to
+      # `pkexec tlp-power-profile-helper performance`; that binary is
+      # installed system-wide above and lands in /run/current-system/sw/bin,
+      # which pkexec searches by default. Polkit grants the `power` group
+      # password-less pkexec via modules/programs/misc/tlp/default.nix, and
+      # ${username} is already in `power` via hosts/common.nix.
+      xdg.configFile."DankMaterialShell/plugins/tlp-power-profile".source = "${tlpPowerProfile.tlp-power-profile-plugin}/share/DankMaterialShell/plugins/tlp-power-profile";
 
       # Screen capture toolbar (third-party plugin from
       # github.com/JDKamalakar/DMS-ScreenCapture_Toolbar). Daemon-type
