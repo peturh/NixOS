@@ -613,7 +613,7 @@
           "minimumWidth": true
         },
         {
-          "id": "tlpCtl",
+          "id": "tlpPowerProfile",
           "enabled": true
         }
       ],

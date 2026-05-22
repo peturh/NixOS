@@ -56,7 +56,6 @@
         scripts = {
           dontkillsteam   = "${./scripts/dontkillsteam.sh}",
           keyboardswitch  = "${./scripts/keyboardswitch.sh}",
-          gamemode        = "${./scripts/gamemode.sh}",
           rebuild         = "${./scripts/rebuild.sh}",
           restartDms      = "${./scripts/restart-dms.sh}",
           screenshot      = "${./scripts/screenshot.sh}",
