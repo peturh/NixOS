@@ -26,4 +26,8 @@
   iptvnator = pkgs.callPackage ./iptvnator.nix {};
   makerom = pkgs.callPackage ./makerom.nix {};
   ctrtool = pkgs.callPackage ./ctrtool.nix {};
+  # DMS Agent plugin — installs the github.com/Francisdelca/dms-agent tree
+  # under share/DankMaterialShell/plugins/dmsAgent so the DMS module can
+  # symlink it into ~/.config/DankMaterialShell/plugins/dmsAgent.
+  dms-agent = pkgs.callPackage ./dms-agent.nix {inherit inputs;};
 }

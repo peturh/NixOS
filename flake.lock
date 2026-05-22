@@ -38,6 +38,23 @@
         "type": "github"
       }
     },
+    "dms-agent": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775602991,
+        "narHash": "sha256-3mI+EZod09JVWEim7tjCA4tdmnYcDJ54bwdlDxQc4wI=",
+        "owner": "Francisdelca",
+        "repo": "dms-agent",
+        "rev": "926cded9025f1bc981072b7e0f60e3cc9178b379",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Francisdelca",
+        "repo": "dms-agent",
+        "rev": "926cded9025f1bc981072b7e0f60e3cc9178b379",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -215,6 +232,7 @@
       "inputs": {
         "cpyvn": "cpyvn",
         "dms": "dms",
+        "dms-agent": "dms-agent",
         "helium": "helium",
         "home-manager": "home-manager",
         "nix-index-database": "nix-index-database",

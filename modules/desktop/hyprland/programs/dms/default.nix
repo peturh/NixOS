@@ -37,11 +37,10 @@
   iconTheme = dmsSettings.iconTheme or "Adwaita";
 
   # Wrap modules/desktop/hyprland/scripts/tlp-ctl.sh as a `tlp-ctl` binary on
-  # PATH so a keybind, the DMS plugin (plugins/tlpCtl/TlpWidget.qml), or
-  # anything else can call it without knowing the script's nix-store path.
-  # The script itself shells out to `pkexec tlp ...`; the polkit rule in
-  # modules/programs/misc/tlp/default.nix grants the `power` group pkexec
-  # without a password prompt.
+  # PATH so the SUPER+F11 cycle keybind (via scripts/tlp-cycle.sh) can call
+  # it without knowing the script's nix-store path. The script itself shells
+  # out to `pkexec tlp ...`; the polkit rule in modules/programs/misc/tlp/default.nix
+  # grants the `power` group pkexec without a password prompt.
   tlpCtl = pkgs.writeShellApplication {
     name = "tlp-ctl";
     runtimeInputs = with pkgs; [tlp jq coreutils];
@@ -170,24 +169,9 @@ in {
         config.lib.file.mkOutOfStoreSymlink
         "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/settings.json";
 
-      # tlp-ctl bar widget. DMS discovers plugins from
-      # ~/.config/DankMaterialShell/plugins/<id>/ and the directory name
-      # must match the `id` field in plugin.json ("tlpCtl"). We symlink
-      # the whole working-copy directory (plugin.json + TlpWidget.qml)
-      # via mkOutOfStoreSymlink so iterating on the QML is just a file
-      # save + plugin reload from DMS Settings → Plugins — no rebuild.
-      #
-      # The widget shells out to the `tlp-ctl` binary installed above
-      # via writeShellApplication, so it works on any host that imports
-      # this module.
-      xdg.configFile."DankMaterialShell/plugins/tlpCtl".source =
-        config.lib.file.mkOutOfStoreSymlink
-        "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/tlpCtl";
-
-      # wwan-ctl bar widget. Same out-of-store symlink pattern as tlpCtl so
-      # QML edits are picked up by a plugin reload (DMS Settings → Plugins)
-      # without a nixos-rebuild. Shells out to the `wwan-ctl` binary
-      # installed above.
+      # wwan-ctl bar widget. Out-of-store symlink pattern so QML edits are
+      # picked up by a plugin reload (DMS Settings → Plugins) without a
+      # nixos-rebuild. Shells out to the `wwan-ctl` binary installed above.
       xdg.configFile."DankMaterialShell/plugins/wwanCtl".source =
         config.lib.file.mkOutOfStoreSymlink
         "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/wwanCtl";
@@ -207,6 +191,14 @@ in {
       # password-less pkexec via modules/programs/misc/tlp/default.nix, and
       # ${username} is already in `power` via hosts/common.nix.
       xdg.configFile."DankMaterialShell/plugins/tlp-power-profile".source = "${tlpPowerProfile.tlp-power-profile-plugin}/share/DankMaterialShell/plugins/tlp-power-profile";
+
+      # DMS Agent — AI desktop assistant by francis. Pinned via the
+      # `dms-agent` flake input (flake = false) and re-exposed as
+      # `pkgs.dms-agent` through the additions overlay; the derivation in
+      # pkgs/dms-agent.nix copies the upstream tree into
+      # share/DankMaterialShell/plugins/dmsAgent. Bumping the pin means
+      # editing the rev in flake.nix and running `nix flake update dms-agent`.
+      xdg.configFile."DankMaterialShell/plugins/dmsAgent".source = "${pkgs.dms-agent}/share/DankMaterialShell/plugins/dmsAgent";
 
       # Screen capture toolbar (third-party plugin from
       # github.com/JDKamalakar/DMS-ScreenCapture_Toolbar). Daemon-type

@@ -54,6 +54,18 @@
       url = "github:peturh/tlp-power-profile";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # DMS Agent — AI desktop assistant plugin by francis
+    # (github.com/Francisdelca/dms-agent). The repo is a plain plugin tree
+    # (no flake), so we consume the source via flake = false and turn it
+    # into a derivation in pkgs/dms-agent.nix that installs the QML/JS/JSON
+    # under share/DankMaterialShell/plugins/dmsAgent. Pinned to a specific
+    # commit so upstream churn can't surprise a rebuild; bump by editing the
+    # `/<rev>` suffix below (or replace with a branch and use
+    # `nix flake update dms-agent`).
+    dms-agent = {
+      url = "github:Francisdelca/dms-agent/926cded9025f1bc981072b7e0f60e3cc9178b379";
+      flake = false;
+    };
   };
 
   outputs = {
