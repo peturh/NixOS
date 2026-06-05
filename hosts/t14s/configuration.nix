@@ -59,6 +59,7 @@
     ../../modules/programs/misc/orca
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/usbimager
+    ../../modules/programs/misc/sweethome3d
     ../../modules/programs/misc/lact
     ../../modules/programs/misc/porttelefon
     ../../modules/programs/hardware/modem

@@ -25,12 +25,13 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("polkit-agent-helper-1")
   hl.exec_cmd("pamixer --set-volume 50")
 
-  -- Work comms autostart on workspace 10 (pinned to the laptop by
-  -- monitors.lua when an external display is connected). `silent` keeps
-  -- focus on the active workspace so the session doesn't yank to ws10
-  -- mid-login. `command -v` guards mean the other two ThinkPads (which
-  -- don't ship Slack/Teams — work-only, see hosts/t14s) skip cleanly
-  -- instead of leaving "not found" noise in the journal.
+  -- Work comms autostart: Slack on workspace 10, Teams on workspace 9
+  -- (both pinned to the laptop by monitors.lua when an external display
+  -- is connected). `silent` keeps focus on the active workspace so the
+  -- session doesn't yank mid-login. `command -v` guards mean the other
+  -- two ThinkPads (which don't ship Slack/Teams — work-only, see
+  -- hosts/t14s) skip cleanly instead of leaving "not found" noise in
+  -- the journal.
   --
   -- Wait for DMS's org.kde.StatusNotifierWatcher to appear on the user
   -- bus before launching. Electron registers its tray icon exactly once
@@ -39,13 +40,26 @@ hl.on("hyprland.start", function()
   -- boot or after a compositor crash, dms.service can take several
   -- seconds (or longer, see modules/desktop/hyprland/programs/dms's
   -- ExecStartPre gates) to come up — so we poll up to ~30s.
-  -- The [workspace 10 silent] prefix is a Hyprland-dispatcher-level rule
+  -- The [workspace N silent] prefix is a Hyprland-dispatcher-level rule
   -- tied to the spawned PID/PGRP. The inner `bash` waits for the Watcher
   -- and then `exec`s into slack/teams — same PID, same PGRP — so the
   -- rule still triggers when the comms app finally opens its first
   -- window. `command -v` keeps the non-work hosts (t470p, t450) quiet.
   hl.exec_cmd([=[[workspace 10 silent] bash -c 'command -v slack >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec slack']=])
-  hl.exec_cmd([=[[workspace 10 silent] bash -c 'command -v teams-for-linux >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec teams-for-linux']=])
+  hl.exec_cmd([=[[workspace 9 silent] bash -c 'command -v teams-for-linux >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec teams-for-linux']=])
+
+  -- Bitwarden: start minimized to tray. `--hidden` keeps the window closed
+  -- on launch; the tray icon is the only entry point until the user clicks
+  -- it. Same Watcher wait as slack/teams above — Electron registers its
+  -- tray icon once at startup and silently gives up if the Watcher isn't
+  -- on the bus yet.
+  hl.exec_cmd([=[bash -c 'command -v bitwarden >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec bitwarden --hidden']=])
+
+  -- Celeste: GTK4 rclone-based sync client. `--background` starts it without
+  -- a window; the tray icon is the only entry point until clicked. Same
+  -- Watcher wait as bitwarden — celeste registers its tray icon at startup
+  -- and is useless headless if the Watcher isn't on the bus yet.
+  hl.exec_cmd([=[bash -c 'command -v celeste >/dev/null || exit 0; for _ in $(seq 1 120); do busctl --user --acquired 2>/dev/null | grep -q "org\.kde\.StatusNotifierWatcher" && break; sleep 0.25; done; exec celeste --background']=])
 
   -- Clipboard history daemon for DMS's built-in clipboard manager
   -- (SUPER+V → `dms ipc call clipboard toggle`). `wl-paste --watch

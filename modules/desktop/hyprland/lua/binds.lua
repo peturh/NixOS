@@ -103,9 +103,9 @@ hl.bind(mainMod .. " + Tab", function()
   hl.dispatch(hl.dsp.window.alter_zorder({ mode = "top" }))
 end)
 
--- Switch workspaces relative to the active workspace.
-hl.bind(mainMod .. " + CTRL + right", hl.dsp.focus({ workspace = "r+1" }))
-hl.bind(mainMod .. " + CTRL + left",  hl.dsp.focus({ workspace = "r-1" }))
+-- Switch workspaces relative to the active workspace (existing only).
+hl.bind(mainMod .. " + CTRL + right", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + CTRL + left",  hl.dsp.focus({ workspace = "e-1" }))
 
 -- Move to the first empty workspace instantly.
 hl.bind(mainMod .. " + CTRL + down", hl.dsp.focus({ workspace = "empty" }))
@@ -134,23 +134,23 @@ hl.bind(mainMod .. " + CTRL + mouse:275",  hl.dsp.window.move({ workspace = 6, f
 -- Rebuild NixOS with a keybind.
 hl.bind(mainMod .. " + U", hl.dsp.exec_cmd(v.term .. " -e " .. v.scripts.rebuild))
 
--- Scroll through workspaces with mainMod + scroll. `r±1` is relative (infinite
--- scroll, creates workspaces as you go) rather than `e±1` (existing-only) — the
--- mental model is a single horizontal strip of workspaces you can scroll into.
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "r-1" }))
+-- Scroll through workspaces with mainMod + scroll. `e±1` only walks existing
+-- workspaces (1..10 driven by the numbered binds below), so this acts as a
+-- quick prev/next over the discrete workspace set rather than creating new
+-- workspaces on demand.
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 
--- Scrolling-workspace keyboard shortcuts. `[` / `]` mirror the browser-tab
--- prev/next idiom and are ergonomic without CTRL+arrow gymnastics. Add SHIFT
+-- `[` / `]` prev/next workspace, mirroring the browser-tab idiom. Add SHIFT
 -- to drag the active window along.
-hl.bind(mainMod .. " + bracketleft",          hl.dsp.focus({ workspace = "r-1" }))
-hl.bind(mainMod .. " + bracketright",         hl.dsp.focus({ workspace = "r+1" }))
-hl.bind(mainMod .. " + SHIFT + bracketleft",  hl.dsp.window.move({ workspace = "r-1", follow = true }))
-hl.bind(mainMod .. " + SHIFT + bracketright", hl.dsp.window.move({ workspace = "r+1", follow = true }))
+hl.bind(mainMod .. " + bracketleft",          hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + bracketright",         hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + SHIFT + bracketleft",  hl.dsp.window.move({ workspace = "e-1", follow = true }))
+hl.bind(mainMod .. " + SHIFT + bracketright", hl.dsp.window.move({ workspace = "e+1", follow = true }))
 
--- Move active window to a relative workspace.
-hl.bind(mainMod .. " + CTRL + ALT + right", hl.dsp.window.move({ workspace = "r+1", follow = true }))
-hl.bind(mainMod .. " + CTRL + ALT + left",  hl.dsp.window.move({ workspace = "r-1", follow = true }))
+-- Move active window to the prev/next existing workspace.
+hl.bind(mainMod .. " + CTRL + ALT + right", hl.dsp.window.move({ workspace = "e+1", follow = true }))
+hl.bind(mainMod .. " + CTRL + ALT + left",  hl.dsp.window.move({ workspace = "e-1", follow = true }))
 
 -- Move active window around current workspace (arrow keys).
 hl.bind(mainMod .. " + SHIFT + CTRL + left",  hl.dsp.window.move({ direction = "l" }))
@@ -163,27 +163,6 @@ hl.bind(mainMod .. " + SHIFT + CTRL + H", hl.dsp.window.move({ direction = "l" }
 hl.bind(mainMod .. " + SHIFT + CTRL + L", hl.dsp.window.move({ direction = "r" }))
 hl.bind(mainMod .. " + SHIFT + CTRL + K", hl.dsp.window.move({ direction = "u" }))
 hl.bind(mainMod .. " + SHIFT + CTRL + J", hl.dsp.window.move({ direction = "d" }))
-
-----------------------------
--- Scrolling layout (0.55+)
-----------------------------
--- The `scrolling` layout (set in looknfeel.lua) treats each workspace as an
--- infinite horizontal row of columns. Focus/move with direction = "l"/"r"
--- already navigate between columns via moveFocus/moveInDirection, so the
--- existing arrow + HJKL binds above keep working. These extras drive the
--- layout-specific operations that have no generic dispatcher equivalent:
---   colresize ±conf  cycle through `scrolling:explicit_column_widths`
---   fit all          rebalance every column to share the viewport evenly
---   fit active       blow current column up to full viewport width
---   center           recenter current column without resizing
---   promote/expel    pop the focused window out into its own column
-hl.bind(mainMod .. " + minus",       hl.dsp.layout("colresize -conf"))
-hl.bind(mainMod .. " + equal",       hl.dsp.layout("colresize +conf"))
-hl.bind(mainMod .. " + G",           hl.dsp.layout("fit all"))
-hl.bind(mainMod .. " + SHIFT + F",   hl.dsp.layout("fit active"))
-hl.bind(mainMod .. " + SHIFT + ALT + C", hl.dsp.layout("center"))
-hl.bind(mainMod .. " + SHIFT + ALT + P", hl.dsp.layout("promote"))
-hl.bind(mainMod .. " + SHIFT + ALT + E", hl.dsp.layout("expel"))
 
 -- Special workspaces (scratchpad).
 hl.bind(mainMod .. " + CTRL + S", hl.dsp.window.move({ workspace = "special", follow = false }))

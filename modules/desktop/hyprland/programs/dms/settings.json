@@ -9,7 +9,7 @@
         "accent": "white"
       }
     },
-    "peaceAndQuiet": "blue"
+    "peaceAndQuiet": "pink"
   },
   "matugenScheme": "scheme-vibrant",
   "runUserMatugenTemplates": true,
@@ -346,7 +346,7 @@
   "matugenTemplateVscode": true,
   "matugenTemplateEmacs": false,
   "matugenTemplateZed": false,
-  "showDock": true,
+  "showDock": false,
   "dockAutoHide": true,
   "dockSmartAutoHide": false,
   "dockGroupByApp": false,
@@ -484,10 +484,17 @@
       "id": "default",
       "innerPadding": 4,
       "leftWidgets": [
-        "launcherButton",
+        {
+          "id": "launcherButton",
+          "enabled": true
+        },
         {
           "id": "workspaceSwitcher",
           "enabled": true
+        },
+        {
+          "id": "unifiedTaskbar",
+          "enabled": false
         }
       ],
       "maximizeDetection": true,
@@ -860,7 +867,7 @@
       "id": "dw_1779193885969_13ryw1ilv",
       "widgetType": "dankAudioVisualizer",
       "name": "Dank Audio Visualizer",
-      "enabled": true,
+      "enabled": false,
       "config": {
         "displayPreferences": [
           "all"

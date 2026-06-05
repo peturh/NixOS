@@ -16,6 +16,26 @@
         "type": "gitlab"
       }
     },
+    "danksearch": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779650358,
+        "narHash": "sha256-53a8H1NhppF1Wte4XRm78AAb23ZVOda2vlmpV4sa90U=",
+        "owner": "AvengeMedia",
+        "repo": "danksearch",
+        "rev": "e4be0825f06370d506e4755cfeae97247a18586f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "danksearch",
+        "type": "github"
+      }
+    },
     "dms": {
       "inputs": {
         "nixpkgs": [
@@ -231,6 +251,7 @@
     "root": {
       "inputs": {
         "cpyvn": "cpyvn",
+        "danksearch": "danksearch",
         "dms": "dms",
         "dms-agent": "dms-agent",
         "helium": "helium",

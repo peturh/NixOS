@@ -66,6 +66,16 @@
       url = "github:Francisdelca/dms-agent/926cded9025f1bc981072b7e0f60e3cc9178b379";
       flake = false;
     };
+    # danksearch (`dsearch`) — indexed filesystem search service that DMS's
+    # launcher hooks into automatically: typing `/` in the launcher triggers
+    # a dsearch query when the binary is on PATH. Upstream ships a flake
+    # with a home-manager module that installs the binary and a `dsearch`
+    # systemd user service running `dsearch serve`. Bump via
+    # `nix flake update danksearch`.
+    danksearch = {
+      url = "github:AvengeMedia/danksearch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {

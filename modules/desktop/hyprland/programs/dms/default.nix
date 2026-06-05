@@ -88,6 +88,12 @@ in {
 
   home-manager.sharedModules = [
     inputs.dms.homeModules.dank-material-shell
+    # danksearch (`dsearch`) — installs the dsearch binary and a user
+    # systemd unit that runs `dsearch serve`. DMS's launcher detects
+    # dsearch on PATH and routes `/`-prefixed queries to it for indexed
+    # filesystem search. Config (if needed later) goes via
+    # `programs.dsearch.config = { ... }` — generates ~/.config/danksearch/config.toml.
+    inputs.danksearch.homeModules.dsearch
     ({
       config,
       lib,
@@ -200,17 +206,6 @@ in {
       # editing the rev in flake.nix and running `nix flake update dms-agent`.
       xdg.configFile."DankMaterialShell/plugins/dmsAgent".source = "${pkgs.dms-agent}/share/DankMaterialShell/plugins/dmsAgent";
 
-      # Screen capture toolbar (third-party plugin from
-      # github.com/JDKamalakar/DMS-ScreenCapture_Toolbar). Daemon-type
-      # plugin: provides a `dms ipc call screenCaptureToolbar toggle`
-      # entrypoint for a pill toolbar with screenshot + screen-recording
-      # controls. Runtime deps (grim, slurp, satty, wl-clipboard,
-      # gpu-screen-recorder, jq) are already installed via the Hyprland
-      # module and the per-host gpu-screen-recorder import.
-      xdg.configFile."DankMaterialShell/plugins/screenCaptureToolbar".source =
-        config.lib.file.mkOutOfStoreSymlink
-        "/home/${username}/NixOS/modules/desktop/hyprland/programs/dms/plugins/screenCaptureToolbar";
-
       # Seed DMS's session.json so the shell boots straight to the
       # configured wallpaper, weather location, and theme mode instead of
       # the upstream defaults (empty background, "New York, NY" weather).
@@ -258,6 +253,13 @@ in {
           }' > "$stateFile"
         fi
       '';
+
+      # danksearch — indexed filesystem search backing DMS's `/` launcher
+      # mode. The upstream home-manager module installs the `dsearch` binary
+      # into the user profile and registers a `dsearch.service` user unit
+      # running `dsearch serve` (REST API + file watcher). DMS auto-detects
+      # the binary on PATH; no plugin install needed.
+      programs.dsearch.enable = true;
 
       programs.dank-material-shell = {
         enable = true;

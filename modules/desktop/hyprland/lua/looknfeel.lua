@@ -9,7 +9,7 @@ hl.config({
     -- (sourced at the bottom of hyprland.lua). Don't set col.* here or it
     -- will override the dynamic palette.
     resize_on_border = true,
-    layout = "scrolling", -- dwindle | master | scrolling (PaperWM-style, built-in since 0.55)
+    layout = "dwindle", -- dwindle | master | scrolling (PaperWM-style, built-in since 0.55)
     -- allow_tearing = true, -- Allow tearing for games (use immediate window rules for specific games or all titles)
   },
 
@@ -46,12 +46,27 @@ hl.curve("easeInOutCirc", { type = "bezier", points = { {0.85, 0}, {0.15, 1}  } 
 hl.curve("easeOutCirc",   { type = "bezier", points = { {0, 0.55}, {0.45, 1}  } })
 hl.curve("easeOutExpo",   { type = "bezier", points = { {0.16, 1}, {0.3, 1}   } })
 
+-- Spring curves. NOTE: when a leaf uses a spring curve, `speed` is ignored —
+-- the spring physics (mass/stiffness/dampening) determine timing.
+hl.curve("spring_menu",      { type = "spring", mass = 1,   stiffness = 80, dampening = 14 })
+hl.curve("spring_window",    { type = "spring", mass = 1,   stiffness = 30, dampening = 8  })
+hl.curve("spring_open",      { type = "spring", mass = 1,   stiffness = 30, dampening = 8  })
+hl.curve("spring_workspace", { type = "spring", mass = 1.2, stiffness = 30, dampening = 10 })
+hl.curve("spring_special",   { type = "spring", mass = 1,   stiffness = 30, dampening = 8  })
+
 -- Animation leaves.
-hl.animation({ leaf = "windows",          enabled = true, speed = 3,   bezier = "md3_decel",   style = "popin 60%" })
+-- Old bezier-based leaves kept as comments for quick revert:
+-- hl.animation({ leaf = "windows",          enabled = true, speed = 3,   bezier = "md3_decel",   style = "popin 60%" })
+-- hl.animation({ leaf = "fade",             enabled = true, speed = 2.5, bezier = "md3_decel" })
+-- hl.animation({ leaf = "workspaces",       enabled = true, speed = 3.5, bezier = "easeOutExpo", style = "slide" })
+-- hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3,   bezier = "md3_decel",   style = "slidevert" })
+
+-- NOTE: when referencing a spring curve in an animation, the field is
+-- `spring = "..."` (not `bezier`). Bezier curves still use `bezier = "..."`.
+hl.animation({ leaf = "windowsIn",        enabled = true, speed = 3,   spring = "spring_open",      style = "popin 60%" })
+hl.animation({ leaf = "windowsOut",       enabled = true, speed = 3,   spring = "spring_window",    style = "popin 60%" })
+hl.animation({ leaf = "windowsMove",      enabled = true, speed = 3,   spring = "spring_window" })
 hl.animation({ leaf = "border",           enabled = true, speed = 10,  bezier = "default" })
-hl.animation({ leaf = "fade",             enabled = true, speed = 2.5, bezier = "md3_decel" })
--- hl.animation({ leaf = "workspaces", enabled = true, speed = 3.5, bezier = "md3_decel", style = "slide" })
-hl.animation({ leaf = "workspaces",       enabled = true, speed = 3.5, bezier = "easeOutExpo", style = "slide" })
--- hl.animation({ leaf = "workspaces", enabled = true, speed = 7, bezier = "fluent_decel", style = "slidefade 15%" })
--- hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3, bezier = "md3_decel", style = "slidefadevert 15%" })
-hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3,   bezier = "md3_decel",   style = "slidevert" })
+hl.animation({ leaf = "fade",             enabled = true, speed = 2.5, spring = "spring_menu" })
+hl.animation({ leaf = "workspaces",       enabled = true, speed = 3.5, spring = "spring_workspace", style = "slide" })
+hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 3,   spring = "spring_special",   style = "slidevert" })
