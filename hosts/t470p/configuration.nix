@@ -46,7 +46,7 @@
     ../../modules/programs/media/gimp
     ../../modules/programs/media/gpu-screen-recorder
     ../../modules/programs/misc/archive
-    ../../modules/programs/misc/celeste
+    ../../modules/programs/misc/rclone
     ../../modules/programs/misc/gparted
     ../../modules/programs/misc/nautilus
     ../../modules/programs/misc/nix-ld
@@ -63,6 +63,16 @@
 
   virtualisation.docker.enable = true;
   users.users.${username}.extraGroups = ["docker"];
+
+  programs.obsidian-sync = {
+    enable = true;
+    pairs = [
+      {
+        remote = "gdrive-personal:Familj";
+        local = "Family";
+      }
+    ];
+  };
 
   networking.hostName = hostname;
 }
