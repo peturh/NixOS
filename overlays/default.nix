@@ -41,5 +41,14 @@
           popd
         '';
       });
+    # nixpkgs is still on claude-code 2.1.161; claude-fable-5 needs 2.1.170+
+    # (released 2026-06-09). Drop this override once nixos-unstable catches up.
+    claude-code = prev.claude-code.overrideAttrs (_old: rec {
+      version = "2.1.170";
+      src = prev.fetchurl {
+        url = "https://downloads.claude.ai/claude-code-releases/${version}/linux-x64/claude";
+        hash = "sha256-hJ4AcnegRCqydXDT49bUN4dQeUZZDo3RlH5aObcIH54=";
+      };
+    });
   };
 }
