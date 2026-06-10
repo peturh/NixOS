@@ -41,19 +41,6 @@
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # The user's standalone DMS plugin repo, published at
-    # github.com/peturh/tlp-power-profile. Exposes a `tlp-power-profile-helper`
-    # package (wrapped helper binary) and a `tlp-power-profile-plugin` package
-    # (QML assets under share/DankMaterialShell/plugins/tlp-power-profile),
-    # both consumed in modules/desktop/hyprland/programs/dms/default.nix. The
-    # flake's `nixosModules.default` is intentionally NOT imported here — its
-    # polkit rule + `power` group declarations duplicate what
-    # modules/programs/misc/tlp/default.nix already sets up. Bump via
-    # `nix flake update tlp-power-profile`.
-    tlp-power-profile = {
-      url = "github:peturh/tlp-power-profile";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # DMS Agent — AI desktop assistant plugin by francis
     # (github.com/Francisdelca/dms-agent). The repo is a plain plugin tree
     # (no flake), so we consume the source via flake = false and turn it

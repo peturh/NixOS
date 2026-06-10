@@ -53,7 +53,6 @@
     ../../modules/programs/misc/orca
     ../../modules/programs/misc/tlp
     ../../modules/programs/misc/usbimager
-    ../../modules/programs/misc/sweethome3d
     ../../modules/programs/security/bitwarden
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
