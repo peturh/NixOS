@@ -130,6 +130,7 @@ in {
       # user later picks a non-Bibata theme via the DMS UI they'll need to
       # swap the package here too.
       home.pointerCursor = {
+        enable = true;
         package = pkgs.bibata-cursors;
         name = cursorTheme;
         size = cursorSize;

@@ -5,11 +5,11 @@
 }:
 let
   pname = "iptvnator";
-  version = "0.18.0";
+  version = "0.21.0";
 
   src = fetchurl {
     url = "https://github.com/4gray/iptvnator/releases/download/v${version}/iptvnator-${version}-linux-x86_64.AppImage";
-    hash = "sha256-gf0wTtFKOO3UiPlyXZNUiDnTpfEMx6d7vBH02gE74Hc=";
+    hash = "sha256-WAfDzM2M2XY4/6hxT4BP/gdzImd2aFUDHiw3Gj2+rAQ=";
   };
 
   appimageContents = appimageTools.extractType2 { inherit pname version src; };

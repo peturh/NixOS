@@ -130,6 +130,10 @@
       #test later systemd.user.targets.hyprland-session.Unit.Wants = [ "xdg-desktop-autostart.target" ];
       wayland.windowManager.hyprland = {
         enable = true;
+        # Keep HM rendering settings/extraConfig as hyprlang (hypr/hyprland.conf).
+        # The new-default "lua" would emit hypr/hyprland.lua, colliding with our
+        # own hand-written hyprland.lua above and breaking the .conf fallback.
+        configType = "hyprlang";
         plugins = [];
         systemd = {
           enable = true;
