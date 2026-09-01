@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   pkgs,
   videoDriver,
   hostname,
@@ -52,6 +53,7 @@
     ../../modules/programs/media/gimp
     ../../modules/programs/media/gpu-screen-recorder
     ../../modules/programs/misc/archive
+    ../../modules/programs/misc/calculator
     ../../modules/programs/misc/rclone
     ../../modules/programs/misc/gparted
     ../../modules/programs/misc/nautilus
@@ -73,19 +75,43 @@
   ];
 
   boot.initrd.kernelModules = ["amdgpu"];
+  # cpuid is needed by amd_s2idle (amd-debug-tools) to check core topology
+  boot.kernelModules = ["cpuid"];
 
   boot.kernelParams = [
     "amdgpu.dcdebugmask=0x10"
-    "mem_sleep_default=deep"
     "amd_pstate=active"
+    # memfd_secret (used by Electron/Bitwarden) disables hibernation kernel-wide
+    "secretmem.enable=0"
+    # First physical extent of /var/lib/swapfile (filefrag -v); re-derive if
+    # the swapfile is ever recreated.
+    "resume_offset=58949632"
   ];
+
+  # Hibernation target: 32G swapfile inside LUKS, replacing the unencrypted 8G
+  # swap partition (nvme0n1p2) so the RAM image never hits disk in plaintext.
+  # Runtime swapping still goes to zram (higher priority).
+  swapDevices = lib.mkForce [
+    {
+      device = "/var/lib/swapfile";
+      size = 32 * 1024;
+    }
+  ];
+  boot.resumeDevice = "/dev/mapper/luks-root";
+  # After the swapfile exists, get the offset with:
+  #   filefrag -v /var/lib/swapfile | awk 'NR==4 {print $4}'
+  # and add "resume_offset=<value>" to boot.kernelParams above.
+
+  # Suspend first; if the lid stays closed, wake and hibernate (zero drain).
+  services.logind.settings.Login.HandleLidSwitch = lib.mkForce "suspend-then-hibernate";
+  systemd.sleep.settings.Sleep.HibernateDelaySec = "45min";
 
   powerManagement.enable = true;
   services.power-profiles-daemon.enable = false;
 
   # T14s-specific: Logitech wireless device support
   hardware.logitech.wireless.enable = true;
-  hardware.logitech.wireless.enableGraphical = true;
+  programs.solaar.enable = true;
 
   # T14s-specific: 8BitDo controller udev rules
   services.udev.extraRules = ''

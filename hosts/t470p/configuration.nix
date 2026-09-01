@@ -46,6 +46,7 @@
     ../../modules/programs/media/gimp
     ../../modules/programs/media/gpu-screen-recorder
     ../../modules/programs/misc/archive
+    ../../modules/programs/misc/calculator
     ../../modules/programs/misc/rclone
     ../../modules/programs/misc/gparted
     ../../modules/programs/misc/nautilus

@@ -1,0 +1,14 @@
+resume_offset=58949632 is in and the config evaluates. Final steps:
+
+1. Rebuild (SUPER+U) — quick this time, just a new boot entry.
+2. Reboot — kernel params (secretmem.enable=0, resume_offset, and dropping mem_sleep_default=deep) only take effect at boot.
+
+After the reboot, verify in this order:
+
+! cat /sys/power/disk
+should show [platform] shutdown reboot ... instead of [disabled] — even with Bitwarden running. Then test hibernate with your work saved, from AC power ideally:
+
+! sudo systemctl hibernate
+It should power off completely (not just suspend), and powering back on should land you exactly where you left off after the LUKS unlock.
+
+If that works, close the lid on battery and you have the full behavior: suspend immediately, auto-hibernate after 45 minutes, zero drain from then on. And when you have a spare 5 minutes, re-run ! sudo nix run nixpkgs#amd-debug-tools -- test --duration 120 — with mem_sleep_default=deep gone it should actually run the suspend cycle and report s0i3 residency, which tells us if the WWAN modem still needs a pre-suspend power-down hook for the first 45 minutes of suspend.

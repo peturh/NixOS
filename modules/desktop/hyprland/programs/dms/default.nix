@@ -216,6 +216,11 @@ in {
           echo "seedDmsSession: $stateFile is a symlink; skipping seed." >&2
         elif [ -s "$stateFile" ] && ${pkgs.jq}/bin/jq -e . "$stateFile" >/dev/null 2>&1; then
           tmp="$stateFile.tmp"
+          # NB: the boolean keys must use explicit null checks, not jq
+          # alternative-operator defaults: "//" treats false as empty, so
+          # it would flip a saved false back to true on every boot. That
+          # bug used to flip isLightMode after every dark-mode shutdown,
+          # leaving session.json in light mode with the dark wallpaper.
           ${pkgs.jq}/bin/jq \
             --arg light "$light" \
             --arg dark "$dark" \
@@ -224,8 +229,8 @@ in {
              | .wallpaperPathDark = (.wallpaperPathDark // $dark)
              | .weatherLocation = (.weatherLocation // "Malmö, Sweden")
              | .weatherCoordinates = (.weatherCoordinates // "55.6050,13.0038")
-             | .nightModeUseIPLocation = (.nightModeUseIPLocation // true)
-             | .isLightMode = (.isLightMode // true)' \
+             | .nightModeUseIPLocation = (if .nightModeUseIPLocation == null then true else .nightModeUseIPLocation end)
+             | .isLightMode = (if .isLightMode == null then true else .isLightMode end)' \
             "$stateFile" > "$tmp" \
             && mv "$tmp" "$stateFile"
         else

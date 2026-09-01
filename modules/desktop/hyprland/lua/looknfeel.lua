@@ -48,11 +48,11 @@ hl.curve("easeOutExpo",   { type = "bezier", points = { {0.16, 1}, {0.3, 1}   } 
 
 -- Spring curves. NOTE: when a leaf uses a spring curve, `speed` is ignored —
 -- the spring physics (mass/stiffness/dampening) determine timing.
-hl.curve("spring_menu",      { type = "spring", mass = 1,   stiffness = 80, dampening = 14 })
-hl.curve("spring_window",    { type = "spring", mass = 1,   stiffness = 30, dampening = 8  })
-hl.curve("spring_open",      { type = "spring", mass = 1,   stiffness = 30, dampening = 8  })
-hl.curve("spring_workspace", { type = "spring", mass = 1.2, stiffness = 30, dampening = 10 })
-hl.curve("spring_special",   { type = "spring", mass = 1,   stiffness = 30, dampening = 8  })
+hl.curve("spring_menu",      { type = "spring", mass = 1,   stiffness = 300, dampening = 25 })
+hl.curve("spring_window",    { type = "spring", mass = 1,   stiffness = 170, dampening = 18 })
+hl.curve("spring_open",      { type = "spring", mass = 1,   stiffness = 170, dampening = 18 })
+hl.curve("spring_workspace", { type = "spring", mass = 1.2, stiffness = 170, dampening = 22 })
+hl.curve("spring_special",   { type = "spring", mass = 1,   stiffness = 170, dampening = 18 })
 
 -- Animation leaves.
 -- Old bezier-based leaves kept as comments for quick revert:
