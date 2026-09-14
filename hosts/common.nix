@@ -18,6 +18,7 @@
     inputs.nix-index-database.nixosModules.nix-index
     ../modules/programs/development/claude-code
     ../modules/programs/editor/vscode
+    ../modules/programs/misc/claude-desktop
   ];
 
   programs.nix-index-database.comma.enable = true;
@@ -305,8 +306,9 @@
     '';
   };
 
-  # Setup keyring
+  # Setup keyring (PAM hook unlocks it with the login password at SDDM login)
   services.gnome.gnome-keyring.enable = true;
+  security.pam.services.sddm.enableGnomeKeyring = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

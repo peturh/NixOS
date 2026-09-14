@@ -84,6 +84,17 @@ PluginComponent {
         postClickRefresh.restart()
     }
 
+    // Rescue path for "ModemManager sees no device": the modem was detached
+    // from the PCI bus around sleep and the automatic resume rescan failed.
+    // `wwan-ctl attach` starts wwan-rescan.service (root, polkit-allowed),
+    // which rescans the bus and re-enables the modem. Rediscovery takes
+    // ~20-40 s, so poll much longer than after a connect/disconnect.
+    function powerOn() {
+        root.busy = true
+        Quickshell.execDetached(["wwan-ctl", "attach"])
+        postClickRefresh.restartFor(50)
+    }
+
     // Right-click on the pill toggles the connection without opening the
     // popout. Left-click falls through to the popout (we set popoutContent).
     pillRightClickAction: () => root.toggle()
@@ -131,16 +142,21 @@ PluginComponent {
         repeat: true
         triggeredOnStart: false
         property int ticks: 0
+        property int maxTicks: 5
         onTriggered: {
             root.refresh()
             ticks += 1
-            if (ticks >= 5) {
+            // Stop early once the slow path (attach) has done its job — no
+            // point polling for another half minute after the modem is back.
+            if (ticks >= maxTicks || (maxTicks > 5 && root.present)) {
                 ticks = 0
+                maxTicks = 5
                 root.busy = false
                 stop()
             }
         }
-        function restart() { ticks = 0; running = false; running = true }
+        function restart() { restartFor(5) }
+        function restartFor(n) { ticks = 0; maxTicks = n; running = false; running = true }
     }
 
     // ==== Bar pill ====
@@ -226,8 +242,8 @@ PluginComponent {
 
                     StyledText {
                         text: {
-                            if (!root.present) return "ModemManager sees no device"
                             if (root.busy) return "Working…"
+                            if (!root.present) return "ModemManager sees no device"
                             if (root.connected) return "Connected · " + (root.tech.toUpperCase() || "—")
                             if (root.modemState === "registered") return "Registered, not connected"
                             return root.modemState.charAt(0).toUpperCase() + root.modemState.slice(1)
@@ -337,23 +353,34 @@ PluginComponent {
             }
 
             // --- Single contextual action button ---
-            // Two states only, so a segmented group is overkill — show the
-            // action that's actually available right now. Icon doubles as
-            // affirmation (check) vs. negation (close).
+            // Show the one action that's actually available right now:
+            // no modem on the bus → power it back on (PCI rescan),
+            // otherwise connect/disconnect. Icon doubles as affirmation
+            // (check) vs. negation (close).
             Item {
                 width: parent.width - Theme.spacingL * 2
                 anchors.horizontalCenter: parent.horizontalCenter
                 height: actionButton.height
-                visible: root.present
 
                 DankButton {
                     id: actionButton
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: root.connected ? "Disconnect" : "Connect"
-                    iconName: root.connected ? "close" : "check"
+                    text: {
+                        if (!root.present) return root.busy ? "Powering on…" : "Power on modem"
+                        return root.connected ? "Disconnect" : "Connect"
+                    }
+                    iconName: {
+                        if (!root.present) return "power_settings_new"
+                        return root.connected ? "close" : "check"
+                    }
                     backgroundColor: Theme.primary
                     textColor: Theme.background
-                    onClicked: root.connected ? root.bringDown() : root.bringUp()
+                    onClicked: {
+                        if (root.busy) return
+                        if (!root.present) root.powerOn()
+                        else if (root.connected) root.bringDown()
+                        else root.bringUp()
+                    }
                 }
             }
 

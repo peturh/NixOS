@@ -63,6 +63,13 @@
       url = "github:AvengeMedia/danksearch";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # llm-agents.nix — numtide's daily-updated packaging of AI agent tools.
+    # Used here for claude-desktop (the Claude.ai desktop app). It's the
+    # maintained successor to the archived Mowerick/claude-desktop-nix flake.
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -77,7 +84,7 @@
     commonSettings = {
       # User configuration
       username = "petur"; # automatically set with install.sh and live-install.sh
-      editor = "cursor"; # cursor, vscode
+      editor = "vscode"; # vscode
       textEditor = "micro"; # micro, nano, vim
       browser = "firefox"; # firefox, google-chrome, helium, microsoft-edge
       terminal = "ghostty"; # ghostty, kitty

@@ -25,6 +25,8 @@ COMMANDS:
     connect         Bring the Telenor WWAN connection up
     disconnect      Bring the Telenor WWAN connection down
     toggle          Connect if down, disconnect if up
+    attach          Power the modem back on when ModemManager sees no
+                    device (PCI rescan + enable, via wwan-rescan.service)
 "
 
 Help() { echo "$USAGE"; }
@@ -114,6 +116,13 @@ is_connected() {
 
 cmd_connect() { nmcli connection up "$CONNECTION_NAME"; }
 cmd_disconnect() { nmcli connection down "$CONNECTION_NAME"; }
+
+# The iosm modem gets detached from the PCI bus around sleep
+# (wwan-sleep-detach.service) and occasionally stays gone if the resume-side
+# rescan fails. wwan-rescan.service redoes the rescan + enable as root; a
+# polkit rule in modules/hardware/networking/wwan.nix lets our user start
+# that one unit without authentication.
+cmd_attach() { systemctl start --no-block wwan-rescan.service; }
 cmd_toggle() {
     if is_connected; then cmd_disconnect; else cmd_connect; fi
 }
@@ -128,5 +137,6 @@ case "$cmd" in
     connect) cmd_connect ;;
     disconnect) cmd_disconnect ;;
     toggle) cmd_toggle ;;
+    attach) cmd_attach ;;
     *) echo "Unknown command: $cmd" >&2; exit 1 ;;
 esac

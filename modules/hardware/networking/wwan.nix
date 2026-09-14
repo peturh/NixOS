@@ -1,4 +1,40 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  username,
+  ...
+}: let
+  # Bring the modem back onto the PCI bus and up in ModemManager. Used both
+  # on resume (wwan-sleep-detach ExecStop) and on demand from the DMS widget
+  # via `wwan-ctl attach` when the device has dropped off the bus.
+  wwanRescanScript = pkgs.writeShellScript "wwan-rescan" ''
+    bridge=$(${pkgs.coreutils}/bin/cat /run/wwan-detach-bridge 2>/dev/null || true)
+    if [ -n "$bridge" ] && [ -e "$bridge/rescan" ]; then
+      # wake the bridge out of runtime PM before asking it to rescan
+      echo on > "$bridge/power/control" 2>/dev/null || true
+      ${pkgs.coreutils}/bin/timeout 20 ${pkgs.bash}/bin/sh -c "echo 1 > '$bridge/rescan'" || true
+      echo auto > "$bridge/power/control" 2>/dev/null || true
+    else
+      ${pkgs.coreutils}/bin/timeout 20 ${pkgs.bash}/bin/sh -c 'echo 1 > /sys/bus/pci/rescan' || true
+    fi
+    # MM may have died or been left stopped (e.g. a rebuild while asleep);
+    # make sure it's up before waiting for it to rediscover the modem.
+    ${pkgs.systemd}/bin/systemctl start ModemManager.service 2>/dev/null || true
+    for i in $(${pkgs.coreutils}/bin/seq 1 15); do
+      if ${pkgs.coreutils}/bin/timeout 5 ${pkgs.modemmanager}/bin/mmcli -L 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q "/Modem/"; then
+        break
+      fi
+      ${pkgs.coreutils}/bin/sleep 2
+    done
+    # Enable can hit "Invalid transition" while the modem is still
+    # initializing after the PCI rescan — retry a few times.
+    for i in $(${pkgs.coreutils}/bin/seq 1 5); do
+      if ${pkgs.coreutils}/bin/timeout 20 ${pkgs.modemmanager}/bin/mmcli -m any --enable 2>/dev/null; then
+        break
+      fi
+      ${pkgs.coreutils}/bin/sleep 3
+    done
+  '';
+in {
   # ModemManager configuration for WWAN
   networking.modemmanager.enable = true;
 
@@ -80,7 +116,7 @@
       Type = "oneshot";
       RemainAfterExit = true;
       TimeoutStartSec = 30;
-      TimeoutStopSec = 120;
+      TimeoutStopSec = 30;
       ExecStart = pkgs.writeShellScript "wwan-detach" ''
         ${pkgs.coreutils}/bin/timeout 15 ${pkgs.modemmanager}/bin/mmcli -m any --disable 2>/dev/null || true
         for d in /sys/bus/pci/devices/*; do
@@ -92,36 +128,40 @@
           fi
         done
       '';
-      ExecStop = pkgs.writeShellScript "wwan-reattach" ''
-        bridge=$(${pkgs.coreutils}/bin/cat /run/wwan-detach-bridge 2>/dev/null)
-        if [ -n "$bridge" ] && [ -e "$bridge/rescan" ]; then
-          # wake the bridge out of runtime PM before asking it to rescan
-          echo on > "$bridge/power/control" 2>/dev/null || true
-          ${pkgs.coreutils}/bin/timeout 20 ${pkgs.bash}/bin/sh -c "echo 1 > '$bridge/rescan'" || true
-          echo auto > "$bridge/power/control" 2>/dev/null || true
-        else
-          ${pkgs.coreutils}/bin/timeout 20 ${pkgs.bash}/bin/sh -c 'echo 1 > /sys/bus/pci/rescan' || true
-        fi
-        # MM may have died or been left stopped (e.g. a rebuild while asleep);
-        # make sure it's up before waiting for it to rediscover the modem.
-        ${pkgs.systemd}/bin/systemctl start ModemManager.service 2>/dev/null || true
-        for i in $(${pkgs.coreutils}/bin/seq 1 15); do
-          if ${pkgs.coreutils}/bin/timeout 5 ${pkgs.modemmanager}/bin/mmcli -L 2>/dev/null | ${pkgs.gnugrep}/bin/grep -q "/Modem/"; then
-            break
-          fi
-          ${pkgs.coreutils}/bin/sleep 2
-        done
-        # Enable can hit "Invalid transition" while the modem is still
-        # initializing after the PCI rescan — retry a few times.
-        for i in $(${pkgs.coreutils}/bin/seq 1 5); do
-          if ${pkgs.coreutils}/bin/timeout 20 ${pkgs.modemmanager}/bin/mmcli -m any --enable 2>/dev/null; then
-            break
-          fi
-          ${pkgs.coreutils}/bin/sleep 3
-        done
-      '';
+      # Delegate the reattach to wwan-rescan.service without blocking. Doing
+      # the rescan + MM-rediscovery wait inline here used to exceed
+      # TimeoutStopSec (worst case ~4 min of retry loops) — systemd killed
+      # the ExecStop mid-rescan and the modem stayed off the bus until a
+      # manual rescue.
+      ExecStop = "${pkgs.systemd}/bin/systemctl start --no-block wwan-rescan.service";
     };
   };
+
+  # On-demand modem rescue: PCI rescan + re-enable. Started by the resume
+  # path above and by `wwan-ctl attach` (DMS widget "Power on modem" button).
+  systemd.services.wwan-rescan = {
+    description = "Rescan PCI bus and re-enable WWAN modem (iosm)";
+    serviceConfig = {
+      Type = "oneshot";
+      TimeoutStartSec = 300;
+      ExecStart = wwanRescanScript;
+    };
+  };
+
+  # Let the desktop user start the rescue unit from the widget without a
+  # password prompt (the widget has no polkit agent interaction to offer).
+  security.polkit.extraConfig = ''
+    polkit.addRule(function (action, subject) {
+      if (
+        action.id == "org.freedesktop.systemd1.manage-units" &&
+        action.lookup("unit") == "wwan-rescan.service" &&
+        action.lookup("verb") == "start" &&
+        subject.user == "${username}"
+      ) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
 
   # FCC unlock script for Lenovo WWAN module
   networking.modemmanager.fccUnlockScripts = [
