@@ -1,0 +1,5 @@
+[url "git@github-personal:peturh/"]
+    insteadOf = git@github.com:peturh/
+
+[user]
+    name = petur
