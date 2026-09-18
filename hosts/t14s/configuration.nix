@@ -17,7 +17,6 @@
     ../../modules/hardware/video/${videoDriver}.nix
     ../../modules/hardware/networking
     ../../modules/hardware/networking/wwan.nix
-    ../../modules/hardware/networking/work-hosts.nix
     ../../modules/hardware/audio
     ../common.nix
     ../../modules/scripts
@@ -128,7 +127,13 @@
   ];
 
   services.intune.enable = true;
-  programs.cpyvpn.enable = true;
+  programs.cpyvpn = {
+    enable = true;
+    dns = {
+      server = "10.47.28.16";
+      domains = ["puzzel.com" "prod.local"];
+    };
+  };
   programs.webengage-release.enable = true;
   programs.porttelefon.enable = true;
 
