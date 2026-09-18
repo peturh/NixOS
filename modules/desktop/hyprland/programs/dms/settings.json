@@ -14,14 +14,12 @@
   "matugenScheme": "scheme-vibrant",
   "cornerRadius": 12,
   "clockFormat": "24h",
-  "nightModeEnabled": false,
   "animationSpeed": 4,
   "customAnimationDuration": 480,
   "syncComponentAnimationSpeeds": false,
   "popoutAnimationSpeed": 4,
   "popoutCustomAnimationDuration": 516,
   "blurEnabled": true,
-  "batteryPillPercentSign": false,
   "controlCenterWidgets": [
     {
       "id": "volumeSlider",
@@ -81,7 +79,7 @@
   "appDrawerSectionViewModes": {
     "apps": "list"
   },
-  "networkPreference": "wifi",
+  "networkPreference": "cellular",
   "cursorSettings": {
     "theme": "Bibata-Original-Ice",
     "size": 24,
@@ -102,8 +100,6 @@
   "launcherLogoColorOverride": "primary",
   "monoFontFamily": "FiraCode Nerd Font Light",
   "lockBeforeSuspend": true,
-  "gtkThemingEnabled": false,
-  "qtThemingEnabled": false,
   "matugenTemplateNiri": false,
   "matugenTemplateMangowc": false,
   "matugenTemplateQt5ct": false,
@@ -197,7 +193,8 @@
       "rightWidgets": [
         {
           "id": "systemTray",
-          "enabled": true
+          "enabled": true,
+          "trayUseInlineExpansion": false
         },
         {
           "id": "network_speed_monitor",
@@ -220,6 +217,10 @@
         },
         {
           "id": "privacyIndicator",
+          "enabled": true
+        },
+        {
+          "id": "colorPicker",
           "enabled": true
         }
       ],
@@ -352,6 +353,32 @@
       "shadowCustomColor": "#000000"
     }
   ],
+  "desktopClockCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
+  "systemMonitorCustomColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1,
+    "hsvHue": -1,
+    "hsvSaturation": 0,
+    "hsvValue": 1,
+    "hslHue": -1,
+    "hslSaturation": 0,
+    "hslLightness": 1,
+    "valid": true
+  },
   "desktopWidgetInstances": [
     {
       "id": "dw_1779193744500_aeqkajbxz",
@@ -446,6 +473,5 @@
     }
   },
   "frameEnabled": true,
-  "configVersion": 18,
-  "closeNiriOverviewOnWindowFocus": true
+  "configVersion": 18
 }
