@@ -148,14 +148,12 @@ in {
       # home.pointerCursor above propagates cursorSettings.
       dconf.settings."org/gnome/desktop/interface" = {
         icon-theme = iconTheme;
-        # Make the xdg-desktop-portal report `prefer-light` to DMS (which
-        # has syncModeWithPortal=true in settings.json) and to GTK apps.
-        # Without this the portal returns `default`, which DMS's QML
-        # treats as dark — visible as a dark flash on every dms.service
-        # restart (e.g. nixos-rebuild) before session.json finishes
-        # loading. The seedDmsSession activation below also defaults
-        # isLightMode to true for fresh installs.
-        color-scheme = "prefer-light";
+        # NB: color-scheme is deliberately NOT set here. DMS owns it
+        # (syncModeWithPortal=true writes prefer-dark/prefer-light on every
+        # mode change). Pinning it from Nix made home-manager's dconf
+        # activation push `prefer-light` through the portal on every
+        # rebuild, flipping GTK apps — and DMS itself, via PortalService's
+        # transition handler — to light mode until auto-mode flipped back.
       };
 
       # Two-way settings sync. We want both:
@@ -218,9 +216,11 @@ in {
           tmp="$stateFile.tmp"
           # NB: the boolean keys must use explicit null checks, not jq
           # alternative-operator defaults: "//" treats false as empty, so
-          # it would flip a saved false back to true on every boot. That
-          # bug used to flip isLightMode after every dark-mode shutdown,
-          # leaving session.json in light mode with the dark wallpaper.
+          # it would flip a saved false back to true on every boot.
+          #
+          # isLightMode is only seeded on a fresh file (else-branch below),
+          # never merged: DMS 1.6+ omits the key from session.json, so
+          # re-adding `true` here forced light mode on every rebuild.
           ${pkgs.jq}/bin/jq \
             --arg light "$light" \
             --arg dark "$dark" \
@@ -229,8 +229,7 @@ in {
              | .wallpaperPathDark = (.wallpaperPathDark // $dark)
              | .weatherLocation = (.weatherLocation // "Malmö, Sweden")
              | .weatherCoordinates = (.weatherCoordinates // "55.6050,13.0038")
-             | .nightModeUseIPLocation = (if .nightModeUseIPLocation == null then true else .nightModeUseIPLocation end)
-             | .isLightMode = (if .isLightMode == null then true else .isLightMode end)' \
+             | .nightModeUseIPLocation = (if .nightModeUseIPLocation == null then true else .nightModeUseIPLocation end)' \
             "$stateFile" > "$tmp" \
             && mv "$tmp" "$stateFile"
         else
