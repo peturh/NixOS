@@ -8,6 +8,7 @@
 
   # Fixed tunnel interface name so we can attach per-link DNS to it.
   tunIface = "cpvpn0";
+  dnsServers = lib.concatStringsSep " " cfg.dns.servers;
 
   # Create a wrapper script that reads secrets and calls cpyvpn
   vpnScript = pkgs.writeShellScriptBin "vpn" ''
@@ -20,7 +21,7 @@
     USERNAME=$(cat /run/secrets/vpn-username)
     PASSWORD=$(cat /run/secrets/vpn-password)
 
-    ${lib.optionalString (cfg.dns.server != null) ''
+    ${lib.optionalString (cfg.dns.servers != []) ''
       # cpyvpn configures the tunnel THROUGH NetworkManager: on every connect
       # it writes the gateway-provided DNS into the ${tunIface} connection
       # profile (nmcli mod ... ipv4.dns) and NM owns the link's DNS from then
@@ -42,7 +43,7 @@
               *) keep="$keep $d" ;;
             esac
           done
-          $nmcli connection modify ${tunIface} ipv4.dns "${cfg.dns.server}" ipv4.dns-search "$keep $our_domains" \
+          $nmcli connection modify ${tunIface} ipv4.dns "${dnsServers}" ipv4.dns-search "$keep $our_domains" \
             && $nmcli device reapply ${tunIface} >/dev/null \
             || echo "Warning: failed to apply split DNS to ${tunIface}" >&2
         }
@@ -62,12 +63,12 @@
           exit 1
         fi
 
-        # Reassert whenever the internal server drops off the link, until the
+        # Reassert whenever the internal servers drop off the link, until the
         # tunnel goes away
         while ${pkgs.iproute2}/bin/ip link show ${tunIface} &>/dev/null; do
-          if ! $nmcli -g IP4.DNS device show ${tunIface} 2>/dev/null | grep -qF "${cfg.dns.server}"; then
+          if ! $nmcli -g IP4.DNS device show ${tunIface} 2>/dev/null | grep -qF "${builtins.head cfg.dns.servers}"; then
             apply_dns
-            echo "Split DNS active: ${lib.concatStringsSep ", " cfg.dns.domains} -> ${cfg.dns.server}"
+            echo "Split DNS active: ${lib.concatStringsSep ", " cfg.dns.domains} -> ${dnsServers}"
           fi
           sleep 15
         done
@@ -93,16 +94,16 @@ in {
     };
 
     dns = {
-      server = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        description = "Internal DNS server to use for dns.domains while the VPN is up.";
+      servers = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = "Internal DNS servers to use for dns.domains while the VPN is up.";
       };
 
       domains = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [];
-        description = "Domains whose queries are routed to dns.server (matched including subdomains).";
+        description = "Domains whose queries are routed to dns.servers (matched including subdomains).";
       };
     };
   };
@@ -116,7 +117,7 @@ in {
 
     # Split DNS (routing domains like ~puzzel.com) needs systemd-resolved as
     # NetworkManager's DNS backend
-    services.resolved.enable = lib.mkIf (cfg.dns.server != null) true;
-    networking.networkmanager.dns = lib.mkIf (cfg.dns.server != null) "systemd-resolved";
+    services.resolved.enable = lib.mkIf (cfg.dns.servers != []) true;
+    networking.networkmanager.dns = lib.mkIf (cfg.dns.servers != []) "systemd-resolved";
   };
 }

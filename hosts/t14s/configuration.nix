@@ -133,8 +133,12 @@
   programs.cpyvpn = {
     enable = true;
     dns = {
-      server = "10.47.28.16";
-      domains = ["puzzel.com" "prod.local"];
+      # dev.local DCs (d1dc01/d1dc02): they serve dev.local, forward
+      # prod.local, and return the internal split-horizon answers for
+      # dev/stag/test/qa *.puzzel.com (the prod DC 10.47.28.16 only knows
+      # prod.local and returns public IPs for those).
+      servers = ["172.16.150.11" "172.16.150.12"];
+      domains = ["puzzel.com" "prod.local" "dev.local"];
     };
   };
   programs.webengage-release.enable = true;
