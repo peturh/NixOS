@@ -128,6 +128,7 @@
   environment.systemPackages = with pkgs; [
     mkcert
     solaar
+    azure-cli
   ];
 
   programs.cpyvpn = {
