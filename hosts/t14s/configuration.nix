@@ -142,6 +142,19 @@
       domains = ["puzzel.com" "prod.local" "dev.local"];
     };
   };
+
+  # Names missing from the internal puzzel.com zone: the DCs answer NXDOMAIN
+  # and resolved never falls back to public DNS, so pin the public records.
+  # Temporary until IT adds them internally (asked 2026-10-20) — the Azure
+  # 20.x IPs in particular can change.
+  networking.hosts = {
+    "212.89.50.28" = ["devagentid.puzzel.com"];
+    "20.50.2.74" = ["devagna.puzzel.com" "qaagna.puzzel.com" "stagagna.puzzel.com" "testagna.puzzel.com"];
+    "212.89.50.128" = ["devturn.puzzel.com"];
+    "212.89.52.177" = ["turn.puzzel.com"];
+    "20.108.64.217" = ["ukturn.puzzel.com"];
+    "77.243.49.219" = ["dharma.puzzel.com"];
+  };
   programs.webengage-release.enable = true;
   programs.porttelefon.enable = true;
 
