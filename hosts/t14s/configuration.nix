@@ -68,6 +68,8 @@
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
     ../../modules/programs/development/go
+    ../../modules/programs/development/dotnet
+    ../../modules/programs/development/kubernetes
     ../../modules/programs/development/webengage-release
     ../../modules/programs/security/cpyvpn
     ../../modules/programs/gaming/steam

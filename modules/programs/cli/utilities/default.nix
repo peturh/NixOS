@@ -8,6 +8,7 @@
         lm_sensors
         jq
         rsync
+        shellcheck
         unimatrix
       ];
     })

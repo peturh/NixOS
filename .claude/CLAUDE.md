@@ -84,6 +84,12 @@ DMS writes GTK theme `.ini` + xdg portal settings but may leave gsettings stale;
 ## Conventions
 
 - Format every `.nix` file with **Alejandra** before committing.
+- **Commit and push installs once they build.** When the user asks for something to be installed or configured, and the change has then been built and switched successfully (`nixos-rebuild switch` succeeded, either run by you or confirmed by the user), commit those changes and push them right away. Do not leave them uncommitted in the working tree. Specifically:
+  - Commit only the files that belong to that install, plus `flake.lock` if the install changed it. Leave unrelated WIP alone and mention it instead.
+  - Write a short conventional message (`feat: add dotnet 10 sdk`, `fix: …`). Never add Claude attribution lines (no `Co-Authored-By`, no "Generated with Claude Code").
+  - Never stage `age.key` or any decrypted secret.
+  - Push the current branch to `origin` (`git push -u origin <branch>` if it has no upstream yet). If the push fails, report it; never force-push.
+  - Before the build, run `git status` and check that the build source (`~/NixOS` or the worktree) matches what's running. Otherwise a rebuild can silently roll back uncommitted work.
 - Quick reference table:
 
 | Item               | Value                                              |
