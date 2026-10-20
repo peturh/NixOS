@@ -8,7 +8,7 @@ This config manages **3 ThinkPad laptops**, each with different hardware and sli
 
 | Machine | GPU | Video Driver | Role |
 | ------- | --- | ------------ | ---- |
-| **T14s** | AMD | amdgpu | Primary work machine (Intune, VPN, WWAN, Logitech, 8BitDo) |
+| **T14s** | AMD | amdgpu | Primary work machine (VPN, WWAN, Logitech, 8BitDo) |
 | **T470p** | Nvidia | nvidia | Personal / secondary |
 | **T450** | Intel | intel | Personal / secondary |
 
@@ -21,7 +21,6 @@ This config manages **3 ThinkPad laptops**, each with different hardware and sli
 | Feature | T14s | T470p | T450 |
 | ------- | ---- | ----- | ---- |
 | Browser (default) | Microsoft Edge | Google Chrome | Google Chrome |
-| Microsoft Intune | Yes | No | No |
 | Check Point VPN (cpyvpn) | Yes | No | No |
 | WWAN / Modem | Yes | No | No |
 | Logitech / Solaar | Yes | No | No |
@@ -42,7 +41,6 @@ All three share: Hyprland, Kitty, Cursor, Firefox, Chrome, Steam, Docker, and th
 - **Containerization**: Docker enabled on all machines
 - **Work Tools** (T14s only):
   - VPN via cpyvpn (Check Point VPN)
-  - Microsoft Intune for device management
   - Jira and Azure DevOps (credentials in sops secrets)
   - Slack, Signal for communication
 
@@ -64,7 +62,7 @@ All three share: Hyprland, Kitty, Cursor, Firefox, Chrome, Steam, Docker, and th
   - `gaming/` - games
   - `media/` - media apps
   - `misc/` - utilities
-  - `security/` - VPN, Intune
+  - `security/` - VPN
   - `shell/` - bash, zsh configs
   - `terminal/` - terminal emulators
 - **Themes**: `modules/themes/` with wallpapers
@@ -74,7 +72,7 @@ All three share: Hyprland, Kitty, Cursor, Firefox, Chrome, Steam, Docker, and th
 ### Multi-Host Architecture
 - `flake.nix` defines `commonSettings` shared by all hosts, with per-host overrides in `hostSettings`
 - Each host has its own `hosts/<name>/configuration.nix` that imports the modules it needs
-- T14s imports work-specific modules (Intune, cpyvpn, WWAN, etc.) that the other two don't
+- T14s imports work-specific modules (cpyvpn, WWAN, etc.) that the other two don't
 - The `browser` setting is `"microsoft-edge"` for T14s and `"google-chrome"` for T470p/T450
 - When adding a package to all machines, add it to `hosts/common.nix`; for a specific machine, add it to that host's `configuration.nix`
 

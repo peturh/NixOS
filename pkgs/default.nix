@@ -24,6 +24,9 @@
   extract-xiso = pkgs.callPackage ./extract-xiso.nix {};
   "8bitdo-updater" = pkgs.callPackage ./8bitdo-updater.nix {};
   iptvnator = pkgs.callPackage ./iptvnator.nix {};
+  photocraft = pkgs.callPackage ./photocraft.nix {};
+  pdfcraft = pkgs.callPackage ./pdfcraft.nix {};
+  orca-ide = pkgs.callPackage ./orca-ide.nix {};
   makerom = pkgs.callPackage ./makerom.nix {};
   ctrtool = pkgs.callPackage ./ctrtool.nix {};
   # DMS Agent plugin — installs the github.com/Francisdelca/dms-agent tree

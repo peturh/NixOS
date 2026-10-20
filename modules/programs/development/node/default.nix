@@ -5,5 +5,6 @@
 }: {
   environment.systemPackages = with pkgs; [
     nodejs_22
+    pnpm_10
   ];
 }

@@ -21,6 +21,9 @@ hl.config({
     swallow_regex = "^(com\\.mitchellh\\.ghostty|kitty)$",
     enable_swallow = true,
     vrr = 0, -- enable variable refresh rate (0=off, 1=on, 2=fullscreen only)
+    -- Honor xdg-activation / focus requests: clicking a DMS notification or
+    -- opening a link raises the target window and switches to its workspace.
+    focus_on_activate = true,
   },
 
   -- Hyprland 0.55 moved vfr out of `misc` into `debug`. Default is `true`

@@ -43,7 +43,8 @@
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/transmission
     ../../modules/programs/media/vlc
-    ../../modules/programs/media/gimp
+    ../../modules/programs/media/photocraft
+    ../../modules/programs/media/pdfcraft
     ../../modules/programs/media/gpu-screen-recorder
     ../../modules/programs/misc/archive
     ../../modules/programs/misc/calculator

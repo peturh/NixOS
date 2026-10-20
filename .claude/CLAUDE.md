@@ -10,11 +10,11 @@ Personal NixOS flake managing **three ThinkPad laptops** from one config:
 
 | Host  | GPU    | Driver  | Role                                                |
 | ----- | ------ | ------- | --------------------------------------------------- |
-| t14s  | AMD    | amdgpu  | Primary **work** machine (Intune, cpyvpn, WWAN, …)  |
+| t14s  | AMD    | amdgpu  | Primary **work** machine (cpyvpn, WWAN, …)         |
 | t470p | Nvidia | nvidia  | Personal                                            |
 | t450  | Intel  | intel   | Personal                                            |
 
-Work-only tooling (Microsoft Intune, Check Point VPN, WWAN, Logitech/Solaar, 8BitDo, Porttelefon, Webengage release, work hosts file) is imported **only** from `hosts/t14s/configuration.nix`. Do not add those to `hosts/common.nix` or the other two hosts.
+Work-only tooling (Check Point VPN, WWAN, Logitech/Solaar, 8BitDo, Porttelefon, Webengage release, work hosts file) is imported **only** from `hosts/t14s/configuration.nix`. Do not add those to `hosts/common.nix` or the other two hosts.
 
 ## Build / rebuild
 

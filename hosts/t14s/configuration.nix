@@ -49,7 +49,8 @@
     ../../modules/programs/media/spicetify
     ../../modules/programs/media/transmission
     ../../modules/programs/media/vlc
-    ../../modules/programs/media/gimp
+    ../../modules/programs/media/photocraft
+    ../../modules/programs/media/pdfcraft
     ../../modules/programs/media/gpu-screen-recorder
     ../../modules/programs/misc/archive
     ../../modules/programs/misc/calculator
@@ -64,13 +65,13 @@
     ../../modules/programs/misc/porttelefon
     ../../modules/programs/hardware/modem
     ../../modules/programs/security/bitwarden
-    ../../modules/programs/security/microsoft-intune
     ../../modules/programs/development/node
     ../../modules/programs/development/python3
     ../../modules/programs/development/go
     ../../modules/programs/development/webengage-release
     ../../modules/programs/security/cpyvpn
     ../../modules/programs/gaming/steam
+    ../../modules/programs/gaming/lutris
   ];
 
   boot.initrd.kernelModules = ["amdgpu"];
@@ -126,7 +127,6 @@
     solaar
   ];
 
-  services.intune.enable = true;
   programs.cpyvpn = {
     enable = true;
     dns = {
