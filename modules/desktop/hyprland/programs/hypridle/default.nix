@@ -10,6 +10,17 @@
       systemctl suspend
     fi
   '';
+
+  # DMS's "keep awake" toggle only sets a Wayland idle-inhibitor on the bar
+  # surface, which Hyprland doesn't honour for hypridle's timers. Ask DMS
+  # directly and skip the action while it's on. If DMS is unreachable the
+  # grep fails and the action runs (fail towards locking).
+  unlessInhibited = pkgs.writeShellScript "unless-inhibited" ''
+    if dms ipc call inhibit status 2>/dev/null | grep -q "is enabled"; then
+      exit 0
+    fi
+    exec "$@"
+  '';
 in {
   home-manager.sharedModules = [
     (_: {
@@ -29,16 +40,16 @@ in {
           listener = [
             {
               timeout = 300; # 5 Minutes - lock screen (both AC and battery)
-              on-timeout = "dms ipc call lock lock";
+              on-timeout = "${unlessInhibited} dms ipc call lock lock";
             }
             {
               timeout = 600; # 10 Minutes - turn off display (both AC and battery)
-              on-timeout = "hyprctl dispatch 'hl.dsp.dpms({ action = \"off\" })'";
+              on-timeout = "${unlessInhibited} hyprctl dispatch 'hl.dsp.dpms({ action = \"off\" })'";
               on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
             }
             {
               timeout = 900; # 15 Minutes - suspend ONLY on battery
-              on-timeout = "${suspendOnBattery}";
+              on-timeout = "${unlessInhibited} ${suspendOnBattery}";
             }
           ];
         };
