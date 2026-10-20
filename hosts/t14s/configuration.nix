@@ -71,6 +71,7 @@
     ../../modules/programs/development/dotnet
     ../../modules/programs/development/kubernetes
     ../../modules/programs/development/webengage-release
+    ../../modules/programs/development/webengage-pr
     ../../modules/programs/security/cpyvpn
     ../../modules/programs/gaming/steam
     ../../modules/programs/gaming/lutris
