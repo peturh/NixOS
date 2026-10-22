@@ -207,6 +207,12 @@
     };
   };
 
+  # If the final shutdown stage freezes (after journald has stopped, so it
+  # leaves no trace beyond "recovering journal" on the next boot), let the
+  # hardware watchdog reset the machine after 1 min instead of the 10 min
+  # default, which in practice meant holding the power button.
+  systemd.settings.Manager.RebootWatchdogSec = "1min";
+
   # Timezone and locale
   time.timeZone = timezone;
   i18n.defaultLocale = locale;
