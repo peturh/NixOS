@@ -109,6 +109,12 @@
   services.logind.settings.Login.HandleLidSwitch = lib.mkForce "suspend-then-hibernate";
   systemd.sleep.settings.Sleep.HibernateDelaySec = "45min";
 
+  # A stalled hibernate entry (amdgpu SMU hang) can keep logind from pinging
+  # its 3 min watchdog; systemd then restarts it, the Hyprland session loses
+  # its devices and SDDM spawns a greeter over it, leaving the lock screen
+  # unusable. A longer limit lets logind survive the stall.
+  systemd.services.systemd-logind.serviceConfig.WatchdogSec = "10min";
+
   powerManagement.enable = true;
   services.power-profiles-daemon.enable = false;
 
