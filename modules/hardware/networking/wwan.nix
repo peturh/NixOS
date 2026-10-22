@@ -133,7 +133,14 @@ in {
       # TimeoutStopSec (worst case ~4 min of retry loops) — systemd killed
       # the ExecStop mid-rescan and the modem stayed off the bus until a
       # manual rescue.
-      ExecStop = "${pkgs.systemd}/bin/systemctl start --no-block wwan-rescan.service";
+      # Skipped while the system is shutting down: StopWhenUnneeded fires
+      # this on reboot too, and a PCI rescan of a wedged modem blocks in the
+      # kernel ("pci 0000:01:00.0: not ready after …ms") where nothing can
+      # kill it, so the reboot never completes.
+      ExecStop = pkgs.writeShellScript "wwan-reattach" ''
+        [ "$(${pkgs.systemd}/bin/systemctl is-system-running)" = "stopping" ] && exit 0
+        ${pkgs.systemd}/bin/systemctl start --no-block wwan-rescan.service
+      '';
     };
   };
 
