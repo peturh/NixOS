@@ -53,11 +53,12 @@ nix develop
 <!-- <summary>Credits/Inspiration</summary> -->
 
 ### Credits/Inspiration
+This config started out from [Sly-Harvey's NixOS config](https://github.com/Sly-Harvey/NixOS). Thank you, Sly Harvey!
+
 | Credit                                                        | Reason                                 |
 | ------------------------------------------------------------- | -------------------------------------- |
-| [Sly Harvey](https://github.com/Sly-Harvey/NixOS)             | This repo is a fork from Sly Harvy     |
-| [Hyprland-Dots](https://github.com/JaKooLit/Hyprland-Dots)    | Script and Waybar templates            |
+| [Sly Harvey](https://github.com/Sly-Harvey/NixOS)             | The original config this grew out of   |
+| [Hyprland-Dots](https://github.com/JaKooLit/Hyprland-Dots)    | Script templates                       |
 | [HyDE](https://github.com/HyDE-Project/HyDE)                  | Some more useful scripts               |
-| [dev-templates](https://github.com/the-nix-way/dev-templates) | Development templates                  |
 | [Vimjoyer](https://www.youtube.com/@vimjoyer)                 | Short, simple, concise guides and info |
 
