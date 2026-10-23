@@ -134,7 +134,9 @@
   environment.systemPackages = with pkgs; [
     mkcert
     solaar
-    azure-cli
+    # Unstable azure-cli depends on python fabric, marked broken since
+    # invoke>=3 (fabric/fabric#2376). Use stable until nixpkgs fixes it.
+    stable.azure-cli
   ];
 
   programs.cpyvpn = {
