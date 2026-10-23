@@ -22,7 +22,6 @@ Work-only tooling (Check Point VPN, WWAN, Logitech/Solaar, 8BitDo, Porttelefon, 
 - Bound to **`SUPER+U`** in Hyprland → opens Kitty and runs `modules/desktop/hyprland/scripts/rebuild.sh`.
 - Update flake inputs: `nix flake update`
 - Format: **Alejandra** (`nix fmt` or `alejandra .`) — `formatter` is set in `flake.nix`.
-- Garbage collection runs automatically via `nh` (keep 7 days / 3 generations).
 
 There is no test suite. Verification = a successful `nixos-rebuild`.
 
@@ -39,19 +38,6 @@ Adding a new setting means: add it to `commonSettings`, optionally override in `
 There is no global module list. Each `hosts/<name>/configuration.nix` explicitly imports every module it wants from `modules/...`. Some imports are string-interpolated from settings (e.g. `modules/programs/browser/${browser}`, `modules/hardware/video/${videoDriver}.nix`) — when adding a new browser/driver/terminal/editor option, ensure a matching directory exists.
 
 `hosts/common.nix` is imported by every host and contains: home-manager wiring, sops-nix setup, SDDM (including a `systemd.services.sddm-theme-by-time` oneshot that swaps the ThinkPad SDDM theme between `-dark` and `-light` based on time of day), boot/zram/kernel tuning, `nix.settings` (substituters, trusted keys), and the always-on `environment.systemPackages` baseline.
-
-### Module directories
-
-```
-modules/
-  hardware/       # video/<driver>.nix, audio, networking (+ wwan.nix, work-hosts.nix)
-  desktop/        # hyprland (with lua/, programs/, scripts/), gnome
-  programs/       # browser, cli, development, editor, gaming, media, misc, security, shell, terminal, hardware
-  themes/         # wallpapers
-  scripts/
-```
-
-`modules/desktop/hyprland/` is the largest subtree — it bundles Hyprland config (`lua/`), shipped scripts (`scripts/rebuild.sh`, `tlp-ctl.sh`, `wwan-ctl.sh`, `screenshot.sh`, …), and embedded programs like DMS (DankMaterialShell, the Quickshell desktop shell) under `programs/dms/` including custom plugins (`plugins/tlpCtl`, `plugins/wwanCtl`).
 
 ### Custom packages and overlays
 
@@ -75,12 +61,6 @@ modules/
 
 Program configs (dotfiles, theming, per-user state) live in home-manager. System-level services (sddm, networking, scx, docker, etc.) live in the NixOS module. Home-manager is wired in `hosts/common.nix` with `useGlobalPkgs = true; useUserPackages = true;` — so `pkgs` inside home-manager modules already has the overlays applied.
 
-### DMS (desktop shell)
-
-DankMaterialShell is pulled via the `dms` flake input (tracks the `stable` branch — don't switch to master without reason). Custom QML plugins live under `modules/desktop/hyprland/programs/dms/plugins/`. When writing plugin QML, avoid reserved names like `signal`, `state`, `connect` — they shadow built-ins and silently break property bindings. Use prefixed names (e.g. `signalPct`, `modemState`).
-
-DMS writes GTK theme `.ini` + xdg portal settings but may leave gsettings stale; if GTK4 apps look wrong after a theme change, check `gsettings get org.gnome.desktop.interface icon-theme`.
-
 ## Conventions
 
 - Format every `.nix` file with **Alejandra** before committing.
@@ -90,15 +70,4 @@ DMS writes GTK theme `.ini` + xdg portal settings but may leave gsettings stale;
   - Never stage `age.key` or any decrypted secret.
   - Push the current branch to `origin` (`git push -u origin <branch>` if it has no upstream yet). If the push fails, report it; never force-push.
   - Before the build, run `git status` and check that the build source (`~/NixOS` or the worktree) matches what's running. Otherwise a rebuild can silently roll back uncommitted work.
-- Quick reference table:
-
-| Item               | Value                                              |
-| ------------------ | -------------------------------------------------- |
-| Config location    | `~/NixOS`                                          |
-| Rebuild            | `SUPER+U` → `rebuild.sh` → `nixos-rebuild switch`  |
-| Formatter          | Alejandra                                          |
-| Secrets            | sops-nix, age key at `~/NixOS/age.key`             |
-| `system.stateVersion` | `23.11` (do not change)                         |
-| Nixpkgs channel    | `nixos-unstable` (with `nixos-25.11` as `stable`)  |
-| Kernel             | `linuxPackages_zen`                                |
-| CPU scheduler      | `scx_rusty`                                        |
+- Never change `system.stateVersion` (`23.11`).
