@@ -157,7 +157,7 @@
   "matugenTemplateWezterm": false,
   "matugenTemplateEmacs": false,
   "matugenTemplateZed": false,
-  "customPowerActionLogout": "hyprctl dispatch exit; sleep 2; loginctl terminate-session \"$XDG_SESSION_ID\" 2>/dev/null; true",
+  "customPowerActionLogout": "hypr-logout",
   "displayNameMode": "model",
   "connectedFrameBarStyleBackups": {
     "default": {
