@@ -122,6 +122,11 @@
   hardware.logitech.wireless.enable = true;
   programs.solaar.enable = true;
 
+  # T14s-specific: Thunderbolt/USB4 device authorization (boltctl) for the
+  # AOOSTAR AG02 eGPU enclosure (Radeon RX 9060 XT). Ports are in "user"
+  # security mode, so new devices must be enrolled with `boltctl enroll`.
+  services.hardware.bolt.enable = true;
+
   # T14s-specific: 8BitDo controller udev rules
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", MODE="0666", GROUP="plugdev"
