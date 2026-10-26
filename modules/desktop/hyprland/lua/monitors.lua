@@ -8,29 +8,31 @@ hl.monitor({
   scale = 1,
 })
 
--- Laptop (same at work and home).
+-- Laptop (same at work and home). Anchored at the origin; the externals
+-- below use explicit positions relative to it. auto-left/auto-right depend
+-- on which monitor Hyprland initializes first, and with the eGPU as primary
+-- GPU (see hosts/t14s AQ_DRM_DEVICES) the external comes up before eDP-1,
+-- which silently mirrored the intended layout.
 hl.monitor({
   output = "desc:Lenovo Group Limited 0x403A",
   mode = "1920x1200@60",
-  position = "auto",
+  position = "0x0",
   scale = 1,
 })
 
--- Work Setup: Samsung 4K (LS32D80xU) on the left, laptop auto-positioned to the right.
--- Center-aligned vertically for easier mouse movement.
+-- Work Setup: Samsung 4K (LS32D80xU) on the left, laptop on the right.
 hl.monitor({
   output = "desc:Samsung Electric Company LS32D80xU",
   mode = "3840x2160@60",
-  position = "auto-left",
+  position = "-3840x0",
   scale = 1,
 })
 
--- Home Setup: laptop auto-positioned to the left, Samsung ultrawide on the right.
--- Center-aligned vertically for easier mouse movement.
+-- Home Setup: laptop on the left, Samsung ultrawide on the right.
 hl.monitor({
   output = "desc:Samsung Electric Company S34C65xU",
   mode = "3440x1440@60",
-  position = "auto-right",
+  position = "1920x0",
   scale = 1,
 })
 
