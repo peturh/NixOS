@@ -218,7 +218,10 @@
           "enabled": true,
           "showWorkspaceIndex": true,
           "workspaceFollowFocus": true,
-          "workspaceFocusedBorderEnabled": true
+          "workspaceFocusedBorderEnabled": true,
+          "workspaceIndicatorStyle": "cards",
+          "showWorkspaceApps": true,
+          "workspaceAppIconSizeOffset": 8
         },
         {
           "id": "unifiedTaskbar",
