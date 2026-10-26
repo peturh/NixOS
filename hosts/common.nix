@@ -376,6 +376,7 @@
     age # Age encryption tool for sops
     extract-xiso # Xbox ISO creation/extraction utility
     iptvnator # IPTV player with Xtream Codes support (overlayed)
+    gravitymark # Tellusim GPU benchmark (overlayed)
     orca-ide # Orca agent development environment (overlayed)
     makerom # CLI tool to create Nintendo 3DS CXI/CFA/CCI/CIA files (overlayed)
     ctrtool # CLI tool to read/extract Nintendo 3DS files (overlayed)
