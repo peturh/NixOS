@@ -127,6 +127,21 @@
   # security mode, so new devices must be enrolled with `boltctl enroll`.
   services.hardware.bolt.enable = true;
 
+  # Make the eGPU Hyprland's primary render device when it is attached at
+  # login. Without this aquamarine picks the GPU with the built-in panel
+  # (iGPU), and every frame for the monitor on the eGPU's DP output is copied
+  # iGPU->eGPU over USB4 as a linear buffer (measured ~35% GravityMark loss
+  # vs a desktop 9060 XT). Missing entries are skipped, so with the dock
+  # unplugged this falls back to the iGPU. Trade-off: unplugging the dock
+  # while it is primary kills the session.
+  #
+  # Plain cardN names on purpose: aquamarine splits this list on ':' and the
+  # by-path names (pci-0000:68:00.0-card) contain colons, which left it with
+  # no usable GPU and crashed Hyprland at login. Numbering is stable on this
+  # machine: simpledrm holds card0 at boot so the iGPU always gets card1, and
+  # the eGPU takes the freed card0 whether probed late at boot or hotplugged.
+  environment.sessionVariables.AQ_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
+
   # T14s-specific: 8BitDo controller udev rules
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTR{idVendor}=="2dc8", MODE="0666", GROUP="plugdev"

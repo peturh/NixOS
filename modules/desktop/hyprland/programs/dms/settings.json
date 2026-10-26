@@ -157,7 +157,7 @@
   "matugenTemplateWezterm": false,
   "matugenTemplateEmacs": false,
   "matugenTemplateZed": false,
-  "customPowerActionLogout": "loginctl terminate-session \"$XDG_SESSION_ID\"",
+  "customPowerActionLogout": "hyprctl dispatch exit; sleep 2; loginctl terminate-session \"$XDG_SESSION_ID\" 2>/dev/null; true",
   "displayNameMode": "model",
   "connectedFrameBarStyleBackups": {
     "default": {
@@ -359,6 +359,12 @@
         {
           "id": "tlpPowerProfile",
           "enabled": true
+        },
+        {
+          "id": "gpuTemp",
+          "enabled": true,
+          "selectedGpuIndex": 0,
+          "pciId": "1002:7590"
         }
       ],
       "spacing": 2,
