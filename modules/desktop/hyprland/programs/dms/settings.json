@@ -337,6 +337,12 @@
       ],
       "rightWidgets": [
         {
+          "id": "gpuTemp",
+          "enabled": false,
+          "selectedGpuIndex": 0,
+          "pciId": "1002:15bf"
+        },
+        {
           "id": "cpuTemp",
           "enabled": true,
           "minimumWidth": true
@@ -359,12 +365,6 @@
         {
           "id": "tlpPowerProfile",
           "enabled": true
-        },
-        {
-          "id": "gpuTemp",
-          "enabled": true,
-          "selectedGpuIndex": 0,
-          "pciId": "1002:7590"
         }
       ],
       "spacing": 2,
@@ -584,5 +584,6 @@
   "notificationAnimationDuration": 600,
   "dmsWindowsFloatingSeeded": [
     "hyprland"
-  ]
+  ],
+  "avatarRing": "primary"
 }
