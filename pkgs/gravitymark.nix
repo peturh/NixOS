@@ -14,6 +14,7 @@
   libglvnd,
   vulkan-loader,
   xdg-utils,
+  procps,
 }: let
   pname = "gravitymark";
   version = "1.89";
@@ -66,11 +67,23 @@ in
       cp Acknowledgements.txt GravityMark_*.pdf $out/share/doc/gravitymark/
       chmod +x $app/bin/GravityMark.x64 $app/bin/Browser.x64
 
+      # The launcher's web server drops any request whose headers exceed
+      # 1024 bytes, replying 200 with an empty body, which leaves its page
+      # blank. Browsers send every cookie set by any other localhost:<port>
+      # dev server along with the request, so point the launcher at
+      # 127.0.0.1 instead (same string length, so the binary stays intact).
+      sed -i 's|http://localhost:%u/index.html|http://127.0.0.1:%u/index.html|' $app/bin/Browser.x64
+      grep -q 'http://127.0.0.1:%u/index.html' $app/bin/Browser.x64 \
+        || { echo "launcher URL patch did not apply"; exit 1; }
+
       unzip -q -j browser.zip browser/images/gravitymark.svg -d .
       install -Dm444 gravitymark.svg $out/share/icons/hicolor/scalable/apps/gravitymark.svg
 
-      # Launcher: serves the configuration UI on localhost and opens it with xdg-open.
+      # Launcher: serves the configuration UI on localhost and opens it with
+      # xdg-open. It binds a fixed port, so a leftover instance makes the next
+      # start fail; upstream's run_browser.sh kills it first and so do we.
       makeWrapper $app/bin/Browser.x64 $out/bin/gravitymark \
+        --run "${procps}/bin/pkill -9 -x Browser.x64 || true" \
         --chdir $app/bin \
         --prefix LD_LIBRARY_PATH : "$runtimeLibs" \
         --prefix PATH : ${lib.makeBinPath [xdg-utils]} \
