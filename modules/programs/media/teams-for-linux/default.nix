@@ -35,10 +35,47 @@
         "name": "teams-for-linux",'
       '';
   });
+
+  # teams-for-linux's `#configureWayland` sets `disableGpu = true` on native
+  # Wayland unless the user set the key themselves ("prevents blank windows").
+  # The result was a `--use-gl=disabled` GPU process and
+  # `--disable-gpu-compositing` renderers: software compositing, software
+  # raster and software WebRTC encode/decode, ~3 cores during calls while
+  # Slack/Claude/Bitwarden ran GPU-accelerated on the same render node.
+  # Writing the key explicitly opts back in (`isOptionSetByUser` checks
+  # `performance.disableGpu` in config.json).
+  #
+  # `electronCLIFlags` → `app.commandLine.appendSwitch`, which *replaces* an
+  # existing switch value. The nixpkgs wrapper already passes
+  # `--enable-features=WaylandWindowDecorations,WebRTCPipeWireCapturer`, so
+  # those two must be repeated here or Wayland screen sharing breaks. The
+  # extra features turn on VA-API video decode/encode (Phoenix iGPU and the
+  # RX 9060 XT both expose H.264/HEVC/AV1 enc+dec via radeonsi).
+  teamsConfig = {
+    performance = {
+      disableGpu = false;
+      electronCLIFlags = [
+        [
+          "enable-features"
+          (builtins.concatStringsSep "," [
+            "WaylandWindowDecorations"
+            "WebRTCPipeWireCapturer"
+            "AcceleratedVideoDecodeLinuxGL"
+            "AcceleratedVideoDecodeLinuxZeroCopyGL"
+            "AcceleratedVideoEncoder"
+            "VaapiIgnoreDriverChecks"
+          ])
+        ]
+        "enable-gpu-rasterization"
+        "enable-zero-copy"
+      ];
+    };
+  };
 in {
   home-manager.sharedModules = [
     (_: {
       home.packages = [teams-for-linux];
+      xdg.configFile."teams-for-linux/config.json".text = builtins.toJSON teamsConfig;
     })
   ];
 }
