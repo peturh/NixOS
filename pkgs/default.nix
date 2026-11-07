@@ -30,6 +30,8 @@
   makerom = pkgs.callPackage ./makerom.nix {};
   ctrtool = pkgs.callPackage ./ctrtool.nix {};
   gravitymark = pkgs.callPackage ./gravitymark.nix {};
+  # Pinned newer than nixpkgs for WoW Forever client support; see the file.
+  wowup-cf = pkgs.callPackage ./wowup-cf.nix {};
   # DMS Agent plugin — installs the github.com/Francisdelca/dms-agent tree
   # under share/DankMaterialShell/plugins/dmsAgent so the DMS module can
   # symlink it into ~/.config/DankMaterialShell/plugins/dmsAgent.

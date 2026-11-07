@@ -3,6 +3,9 @@
   environment.systemPackages = with pkgs; [
     lutris
     winetricks
+    # WoW addon manager (CurseForge/Wago/GitHub sources). Point it at the
+    # Lutris prefix: ~/Games/battlenet/drive_c/Program Files (x86)/World of Warcraft
+    wowup-cf
   ];
 
   # 32-bit graphics are required by the Battle.net launcher
