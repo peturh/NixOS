@@ -1,5 +1,6 @@
 {pkgs, ...}: let
   docker = "${pkgs.docker}/bin/docker";
+  coreutils = "${pkgs.coreutils}/bin";
 
   # Stop/start every kind node container (kind labels them with their
   # cluster name). `stop` records which nodes were running in a state file so
@@ -20,8 +21,19 @@
         ;;
       start)
         [ -s "$state" ] || exit 0
-        ${docker} start $(${pkgs.coreutils}/bin/cat "$state") || true
+        ${docker} start $(${coreutils}/cat "$state") || true
         rm -f "$state"
+        # The node is privileged and kernel.core_pattern is not namespaced:
+        # a second or two after start its own systemd-sysctl applies Debian's
+        # `kernel.core_pattern=core` to the host, after which every crashing
+        # host daemon drops a /core.<pid> file instead of reaching
+        # systemd-coredump. Wait for that write, then re-apply the host's
+        # sysctl files.
+        for _ in $(${coreutils}/seq 1 30); do
+          [ "$(${coreutils}/cat /proc/sys/kernel/core_pattern)" = core ] && break
+          ${coreutils}/sleep 1
+        done
+        ${pkgs.systemd}/bin/systemctl restart systemd-sysctl.service
         ;;
     esac
   '';
