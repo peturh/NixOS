@@ -48,29 +48,20 @@
             || echo "Warning: failed to apply split DNS to ${tunIface}" >&2
         }
 
-        # Wait for NM to report the tunnel connected (gateway DNS is written
-        # to the profile before activation, so it's in place by then)
-        connected=""
-        for _ in $(seq 1 120); do
-          if $nmcli -g GENERAL.STATE device show ${tunIface} 2>/dev/null | grep -q "^100"; then
-            connected=1
-            break
-          fi
-          sleep 1
-        done
-        if [ -z "$connected" ]; then
-          echo "Warning: ${tunIface} never connected, split DNS not configured" >&2
-          exit 1
-        fi
-
-        # Reassert whenever the internal servers drop off the link, until the
-        # tunnel goes away
-        while ${pkgs.iproute2}/bin/ip link show ${tunIface} &>/dev/null; do
-          if ! $nmcli -g IP4.DNS device show ${tunIface} 2>/dev/null | grep -qF "${builtins.head cfg.dns.servers}"; then
+        # Run for the lifetime of cp_client (the exec below turns this shell,
+        # $$, into cp_client). Deliberately not keyed on the link existing:
+        # cp_client tears down a stale ${tunIface} left by a previous session
+        # before creating the new one, and a slow O365 browser login can take
+        # minutes before the link exists at all. Either way, whenever the
+        # device is connected without our servers, put them back.
+        parent=$$
+        while kill -0 "$parent" 2>/dev/null; do
+          if $nmcli -g GENERAL.STATE device show ${tunIface} 2>/dev/null | grep -q "^100" \
+            && ! $nmcli -g IP4.DNS device show ${tunIface} 2>/dev/null | grep -qF "${builtins.head cfg.dns.servers}"; then
             apply_dns
             echo "Split DNS active: ${lib.concatStringsSep ", " cfg.dns.domains} -> ${dnsServers}"
           fi
-          sleep 15
+          sleep 5
         done
       ) &
     ''}
