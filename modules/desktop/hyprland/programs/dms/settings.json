@@ -585,5 +585,6 @@
   "dmsWindowsFloatingSeeded": [
     "hyprland"
   ],
-  "avatarRing": "primary"
+  "avatarRing": "primary",
+  "audioShowStreamDevices": false
 }
