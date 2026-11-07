@@ -56,6 +56,10 @@
     "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font', 'SymbolsNerdFont'";
     "editor.fontSize" = 14;
     "explorer.confirmDragAndDrop" = false;
+    # Never let ripgrep follow symlinks when listing a workspace: Wine
+    # prefixes contain `dosdevices/z: -> /`, so opening ~ as a workspace made
+    # the startup file scan crawl all of / (incl. /sys) at 12 cores and 9 GB.
+    "search.followSymlinks" = false;
     "editor.fontLigatures" = true;
     "workbench.startupEditor" = "none";
     "telemetry.enableCrashReporter" = false;
