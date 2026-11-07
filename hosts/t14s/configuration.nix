@@ -70,6 +70,7 @@
     ../../modules/programs/development/go
     ../../modules/programs/development/dotnet
     ../../modules/programs/development/kubernetes
+    ../../modules/programs/development/ollama
     ../../modules/programs/development/webengage-release
     ../../modules/programs/development/webengage-pr
     ../../modules/programs/security/cpyvpn
