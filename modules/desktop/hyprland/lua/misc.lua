@@ -7,6 +7,20 @@ hl.config({
     direct_scanout = 2, -- 0 = off, 1 = on, 2 = auto (on with content type 'game')
   },
 
+  -- Software (compositor-drawn) cursor instead of the KMS cursor plane.
+  -- With an output on a non-primary GPU (eGPU over USB4: either DP-7 when
+  -- the eGPU is hotplugged as secondary, or eDP-1 when AQ_DRM_DEVICES makes
+  -- the eGPU primary at boot) Hyprland renders each new cursor shape in
+  -- "full fake" mode, which skips the GL flush/fence, and aquamarine's
+  -- secondary-GPU blit copies that buffer without waiting on it. The eGPU's
+  -- cursor plane then scans out the *previous* shape (text/resize/pointer
+  -- lagging one change behind). Drawing the cursor into the frame goes
+  -- through the normal, fenced multi-GPU frame copy. vfr is already off
+  -- (debug.vfr below), so the per-frame cost is negligible.
+  cursor = {
+    no_hardware_cursors = 1, -- 0 = off, 1 = on, 2 = auto (off except nvidia)
+  },
+
   ecosystem = {
     no_update_news = true,
     no_donation_nag = true,
