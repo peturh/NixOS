@@ -28,11 +28,14 @@ hl.monitor({
   scale = 1,
 })
 
--- Home Setup: laptop on the left, Samsung ultrawide on the right.
+-- Home Setup: Samsung ultrawide on the left, laptop on the right. The laptop
+-- sits on the desk well below the ultrawide, so the ultrawide is raised by
+-- 900px: the laptop's top edge lines up with a point 900px down the
+-- ultrawide's right edge (bottom 540px of it borders the laptop).
 hl.monitor({
   output = "desc:Samsung Electric Company S34C65xU",
   mode = "3440x1440@60",
-  position = "1920x0",
+  position = "-3440x-900",
   scale = 1,
 })
 
